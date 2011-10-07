@@ -1,6 +1,7 @@
 package org.AndroidShareApp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 public class MainActivity extends Activity {
@@ -8,6 +9,11 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        //setContentView(R.layout.main_activity);
+        
+        Intent mIntent = new Intent(MainActivity.this,SharedWithMeListActivity.class);
+        MainActivity.this.startActivity(mIntent);
     }
+
+    
 }
