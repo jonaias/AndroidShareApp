@@ -1,4 +1,7 @@
-package org.AndroidShareApp;
+package org.AndroidShareApp.gui;
+
+import org.AndroidShareApp.R;
+import org.AndroidShareApp.R.string;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -33,7 +36,7 @@ public class MainActivity extends TabActivity {
         						  .setContent(intent));
         
         for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
-            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 23;
+            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 30;
         }
 
         tabHost.setCurrentTab(1);

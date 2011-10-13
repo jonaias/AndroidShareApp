@@ -1,7 +1,12 @@
 /**
  * 
  */
-package org.AndroidShareApp;
+package org.AndroidShareApp.gui;
+
+import org.AndroidShareApp.R;
+import org.AndroidShareApp.R.id;
+import org.AndroidShareApp.R.layout;
+import org.AndroidShareApp.R.string;
 
 import android.app.ListActivity;
 import android.content.Context;
