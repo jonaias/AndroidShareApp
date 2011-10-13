@@ -1,11 +1,9 @@
 package org.AndroidShareApp.gui;
 
 import org.AndroidShareApp.R;
-import org.AndroidShareApp.R.string;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 
@@ -16,7 +14,7 @@ public class MainActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.main_activity);
         
-        Resources res = getResources(); // Resource object to get Drawables
+        //Resources res = getResources(); // Resource object to get Drawables
         TabHost tabHost = getTabHost();  // The activity TabHost
         Intent intent;  // Reusable Intent for each tab
 

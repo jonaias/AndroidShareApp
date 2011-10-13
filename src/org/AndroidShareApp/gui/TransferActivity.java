@@ -4,7 +4,6 @@
 package org.AndroidShareApp.gui;
 
 import org.AndroidShareApp.R;
-import org.AndroidShareApp.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;

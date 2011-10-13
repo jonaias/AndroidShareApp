@@ -4,9 +4,6 @@
 package org.AndroidShareApp.gui;
 
 import org.AndroidShareApp.R;
-import org.AndroidShareApp.R.id;
-import org.AndroidShareApp.R.layout;
-import org.AndroidShareApp.R.string;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -157,25 +154,21 @@ public class SharedByMeActivity extends ListActivity {
 
 		@Override
 		public Filter getFilter() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return data.length;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return data[position];
 		}
 
