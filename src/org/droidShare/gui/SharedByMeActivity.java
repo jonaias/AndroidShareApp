@@ -1,9 +1,9 @@
 /**
  * 
  */
-package org.AndroidShareApp.gui;
+package org.droidShare.gui;
 
-import org.AndroidShareApp.R;
+import org.droidShare.R;
 
 import android.app.ListActivity;
 import android.content.Context;

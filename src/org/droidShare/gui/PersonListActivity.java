@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.AndroidShareApp.gui;
+package org.droidShare.gui;
 
 import android.app.Activity;
 

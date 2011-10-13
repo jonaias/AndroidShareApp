@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">AndroidShareApp</string>
+    <string name="app_name">droidShare</string>
     <string name="find_manually_button_text">Find Manually</string>
     <string name="person_list_legend">Color legend:\nGreen: Read &amp; Write\nBlue: Read</string>
-    <string name="package_str">org.AndroidShareApp</string>
+    <string name="package_str">org.droidShare</string>
     <string name="create_share">Create share</string>
     <string name="activate_share">Activate Share</string>
     <string name="deactivate_share">Deactivate Share</string>
     <string name="my_shares">My shares</string>
     <string name="shared_with_me">Shared with me</string>
+    <string name="shared_by_me">Shared by me</string>
+    <string name="active_transfers">Active Transfers</string>
     <string name="send">Send</string>
 </resources>

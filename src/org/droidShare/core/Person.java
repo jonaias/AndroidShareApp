@@ -1,4 +1,4 @@
-package org.AndroidShareApp.core;
+package org.droidShare.core;
 
 public class Person {
 

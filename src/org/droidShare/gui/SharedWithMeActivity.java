@@ -1,9 +1,9 @@
 /**
  *
  */
-package org.AndroidShareApp.gui;
+package org.droidShare.gui;
 
-import org.AndroidShareApp.R;
+import org.droidShare.R;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -33,8 +33,7 @@ public class SharedWithMeActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.shared_with_me_activity);
-		setContentView(R.layout.shared_with_me_list_activity);//TODO: REMOVE!
+		setContentView(R.layout.shared_with_me_activity);
 		adap = new EfficientAdapter(this);
 		setListAdapter(adap);
 	}
@@ -70,7 +69,7 @@ public class SharedWithMeActivity extends ListActivity {
 			// supplied by ListView is null.
 			if (convertView == null) {
 				//convertView = mInflater.inflate(R.layout.adaptor_content, null);
-				convertView = mInflater.inflate(R.layout.adaptor_content, null);
+				convertView = mInflater.inflate(R.layout.shared_by_me_list_item, null);
 
 				// Creates a ViewHolder and store references to the two children
 				// views
