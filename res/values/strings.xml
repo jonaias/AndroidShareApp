@@ -9,4 +9,6 @@
     <string name="activate_share">Activate Share</string>
     <string name="deactivate_share">Deactivate Share</string>
     <string name="my_shares">My shares</string>
+    <string name="shared_with_me">Shared with me</string>
+    <string name="send">Send</string>
 </resources>

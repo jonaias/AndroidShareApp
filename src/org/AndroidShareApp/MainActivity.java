@@ -24,12 +24,12 @@ public class MainActivity extends TabActivity {
 
         //  Add a new tab with SharedWithMeActivity
         intent = new Intent(this,SharedWithMeListActivity.class);
-        tabHost.addTab(tabHost.newTabSpec("sharedWithMe").setIndicator("Shared With Me")
+        tabHost.addTab(tabHost.newTabSpec("sharedWithMe").setIndicator(getString(R.string.shared_with_me))
         						  .setContent(intent));
         
-        //for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
-         //   tabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 23;
-        //}
+        for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 23;
+        }
 
         tabHost.setCurrentTab(1);
     }
