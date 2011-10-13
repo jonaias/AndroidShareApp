@@ -1,4 +1,4 @@
-package org.droidShare.core;
+package org.AndroidShareApp.core;
 
 public class SharedByMeItem {
 	
