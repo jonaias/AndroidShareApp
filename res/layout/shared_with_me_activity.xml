@@ -4,21 +4,21 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:weightSum="1"
   android:background="@color/screen_background">
   
-    <LinearLayout 
+    <LinearLayout
     	android:layout_height="wrap_content" 
     	android:layout_width="match_parent">
     	
         <ImageButton android:id="@+id/backButton" 
-        	android:src="@drawable/left_arrow" 
-        	android:layout_width="50dp" 
+        	android:src="@drawable/left_arrow"
+        	android:layout_width="50dp"
         	android:layout_height="47dp"
         />
         
         <EditText android:layout_width="wrap_content" 
-        	android:id="@+id/shareNameText" android:layout_weight="1" 
+        	android:id="@+id/shareNameText"
+        	android:layout_weight="1" 
         	android:layout_height="wrap_content"
         />
         
@@ -51,10 +51,11 @@
 	<LinearLayout  
 			android:layout_height="wrap_content" 
 			android:layout_width="match_parent">
+			
 			<Button android:layout_width="wrap_content" 
-				android:id="@+id/sendButton" 
+				android:id="@+id/sendButton"
 				android:layout_height="wrap_content" 
-				android:text="@string/send" 
+				android:text="@string/send"
 				android:drawableTop="@drawable/flag_0"/>
 				
 			<EditText 

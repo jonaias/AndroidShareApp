@@ -15,8 +15,6 @@ public class MainActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         
-        //jfkdsjfdksl
-        
         //Resources res = getResources(); // Resource object to get Drawables
 		TabHost tabHost = getTabHost(); // The activity TabHost
 		TabHost.TabSpec spec; // Reusable TabSpec for each tab
@@ -29,7 +27,7 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(spec);
         
         // Add a new tab with SharedWithMeActivity
-		intent = new Intent().setClass(this, SharedByMeActivity.class);
+		intent = new Intent().setClass(this, SharedWithMeListActivity.class);
         spec = tabHost.newTabSpec("sharedByMe").setIndicator(getString(R.string.shared_with_me))
                       .setContent(intent);
         tabHost.addTab(spec);
@@ -40,9 +38,9 @@ public class MainActivity extends TabActivity {
                       .setContent(intent);
         tabHost.addTab(spec);
         
-        //for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
-        //    tabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 30;
-        //}
+        for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 30;
+        }
 
         tabHost.setCurrentTab(0);
     }
