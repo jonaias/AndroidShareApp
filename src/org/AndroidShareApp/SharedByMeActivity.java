@@ -98,7 +98,7 @@ public class SharedByMeActivity extends ListActivity {
 			// convertView
 			// supplied by ListView is null.
 			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.adaptor_content, null);
+				convertView = mInflater.inflate(R.layout.shared_by_me_list_item, null);
 
 				// Creates a ViewHolder and store references to the two children
 				// views

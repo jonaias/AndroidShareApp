@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.AndroidShareApp;
 
@@ -21,32 +21,34 @@ import android.widget.Toast;
 
 /**
  * @author jonaias
- *
+ * 
  */
 public class SharedWithMeActivity extends ListActivity {
 
 	private EfficientAdapter adap;
 	private static String[] data = new String[] { "0", "1", "2", "3", "4" };
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.shared_with_me_activity);
+		//setContentView(R.layout.shared_with_me_activity);
+		setContentView(R.layout.shared_with_me_list_activity);
 		adap = new EfficientAdapter(this);
 		setListAdapter(adap);
 	}
-    
-    public static class EfficientAdapter extends BaseAdapter implements	Filterable {
+
+	public static class EfficientAdapter extends BaseAdapter implements
+			Filterable {
 		private LayoutInflater mInflater;
 		private Bitmap mIcon1;
 		private Context context;
-		
+
 		public EfficientAdapter(Context context) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
 			this.context = context;
 		}
-		
+
 		/**
 		 * Make a view to hold each row.
 		 * 
@@ -59,14 +61,15 @@ public class SharedWithMeActivity extends ListActivity {
 			// unnecessary calls
 			// to findViewById() on each row.
 			ViewHolder holder;
-		
+
 			// When convertView is not null, we can reuse it directly, there is
 			// no need to reinflate it. We only inflate a new View when the
 			// convertView
 			// supplied by ListView is null.
 			if (convertView == null) {
+				//convertView = mInflater.inflate(R.layout.adaptor_content, null);
 				convertView = mInflater.inflate(R.layout.adaptor_content, null);
-		
+
 				// Creates a ViewHolder and store references to the two children
 				// views
 				// we want to bind data to.
@@ -75,10 +78,10 @@ public class SharedWithMeActivity extends ListActivity {
 						.findViewById(R.id.textLine);
 				holder.iconLine = (ImageView) convertView
 						.findViewById(R.id.iconLine);
-		
+
 				convertView.setOnClickListener(new OnClickListener() {
 					private int pos = position;
-		
+
 					@Override
 					public void onClick(View v) {
 						Toast.makeText(context,
@@ -86,60 +89,60 @@ public class SharedWithMeActivity extends ListActivity {
 								Toast.LENGTH_SHORT).show();
 					}
 				});
-		
+
 				convertView.setTag(holder);
 			} else {
 				// Get the ViewHolder back to get fast access to the TextView
 				// and the ImageView.
 				holder = (ViewHolder) convertView.getTag();
 			}
-		
+
 			// Get flag name and id
 			String filename = "flag_" + String.valueOf(position);
 			int id = context.getResources().getIdentifier(filename, "drawable",
 					context.getString(R.string.package_str));
-		
+
 			// Icons bound to the rows.
 			if (id != 0x0) {
 				mIcon1 = BitmapFactory.decodeResource(context.getResources(),
 						id);
 			}
-		
+
 			// Bind the data efficiently with the holder.
 			holder.iconLine.setImageBitmap(mIcon1);
 			holder.textLine.setText("Share " + String.valueOf(position));
-		
+
 			return convertView;
 		}
-		
+
 		static class ViewHolder {
 			TextView textLine;
 			ImageView iconLine;
 		}
-		
+
 		@Override
 		public Filter getFilter() {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub
 			return 0;
 		}
-		
+
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
 			return data.length;
 		}
-		
+
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
 			return data[position];
 		}
-		
-		}
+
+	}
 }

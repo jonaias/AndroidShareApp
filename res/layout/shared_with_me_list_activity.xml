@@ -5,14 +5,14 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/screen_background">
-    <ListView android:layout_width="match_parent" 
-    	android:layout_gravity="top" 
-    	android:layout_height="311dp" 
-    	android:layout_weight="1" 
-    	android:id="@+id/personList"/>
-    <Button android:layout_width="match_parent" 
-    	android:layout_height="wrap_content" 
-    	android:text="@string/find_manually_button_text" 
-    	android:id="@+id/findManuallyButton"/>
+    <ListView android:layout_width="match_parent"
+     android:layout_gravity="top"
+     android:layout_height="311dp"
+     android:layout_weight="1"
+     android:id="@+id/personList"/>
+    <Button android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:text="@string/find_manually_button_text"
+     android:id="@+id/findManuallyButton"/>
     
 </LinearLayout>

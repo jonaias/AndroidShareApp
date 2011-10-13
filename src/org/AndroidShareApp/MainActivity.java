@@ -26,6 +26,11 @@ public class MainActivity extends TabActivity {
         intent = new Intent(this,SharedWithMeListActivity.class);
         tabHost.addTab(tabHost.newTabSpec("sharedWithMe").setIndicator(getString(R.string.shared_with_me))
         						  .setContent(intent));
+
+        //TODO: Remove. Just for debugging.
+        intent = new Intent(this,TransferActivity.class);
+        tabHost.addTab(tabHost.newTabSpec("transfer").setIndicator("Active Transfers")
+        						  .setContent(intent));
         
         for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 23;

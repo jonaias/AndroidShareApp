@@ -17,6 +17,7 @@
         <activity android:name=".SharedWithMeListActivity"/>
         <activity android:name=".SharedWithMeActivity"/>		  
         <activity android:name=".SharedByMeActivity" />
+        <activity android:name=".TransferActivity" />
         
     </application>
 </manifest>
