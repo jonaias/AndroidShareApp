@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/transferItem"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:background="@drawable/transfer_item_background" >
+	
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="match_parent">
+		
+		<ImageView android:id="@+id/transferImage"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:background="@drawable/waiting"
+			android:layout_marginLeft="5dip"
+			android:layout_marginRight="5dip"
+			android:layout_marginBottom="5dip"
+			android:layout_marginTop="5dip"/>
+			
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center_vertical"
+			android:layout_weight="1">
+			
+			<TextView android:id="@+id/transferInfoText"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="No transfer."
+				android:textColor="#4A5043"/>
+				
+			<TextView android:id="@+id/transferPersonText"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Nobody."
+				android:textColor="#6F845A"/>
+					
+		</LinearLayout>
+		
+		<ImageButton android:id="@+id/transferCancelButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="5dip"
+			android:layout_marginRight="5dip"
+			android:layout_marginBottom="5dip"
+			android:layout_marginTop="5dip"
+			android:background="@drawable/cancel"/>
+						
+	</LinearLayout>
+	
+	<ProgressBar android:id="@+id/transferProgress"
+		style="?android:attr/progressBarStyleHorizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:progressDrawable="@drawable/transfer_progress_background"
+		android:background="#EEEEEE"
+		android:progress="30" />
+		
+</LinearLayout>

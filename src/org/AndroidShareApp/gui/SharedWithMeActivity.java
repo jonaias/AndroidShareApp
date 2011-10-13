@@ -1,7 +1,9 @@
 /**
- * 
+ *
  */
-package org.AndroidShareApp;
+package org.AndroidShareApp.gui;
+
+import org.AndroidShareApp.R;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -10,43 +12,20 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/*
- * Copyright (C) 2009 codemobiles.com.
- * http://www.codemobiles.com
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * author: Chaiyasit Tayabovorn 
- * email: chaiyasit.t@gmail.com
- * 
- * Modified in October 2011 for this project by:
- * author: Andre Luiz Verucci da Cunha
- * e-mail: andrecunha.usp@gmail.com
+/**
+ * @author jonaias
  * 
  */
-
-public class SharedByMeActivity extends ListActivity {
+public class SharedWithMeActivity extends ListActivity {
 
 	private EfficientAdapter adap;
 	private static String[] data = new String[] { "0", "1", "2", "3", "4" };
@@ -54,18 +33,10 @@ public class SharedByMeActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.shared_by_me_activity);
+		//setContentView(R.layout.shared_with_me_activity);
+		setContentView(R.layout.shared_with_me_list_activity);//TODO: REMOVE!
 		adap = new EfficientAdapter(this);
 		setListAdapter(adap);
-	}
-
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
-		super.onListItemClick(l, v, position, id);
-		Toast.makeText(this, "Got click on share" + String.valueOf(position),
-				Toast.LENGTH_SHORT).show();
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
@@ -98,6 +69,7 @@ public class SharedByMeActivity extends ListActivity {
 			// convertView
 			// supplied by ListView is null.
 			if (convertView == null) {
+				//convertView = mInflater.inflate(R.layout.adaptor_content, null);
 				convertView = mInflater.inflate(R.layout.adaptor_content, null);
 
 				// Creates a ViewHolder and store references to the two children
@@ -152,25 +124,21 @@ public class SharedByMeActivity extends ListActivity {
 
 		@Override
 		public Filter getFilter() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return data.length;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return data[position];
 		}
 

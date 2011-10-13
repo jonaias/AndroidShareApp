@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.AndroidShareApp;
+package org.AndroidShareApp.gui;
+
+import org.AndroidShareApp.R;
 
 import android.app.Activity;
 import android.os.Bundle;
