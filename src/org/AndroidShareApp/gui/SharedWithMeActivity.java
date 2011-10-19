@@ -35,7 +35,6 @@ public class SharedWithMeActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.shared_with_me_activity);
 		adap = new EfficientAdapter(this);
 		setListAdapter(adap);

@@ -2,19 +2,19 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
   android:background="@color/screen_background">
   
     <LinearLayout
     	android:layout_height="wrap_content" 
     	android:layout_width="match_parent">
     	
-        <ImageButton android:id="@+id/backButton" 
-        	android:src="@drawable/left_arrow"
+        <Button android:id="@+id/backButton" 
+        	android:background="@drawable/left_arrow"
         	android:layout_width="50dp"
         	android:layout_height="47dp"
-        />
+   		/>
         
         <EditText android:layout_width="wrap_content" 
         	android:id="@+id/shareNameText"
@@ -36,7 +36,7 @@
 		android:layout_marginRight="7dip"
 	/>
 	
-	<ListView android:id="@+id/sharedWithMeFilesList"
+	<ListView android:id="@+id/android:list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:drawSelectorOnTop="false"
@@ -56,13 +56,23 @@
 				android:id="@+id/sendButton"
 				android:layout_height="wrap_content" 
 				android:text="@string/send"
-				android:drawableTop="@drawable/flag_0"/>
+				android:background="@drawable/flag_2"
+				android:textColor="@android:color/black"
+				android:textStyle="bold"
+				android:textSize="20dp"
+			/>
+				
 				
 			<EditText 
 				android:id="@+id/editText1"
 				android:inputType="textMultiLine" 
 				android:layout_width="match_parent" 
-				android:layout_height="98dp"/>
+				android:layout_height="match_parent"
+				android:text="@string/select_a_file_tip"
+				android:textSize="13dp"
+				android:lines="3"
+				android:enabled="false"
+			/>
 				
 	</LinearLayout>
 	

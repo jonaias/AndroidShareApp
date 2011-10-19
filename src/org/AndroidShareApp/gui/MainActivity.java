@@ -28,7 +28,7 @@ public class MainActivity extends TabActivity {
         
         // Add a new tab with SharedWithMeActivity
 		intent = new Intent().setClass(this, SharedWithMeListActivity.class);
-        spec = tabHost.newTabSpec("sharedByMe").setIndicator(getString(R.string.shared_with_me))
+        spec = tabHost.newTabSpec("sharedWithMe").setIndicator(getString(R.string.shared_with_me))
                       .setContent(intent);
         tabHost.addTab(spec);
 
