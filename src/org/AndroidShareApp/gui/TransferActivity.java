@@ -20,7 +20,4 @@ public class TransferActivity extends Activity {
 		// JUST FOR TESTING!!!!
 		setContentView(R.layout.transfer_item);
 	}
-	
-	
-
 }

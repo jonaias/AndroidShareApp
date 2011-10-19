@@ -73,6 +73,7 @@
 		android:layout_height="wrap_content"
 		android:drawableLeft="@drawable/share"
 		android:gravity="center"
-		android:layout_marginTop="10dip" />
+		android:layout_marginTop="10dip"
+		android:layout_weight="0.06" />
 
 </LinearLayout>
