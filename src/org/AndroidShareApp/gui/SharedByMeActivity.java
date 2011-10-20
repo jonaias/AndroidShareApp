@@ -7,6 +7,7 @@ import org.AndroidShareApp.R;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,7 +50,7 @@ import android.widget.Toast;
  * 
  */
 
-public class SharedByMeActivity extends ListActivity {
+public class SharedByMeActivity extends ListActivity implements OnClickListener {
 
 	private EfficientAdapter adap;
 	private static String[] data = new String[] { "0", "1", "2", "3", "4" };
@@ -60,6 +62,9 @@ public class SharedByMeActivity extends ListActivity {
 		setContentView(R.layout.shared_by_me_activity);
 		adap = new EfficientAdapter(this);
 		setListAdapter(adap);
+
+		ImageButton buttonConfig = (ImageButton) findViewById(R.id.buttonConfig);
+		buttonConfig.setOnClickListener(this);
 	}
 
 	@Override
@@ -67,6 +72,14 @@ public class SharedByMeActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		Toast.makeText(this, "Got click on share" + String.valueOf(position),
 				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.buttonConfig) {
+			Intent intent = new Intent(this, SharedByMeConfigActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
@@ -99,7 +112,8 @@ public class SharedByMeActivity extends ListActivity {
 			// convertView
 			// supplied by ListView is null.
 			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.shared_by_me_list_item, null);
+				convertView = mInflater.inflate(
+						R.layout.shared_by_me_list_item, null);
 
 				// Creates a ViewHolder and store references to the two children
 				// views
