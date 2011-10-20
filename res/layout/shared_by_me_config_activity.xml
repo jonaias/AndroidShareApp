@@ -11,7 +11,7 @@
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		
-		<EditText
+		<EditText android:id="@+id/sharedPathEditText"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:text="Press 'Select' to set a path."
@@ -20,7 +20,7 @@
 			android:padding="3dip"
 			android:textStyle="italic"/>
 			
-		<Button
+		<Button android:id="@+id/selectSharePathButton"
 			android:layout_width="60dip"
 			android:layout_height="match_parent"
 			android:text="Select"

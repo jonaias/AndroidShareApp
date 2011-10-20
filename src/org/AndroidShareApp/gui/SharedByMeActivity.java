@@ -3,7 +3,11 @@
  */
 package org.AndroidShareApp.gui;
 
+import java.util.ArrayList;
+
 import org.AndroidShareApp.R;
+import org.AndroidShareApp.core.NetworkManager;
+import org.AndroidShareApp.core.SharedByMeItem;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -16,14 +20,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /*
  * Copyright (C) 2009 codemobiles.com.
@@ -50,33 +55,46 @@ import android.widget.Toast;
  * 
  */
 
-public class SharedByMeActivity extends ListActivity implements OnClickListener {
+public class SharedByMeActivity extends ListActivity implements
+		OnClickListener, OnItemClickListener {
 
 	private EfficientAdapter adap;
-	private static String[] data = new String[] { "0", "1", "2", "3", "4" };
+	private static ArrayList<SharedByMeItem> mSharedByMeItems;
+	private volatile int mCurrentSelectedItem;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.shared_by_me_activity);
-		adap = new EfficientAdapter(this);
+
+		mSharedByMeItems = NetworkManager.getInstance().getSharedByMeItems();
+
+		adap = new EfficientAdapter(this, this);
 		setListAdapter(adap);
 
-		ImageButton buttonConfig = (ImageButton) findViewById(R.id.buttonConfig);
-		buttonConfig.setOnClickListener(this);
+		ImageButton configButton = (ImageButton) findViewById(R.id.buttonConfig);
+		configButton.setOnClickListener(this);
+
+		Button createShareButton = (Button) findViewById(R.id.createShareButton);
+		createShareButton.setOnClickListener(this);
+		
+		getListView().setOnItemClickListener(this);
 	}
 
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Toast.makeText(this, "Got click on share" + String.valueOf(position),
-				Toast.LENGTH_SHORT).show();
+	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+		v.setSelected(true);
+		mCurrentSelectedItem = position;
 	}
 
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.buttonConfig) {
+			Intent intent = new Intent(this, SharedByMeConfigActivity.class);
+			intent.putExtra("position", mCurrentSelectedItem);
+			startActivity(intent);
+		} else if (v.getId() == R.id.createShareButton) {
 			Intent intent = new Intent(this, SharedByMeConfigActivity.class);
 			startActivity(intent);
 		}
@@ -86,12 +104,15 @@ public class SharedByMeActivity extends ListActivity implements OnClickListener 
 			Filterable {
 		private LayoutInflater mInflater;
 		private Bitmap mIcon1;
-		private Context context;
+		private Context mContext;
+		private SharedByMeActivity mSharedActivity;
 
-		public EfficientAdapter(Context context) {
+		public EfficientAdapter(Context context,
+				SharedByMeActivity sharedActivity) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
-			this.context = context;
+			mContext = context;
+			mSharedActivity = sharedActivity;
 		}
 
 		/**
@@ -124,16 +145,7 @@ public class SharedByMeActivity extends ListActivity implements OnClickListener 
 				holder.iconLine = (ImageView) convertView
 						.findViewById(R.id.iconLine);
 
-				convertView.setOnClickListener(new OnClickListener() {
-					private int pos = position;
-
-					@Override
-					public void onClick(View v) {
-						Toast.makeText(context,
-								"Got click on share " + String.valueOf(pos),
-								Toast.LENGTH_SHORT).show();
-					}
-				});
+				convertView.setOnClickListener(mSharedActivity);
 
 				convertView.setTag(holder);
 			} else {
@@ -142,20 +154,16 @@ public class SharedByMeActivity extends ListActivity implements OnClickListener 
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			// Get flag name and id
-			String filename = "flag_" + String.valueOf(position);
-			int id = context.getResources().getIdentifier(filename, "drawable",
-					context.getString(R.string.package_str));
+			int id = mContext.getResources().getIdentifier("flag_0",
+					"drawable", mContext.getString(R.string.package_str));
 
-			// Icons bound to the rows.
 			if (id != 0x0) {
-				mIcon1 = BitmapFactory.decodeResource(context.getResources(),
+				mIcon1 = BitmapFactory.decodeResource(mContext.getResources(),
 						id);
 			}
-
-			// Bind the data efficiently with the holder.
 			holder.iconLine.setImageBitmap(mIcon1);
-			holder.textLine.setText("Share " + String.valueOf(position));
+			holder.textLine.setText(mSharedByMeItems.get(position)
+					.getSharedPath());
 
 			return convertView;
 		}
@@ -177,12 +185,13 @@ public class SharedByMeActivity extends ListActivity implements OnClickListener 
 
 		@Override
 		public int getCount() {
-			return data.length;
+			return mSharedByMeItems.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return data[position];
+			// return data[position];
+			return mSharedByMeItems.get(position).getSharedPath();
 		}
 
 	}

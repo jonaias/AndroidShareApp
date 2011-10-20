@@ -3,58 +3,80 @@
  */
 package org.AndroidShareApp.gui;
 
+import java.util.ArrayList;
+
 import org.AndroidShareApp.R;
+import org.AndroidShareApp.core.NetworkManager;
+import org.AndroidShareApp.core.SharedByMeItem;
+import org.AndroidShareApp.core.SharedPerson;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author jonaias
  * 
  */
-public class SharedByMeConfigActivity extends ListActivity {
+public class SharedByMeConfigActivity extends ListActivity implements OnClickListener {
 
 	private EfficientAdapter adap;
-	private static String[] data = new String[] { "Fulano de Tal",
-			"Beltrano de Tal", "Cicrano de Tal" };
+	private static ArrayList<SharedByMeItem> mSharedByMeItems;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.shared_by_me_config_activity);
-		adap = new EfficientAdapter(this);
-		setListAdapter(adap);
-	}
 
+		mSharedByMeItems = NetworkManager.getInstance().getSharedByMeItems();
+
+		adap = new EfficientAdapter(this, this);
+		setListAdapter(adap);
+		
+		Button selectSharePathButton = (Button) findViewById(R.id.selectSharePathButton);
+		selectSharePathButton.setOnClickListener(this);
+	}
+	
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Toast.makeText(this, "Got click on share" + String.valueOf(position),
-				Toast.LENGTH_SHORT).show();
+	public void onClick(View v) {
+		if (v.getId() == R.id.selectSharePathButton) {
+			((EditText) findViewById(R.id.sharedPathEditText))
+			.setText("User selected something.");
+		}
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
 			Filterable {
 		private LayoutInflater mInflater;
-		private Context context;
+		//private Context mContext;
+		private SharedByMeConfigActivity mActivity;
+		private int mClickPosition;
 
-		public EfficientAdapter(Context context) {
+		public EfficientAdapter(Context context,
+				SharedByMeConfigActivity activity) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
-			this.context = context;
+			//mContext = context;
+			mActivity = activity;
+
+			Bundle extras = mActivity.getIntent().getExtras();
+			if (extras != null)
+				mClickPosition = extras.getInt("position");
+			else
+				mClickPosition = -1;
 		}
 
 		/**
@@ -89,21 +111,23 @@ public class SharedByMeConfigActivity extends ListActivity {
 				holder.canWriteCheckBox = (CheckBox) convertView
 						.findViewById(R.id.canWriteCheckBox);
 
-				convertView.setOnClickListener(new OnClickListener() {
-					private int pos = position;
-
-					@Override
-					public void onClick(View v) {
-						Toast.makeText(context,
-								"Got click on share " + String.valueOf(pos),
-								Toast.LENGTH_SHORT).show();
-					}
-				});
-
-				holder.peerName.setText(data[position]);
-				holder.canReadCheckBox.setChecked(true);
-				holder.canWriteCheckBox.setChecked(false);
-
+				if (mClickPosition != -1) {
+					ArrayList<SharedPerson> person = mSharedByMeItems.get(
+							mClickPosition).getSharedPersonList();
+	
+					holder.peerName.setText(person.get(position).getName());
+					holder.canReadCheckBox.setChecked(person.get(position)
+							.canRead());
+					holder.canWriteCheckBox.setChecked(person.get(position)
+							.canWrite());
+	
+					((EditText) mActivity.findViewById(R.id.sharedPathEditText))
+							.setText(mSharedByMeItems.get(mClickPosition)
+									.getSharedPath());
+				} else {
+					((EditText) mActivity.findViewById(R.id.sharedPathEditText))
+					.setText("Press 'Select' to set path");
+				}
 				convertView.setTag(holder);
 			} else {
 				// Get the ViewHolder back to get fast access to the TextView
@@ -132,12 +156,17 @@ public class SharedByMeConfigActivity extends ListActivity {
 
 		@Override
 		public int getCount() {
-			return data.length;
+			if(mClickPosition == -1)
+				return 0;
+			return mSharedByMeItems.get(mClickPosition).getSharedPersonList()
+					.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return data[position];
+			if(mClickPosition == -1)
+				return null;
+			return mSharedByMeItems.get(mClickPosition).getSharedPath();
 		}
 	}
 }
