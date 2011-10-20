@@ -30,17 +30,25 @@ public class NetworkManager {
 		
 		/*------------------------------------------------------------ */
 		
-		SharedPerson james2 = new SharedPerson("James Stewart", false, true);
-		SharedPerson john2 = new SharedPerson("John Noble", true, true);
-		SharedPerson paul2 = new SharedPerson("Paul Tomas", true, false);
+		SharedPerson ana = new SharedPerson("Ana Simpson", false, true);
+		SharedPerson maria = new SharedPerson("Maria Teresa", true, true);
+		SharedPerson steve = new SharedPerson("Steve Timberlake", true, false);
 		
 		SharedByMeItem item2 = new SharedByMeItem("file.pdf");
-		item2.managePerson(james2);
-		item2.managePerson(john2);
-		item2.managePerson(paul2);
+		item2.managePerson(ana);
+		item2.managePerson(maria);
+		item2.managePerson(steve);
 		
 		mSharedByMeItems.add(item1);
 		mSharedByMeItems.add(item2);
+		
+		/*------------------------------------------------------------ */
+		mPersonList.add(james);
+		mPersonList.add(john);
+		mPersonList.add(paul);
+		mPersonList.add(ana);
+		mPersonList.add(maria);
+		mPersonList.add(steve);
 		
 		/* ########################################################### */
 	}

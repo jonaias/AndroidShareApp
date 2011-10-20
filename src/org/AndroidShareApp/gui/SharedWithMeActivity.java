@@ -35,6 +35,7 @@ public class SharedWithMeActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shared_with_me_activity);
+		
 		adap = new EfficientAdapter(this);
 		setListAdapter(adap);
 	}
