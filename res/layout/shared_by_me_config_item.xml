@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout
+	xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:stretchColumns="1"
+	android:shrinkColumns="2,3">
+	
+	<TableRow>
+		<TextView android:id="@+id/peerNameTextBox"
+			android:layout_column="1"
+			android:padding="3dip"
+			android:gravity="center"
+			android:layout_gravity="center_vertical"
+			android:textColor="#000000"/>
+		<CheckBox android:id="@+id/canReadCheckBox"
+			android:layout_column="2"
+			android:gravity="center"/>
+		<CheckBox android:id="@+id/canWriteCheckBox"
+			android:layout_column="3" 
+			android:gravity="center" />
+	</TableRow>
+
+	<View android:layout_height="2dip"
+		android:background="#FF909090" />
+		
+</TableLayout>

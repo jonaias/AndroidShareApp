@@ -1,13 +1,21 @@
 package org.AndroidShareApp.core;
 
+import java.util.ArrayList;
+
 public class SharedByMeItem {
-	
+
 	private String mSharedPath;
-	private SharedPerson mPerson;
-	
-	public SharedByMeItem (String sharedPath, SharedPerson person) {
+	private ArrayList<SharedPerson> mPerson;
+
+	public SharedByMeItem(String sharedPath, SharedPerson person) {
 		mSharedPath = sharedPath;
-		mPerson = person;
+		mPerson = new ArrayList<SharedPerson>();
+		mPerson.add(person);
+	}
+	
+	public SharedByMeItem(String sharedPath) {
+		mSharedPath = sharedPath;
+		mPerson = new ArrayList<SharedPerson>();
 	}
 
 	public String getSharedPath() {
@@ -18,12 +26,20 @@ public class SharedByMeItem {
 		this.mSharedPath = SharedPath;
 	}
 
-	public Person getPerson() {
+	public ArrayList<SharedPerson> getSharedPersonList() {
 		return mPerson;
 	}
 
-	public void setPerson(SharedPerson person) {
-		this.mPerson = person;
+	public void managePerson(SharedPerson person) {
+		if (mPerson.contains(person)) {
+			if ((!person.canRead()) && (!person.canWrite()))
+				mPerson.remove(person);
+			else {
+				mPerson.get(mPerson.indexOf(person)).setPermissions(
+						person.canRead(), person.canWrite());
+			}
+		} else {
+			mPerson.add(person);
+		}
 	}
-	
 }
