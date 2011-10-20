@@ -99,20 +99,20 @@ public class SharedByMeActivity extends ListActivity implements
 			startActivity(intent);
 		}
 	}
-
+	
 	public static class EfficientAdapter extends BaseAdapter implements
 			Filterable {
 		private LayoutInflater mInflater;
 		private Bitmap mIcon1;
 		private Context mContext;
-		private SharedByMeActivity mSharedActivity;
+		private SharedByMeActivity mListActivity;
 
 		public EfficientAdapter(Context context,
-				SharedByMeActivity sharedActivity) {
+				SharedByMeActivity listActivity) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
 			mContext = context;
-			mSharedActivity = sharedActivity;
+			mListActivity = listActivity;
 		}
 
 		/**
@@ -145,7 +145,7 @@ public class SharedByMeActivity extends ListActivity implements
 				holder.iconLine = (ImageView) convertView
 						.findViewById(R.id.iconLine);
 
-				convertView.setOnClickListener(mSharedActivity);
+				convertView.setOnClickListener(mListActivity);
 
 				convertView.setTag(holder);
 			} else {

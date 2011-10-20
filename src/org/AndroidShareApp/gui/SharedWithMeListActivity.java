@@ -1,11 +1,12 @@
 /**
- * 
+ *
  */
 package org.AndroidShareApp.gui;
 
 import java.util.ArrayList;
 
 import org.AndroidShareApp.R;
+import org.AndroidShareApp.core.NetworkManager;
 import org.AndroidShareApp.core.Person;
 
 import android.app.ListActivity;
@@ -25,34 +26,30 @@ import android.widget.Toast;
 
 /**
  * @author jonaias
- *
+ * 
  */
 public class SharedWithMeListActivity extends ListActivity {
 
-	Person person0 = new Person("Seu ze;");
-	Person person1 = new Person("Mane");
-	Person person2 = new Person("Andrew");
-	EfficientAdapter adapter;
-
-	static ArrayList<Person> list_of_persons = new ArrayList<Person>();
+	private EfficientAdapter adapter;
+	private static ArrayList<Person> personList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shared_with_me_list_activity);
-		list_of_persons.add(person0);
-		list_of_persons.add(person1);
-		list_of_persons.add(person2);
-
+		
+		personList = NetworkManager.getInstance().getPersonList();
+		
 		adapter = new EfficientAdapter(this);
 		setListAdapter(adapter);
 
 		Toast.makeText(getApplicationContext(), R.string.person_list_legend,
-				Toast.LENGTH_LONG).show();   
+				Toast.LENGTH_LONG).show();
 	}
-	
-	public void startShareWithMeActivity(Person person){
-		Intent tempIntent = new Intent(this.getApplicationContext(), SharedWithMeActivity.class);
+
+	public void startShareWithMeActivity(Person person) {
+		Intent tempIntent = new Intent(this.getApplicationContext(),
+				SharedWithMeActivity.class);
 		tempIntent.putExtra("Person", person.getDeviceID());
 		startActivityForResult(tempIntent, 0);
 	}
@@ -63,7 +60,7 @@ public class SharedWithMeListActivity extends ListActivity {
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
-	Filterable {
+			Filterable {
 		private LayoutInflater mInflater;
 		private Context context;
 
@@ -91,7 +88,8 @@ public class SharedWithMeListActivity extends ListActivity {
 			// convertView
 			// supplied by ListView is null.
 			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.shared_with_me_list_item, null);
+				convertView = mInflater.inflate(
+						R.layout.shared_with_me_list_item, null);
 
 				// Creates a ViewHolder and store references to the two children
 				// views
@@ -105,8 +103,10 @@ public class SharedWithMeListActivity extends ListActivity {
 
 					@Override
 					public void onClick(View v) {
-						Intent tempIntent = new Intent(context, SharedWithMeActivity.class);
-						tempIntent.putExtra("Person", list_of_persons.get(position).getDeviceID());
+						Intent tempIntent = new Intent(context,
+								SharedWithMeActivity.class);
+						tempIntent.putExtra("Person",
+								personList.get(position).getDeviceID());
 						context.startActivity(tempIntent);
 					}
 				});
@@ -119,7 +119,7 @@ public class SharedWithMeListActivity extends ListActivity {
 			}
 
 			// Bind the data efficiently with the holder.
-			holder.textLine.setText(list_of_persons.get(position).getName());
+			holder.textLine.setText(personList.get(position).getName());
 
 			return convertView;
 		}
@@ -140,12 +140,12 @@ public class SharedWithMeListActivity extends ListActivity {
 
 		@Override
 		public int getCount() {
-			return list_of_persons.size();
+			return personList.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return list_of_persons.get(position);
+			return personList.get(position);
 		}
 
 	}

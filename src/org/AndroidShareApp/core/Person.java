@@ -1,13 +1,17 @@
 package org.AndroidShareApp.core;
 
+import java.util.ArrayList;
+
 public class Person {
 
 	private String mName;
 	private String mDeviceId;
+	private ArrayList<SharedWithMeItem> mSharedItems;
 
 	public Person(String name) {
-		this.mName = name;
-		this.mDeviceId = "0"; //TODO: Find the device ID.
+		mName = name;
+		mDeviceId = "0"; //TODO: Find the device ID.
+		mSharedItems = new ArrayList<SharedWithMeItem>();
 	}
 
 	public String getName() {
@@ -25,6 +29,14 @@ public class Person {
 
 	public String getDeviceID() {
 		return mDeviceId;
+	}
+	
+	public void addSharedwithMeItem(SharedWithMeItem item) {
+		mSharedItems.add(item);
+	}
+	
+	public ArrayList<SharedWithMeItem> getSharedWithMeItems () {
+		return mSharedItems;
 	}
 
 }
