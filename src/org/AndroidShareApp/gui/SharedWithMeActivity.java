@@ -33,6 +33,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 
 	private EfficientAdapter adap;
 	private static String[] data = new String[] { "0", "1", "2", "3", "4" };
+	private String personId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,10 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		
 		Button backButton = (Button) findViewById(R.id.backButton);
 		backButton.setOnClickListener(this);
+		
+		personId = savedInstanceState.getString("Person");
+		
+		
 	}
 	
 	@Override
