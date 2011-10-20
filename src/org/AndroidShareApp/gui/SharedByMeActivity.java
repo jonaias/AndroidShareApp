@@ -26,7 +26,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,9 +72,6 @@ public class SharedByMeActivity extends ListActivity implements
 		adap = new EfficientAdapter(this, this);
 		setListAdapter(adap);
 
-		ImageButton configButton = (ImageButton) findViewById(R.id.buttonConfig);
-		configButton.setOnClickListener(this);
-
 		Button createShareButton = (Button) findViewById(R.id.createShareButton);
 		createShareButton.setOnClickListener(this);
 		
@@ -90,11 +86,7 @@ public class SharedByMeActivity extends ListActivity implements
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.buttonConfig) {
-			Intent intent = new Intent(this, SharedByMeConfigActivity.class);
-			intent.putExtra("position", mCurrentSelectedItem);
-			startActivity(intent);
-		} else if (v.getId() == R.id.createShareButton) {
+		if (v.getId() == R.id.createShareButton) {
 			Intent intent = new Intent(this, SharedByMeConfigActivity.class);
 			startActivity(intent);
 		}
@@ -145,7 +137,15 @@ public class SharedByMeActivity extends ListActivity implements
 				holder.iconLine = (ImageView) convertView
 						.findViewById(R.id.iconLine);
 
-				convertView.setOnClickListener(mListActivity);
+				//convertView.setOnClickListener(mListActivity);
+				convertView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(mContext, SharedByMeConfigActivity.class);
+						intent.putExtra("position", position);
+						mContext.startActivity(intent);
+					}
+				});
 
 				convertView.setTag(holder);
 			} else {
