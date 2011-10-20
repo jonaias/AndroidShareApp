@@ -7,6 +7,7 @@ import org.AndroidShareApp.R;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,7 +29,7 @@ import android.widget.Toast;
  * @author jonaias
  * 
  */
-public class SharedWithMeActivity extends ListActivity {
+public class SharedWithMeActivity extends ListActivity implements OnClickListener {
 
 	private EfficientAdapter adap;
 	private static String[] data = new String[] { "0", "1", "2", "3", "4" };
@@ -37,6 +40,9 @@ public class SharedWithMeActivity extends ListActivity {
 		setContentView(R.layout.shared_with_me_activity);
 		adap = new EfficientAdapter(this);
 		setListAdapter(adap);
+		
+		Button backButton = (Button) findViewById(R.id.backButton);
+		backButton.setOnClickListener(this);
 	}
 	
 	@Override
@@ -44,6 +50,13 @@ public class SharedWithMeActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		Toast.makeText(this, "Got click on share" + String.valueOf(position),
 				Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.backButton) {
+			finish();
+		}
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
