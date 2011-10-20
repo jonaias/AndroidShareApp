@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
@@ -46,8 +47,11 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		Button backButton = (Button) findViewById(R.id.backButton);
 		backButton.setOnClickListener(this);
 		
-		personId = savedInstanceState.getString("Person");
+		Bundle bundle = this.getIntent().getExtras();
+		personId = bundle.getString("person");
 		
+		EditText editText = (EditText) findViewById(R.id.shareNameText);
+		editText.setText(personId);
 		
 	}
 	

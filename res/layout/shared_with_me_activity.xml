@@ -11,7 +11,7 @@
     	android:layout_width="match_parent">
     	
         <Button android:id="@+id/backButton" 
-        	android:background="@drawable/left_arrow"
+        	android:background ="@drawable/left_arrow"
         	android:layout_width="50dp"
         	android:layout_height="47dp"
    		/>
@@ -20,6 +20,7 @@
         	android:id="@+id/shareNameText"
         	android:layout_weight="1" 
         	android:layout_height="wrap_content"
+        	android:enabled="false"
         />
         
     </LinearLayout>

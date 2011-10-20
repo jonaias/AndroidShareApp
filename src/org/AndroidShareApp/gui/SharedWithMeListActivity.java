@@ -47,13 +47,6 @@ public class SharedWithMeListActivity extends ListActivity {
 				Toast.LENGTH_LONG).show();
 	}
 
-	public void startShareWithMeActivity(Person person) {
-		Intent tempIntent = new Intent(this.getApplicationContext(),
-				SharedWithMeActivity.class);
-		tempIntent.putExtra("Person", person.getDeviceID());
-		startActivityForResult(tempIntent, 0);
-	}
-
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -105,8 +98,8 @@ public class SharedWithMeListActivity extends ListActivity {
 					public void onClick(View v) {
 						Intent tempIntent = new Intent(context,
 								SharedWithMeActivity.class);
-						tempIntent.putExtra("Person",
-								personList.get(position).getDeviceID());
+						tempIntent.putExtra("person",
+								personList.get(position).getName());
 						context.startActivity(tempIntent);
 					}
 				});
