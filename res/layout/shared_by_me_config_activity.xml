@@ -85,6 +85,44 @@
 		android:layout_weight="1"
 		android:background="@color/screen_background" />
 	
+	<RelativeLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent">
+
+		<ToggleButton android:textOn="@string/deactivate_share"
+			android:textOff="@string/activate_share"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:layout_marginTop="10dip"
+			android:layout_marginBottom="10dip" />
+
+		<ImageButton android:id="@+id/buttonDelete"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:background="@drawable/cancel"
+			android:layout_alignParentRight="true"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:layout_marginTop="10dip"
+			android:layout_marginBottom="10dip"
+			android:layout_centerVertical="true" />
+
+		<ImageButton android:id="@+id/buttonConfig" 
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:background="@drawable/config"
+			android:layout_toLeftOf="@+id/buttonDelete"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:layout_marginTop="10dip"
+			android:layout_marginBottom="10dip"
+			android:layout_centerVertical="true" />
+			
+	</RelativeLayout>
+	
 	<Button 
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
