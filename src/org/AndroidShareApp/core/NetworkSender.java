@@ -1,5 +1,7 @@
 package org.AndroidShareApp.core;
 
-public class NetworkSender {
+public class NetworkSender extends Thread {
+	
+	
 
 }

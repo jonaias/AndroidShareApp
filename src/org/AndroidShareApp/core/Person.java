@@ -1,6 +1,7 @@
 package org.AndroidShareApp.core;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Person {
 
@@ -8,13 +9,16 @@ public class Person {
 	private String mDeviceId;
 	private ArrayList<SharedWithMeItem> mSharedItems;
 	private boolean mSharesWithMe;
-	private boolean mIsActive;
+	private int mTimeoutLeft;
+	private static final int mMaxTimeoutLeft = 6;
 
-	public Person(String name) {
+	public Person(String name,String deviceId, boolean sharesWithme) {
 		mName = name;
-		mDeviceId = "0"; //TODO: Find the device ID.
+		mDeviceId = deviceId;
+		setSharesWithMe(sharesWithme);
+		
 		mSharedItems = new ArrayList<SharedWithMeItem>();
-		setSharesWithMe(false);
+		resetTimeoutLeft();
 	}
 
 	public String getName() {
@@ -49,5 +53,14 @@ public class Person {
 	public boolean sharesWithMe() {
 		return mSharesWithMe;
 	}
+	
+	public void decTimeoutLeft(){
+		if((--mTimeoutLeft)==0){
+			NetworkManager.getInstance().deletePerson(this);
+		}
+	}
 
+	public void resetTimeoutLeft(){
+		mTimeoutLeft = mMaxTimeoutLeft;
+	}
 }
