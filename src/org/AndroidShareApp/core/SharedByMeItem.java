@@ -5,12 +5,14 @@ import java.util.ArrayList;
 public class SharedByMeItem {
 
 	private String mSharedPath;
+	private String mFullPath;
 	private ArrayList<SharedPerson> mPerson;
 
-	public SharedByMeItem(String sharedPath, SharedPerson person) {
-		mSharedPath = sharedPath;
+	public SharedByMeItem(String fullPath, SharedPerson person) {
+		mFullPath = fullPath;
 		mPerson = new ArrayList<SharedPerson>();
 		mPerson.add(person);
+		/* TODO: Pegar o sharedPath a partir do fullPath. */
 	}
 	
 	public SharedByMeItem(String sharedPath) {
@@ -26,6 +28,14 @@ public class SharedByMeItem {
 		this.mSharedPath = SharedPath;
 	}
 
+	public String getFullPath() {
+		return mFullPath;
+	}
+
+	public void setFullPath(String fullPath) {
+		this.mFullPath = fullPath;
+	}
+	
 	public ArrayList<SharedPerson> getSharedPersonList() {
 		return mPerson;
 	}

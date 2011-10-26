@@ -18,6 +18,8 @@ public class NetworkManager {
 		SharedPerson everybody = new SharedPerson("Everybody");
 		mPersonList.add(everybody);
 		
+		/* TODO: Criar NetworkSender e NetworkListener. */
+		
 		/*############ TODO: REMOVE! JUST FOR DEBUGGING. ############## */
 		SharedPerson james = new SharedPerson("James Stewart", true, false);
 		SharedPerson john = new SharedPerson("John Noble", false, true);
