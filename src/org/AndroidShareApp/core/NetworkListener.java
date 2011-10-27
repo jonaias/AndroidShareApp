@@ -95,7 +95,8 @@ public class NetworkListener extends Thread {
 			}
 
 		} catch (JSONException e) {
-			System.err.println("Malformed JSON string: \"" + json + "\"\n");
+			System.err.println("ERROR: Malformed JSON string: "
+					+ e.getMessage() + "\n");
 			return;
 		}
 	}
