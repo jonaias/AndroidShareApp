@@ -1,7 +1,6 @@
 package org.AndroidShareApp.core;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Person {
 
@@ -12,10 +11,11 @@ public class Person {
 	private int mTimeoutLeft;
 	private static final int mMaxTimeoutLeft = 6;
 
-	public Person(String name,String deviceId, boolean sharesWithme) {
+	public Person(String name,String deviceId) {
 		mName = name;
 		mDeviceId = deviceId;
-		setSharesWithMe(sharesWithme);
+		/* At creation, person doesnt have any shares */
+		setSharesWithMe(false);
 		
 		mSharedItems = new ArrayList<SharedWithMeItem>();
 		resetTimeoutLeft();
