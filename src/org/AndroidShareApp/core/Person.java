@@ -54,13 +54,13 @@ public class Person {
 		return mSharesWithMe;
 	}
 	
-	public void decTimeoutLeft(){
+	public synchronized void decTimeoutLeft(){
 		if((--mTimeoutLeft)==0){
 			NetworkManager.getInstance().deletePerson(this);
 		}
 	}
 
-	public void resetTimeoutLeft(){
+	public synchronized void resetTimeoutLeft(){
 		mTimeoutLeft = mMaxTimeoutLeft;
 	}
 }

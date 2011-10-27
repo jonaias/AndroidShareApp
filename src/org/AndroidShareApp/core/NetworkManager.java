@@ -11,6 +11,7 @@ public class NetworkManager {
 	private ArrayList<FileTransferrer> mCurrentTransfers;
 	private ArrayList<SharedByMeItem> mSharedByMeItems;
 	private String mThisDeviceId;
+	private String mThisDevideName;
 
 	private NetworkManager() {
 		mPersonList = new ArrayList<Person>();
@@ -21,9 +22,11 @@ public class NetworkManager {
 		mPersonList.add(everybody);
 		
 		mThisDeviceId = String.valueOf(new Random().nextInt());//TODO: Find the device ID. THIS IS A TEMPORARY FIX
-		
+		mThisDevideName = "jonaias";
 		
 		/* TODO: Criar NetworkSender. */
+		NetworkSender sender = new NetworkSender();
+		sender.start();
 		NetworkListener listener = new NetworkListener(9226);
 		listener.start();
 	}
@@ -81,6 +84,10 @@ public class NetworkManager {
 	
 	public String getThisDeviceId(){
 		return mThisDeviceId;
+	}
+	
+	public String getThisDeviceName(){
+		return mThisDevideName;
 	}
 	
 	
