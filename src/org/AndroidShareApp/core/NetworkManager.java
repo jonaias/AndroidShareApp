@@ -114,4 +114,6 @@ public class NetworkManager {
 	public String getThisDeviceId(){
 		return mThisDeviceId;
 	}
+	
+	
 }
