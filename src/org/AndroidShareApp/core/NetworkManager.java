@@ -26,40 +26,6 @@ public class NetworkManager {
 		/* TODO: Criar NetworkSender. */
 		NetworkListener listener = new NetworkListener(9226);
 		listener.start();
-		
-		/*############ TODO: REMOVE! JUST FOR DEBUGGING. ############## */
-		SharedPerson james = new SharedPerson("James Stewart",String.valueOf(new Random().nextInt()), true, false);
-		SharedPerson john = new SharedPerson("John Noble", String.valueOf(new Random().nextInt()), false, true);
-		SharedPerson paul = new SharedPerson("Paul Tomas", String.valueOf(new Random().nextInt()), true, true);
-		
-		SharedByMeItem item1 = new SharedByMeItem("Music/");
-		item1.managePerson(james);
-		item1.managePerson(john);
-		item1.managePerson(paul);
-		
-		/*------------------------------------------------------------ */
-		
-		SharedPerson ana = new SharedPerson("Ana Simpson",String.valueOf(new Random().nextInt()), false, true);
-		SharedPerson maria = new SharedPerson("Maria Teresa",String.valueOf(new Random().nextInt()), true, true);
-		SharedPerson steve = new SharedPerson("Steve Timberlake",String.valueOf(new Random().nextInt()), true, false);
-		
-		SharedByMeItem item2 = new SharedByMeItem("file.pdf");
-		item2.managePerson(ana);
-		item2.managePerson(maria);
-		item2.managePerson(steve);
-		
-		mSharedByMeItems.add(item1);
-		mSharedByMeItems.add(item2);
-		
-		/*------------------------------------------------------------ */
-		mPersonList.add(james);
-		mPersonList.add(john);
-		mPersonList.add(paul);
-		mPersonList.add(ana);
-		mPersonList.add(maria);
-		mPersonList.add(steve);
-		
-		/* ########################################################### */
 	}
 
 	public static synchronized NetworkManager getInstance() {
