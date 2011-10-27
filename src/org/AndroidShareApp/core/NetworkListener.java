@@ -57,7 +57,7 @@ public class NetworkListener extends Thread {
 				String name = obj.getString("name");
 				String deviceID = obj.getString("deviceID");
 				NetworkManager.getInstance().addPerson(
-						new Person(name, deviceID, false));
+						new Person(name, deviceID));
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_LEAVING_ANNOUNCEMENT): {
@@ -69,7 +69,7 @@ public class NetworkListener extends Thread {
 				String deviceID = obj.getString("deviceID");
 
 				NetworkManager.getInstance().deletePerson(
-						new Person(name, deviceID, false));
+						new Person(name, deviceID));
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_SHARING_NOTIFICATION):

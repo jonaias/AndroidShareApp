@@ -24,7 +24,7 @@ public class NetworkManager {
 		
 		
 		/* TODO: Criar NetworkSender. */
-		NetworkListener listener = new NetworkListener(32767);
+		NetworkListener listener = new NetworkListener(9226);
 		listener.start();
 		
 		/*############ TODO: REMOVE! JUST FOR DEBUGGING. ############## */
