@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class NetworkManager {
-
+	
 	private static NetworkManager mSingleton=null;
 	private ArrayList<Person> mPersonList;
 	private ArrayList<FileTransferrer> mCurrentTransfers;
@@ -23,7 +23,9 @@ public class NetworkManager {
 		mThisDeviceId = String.valueOf(new Random().nextInt());//TODO: Find the device ID. THIS IS A TEMPORARY FIX
 		
 		
-		/* TODO: Criar NetworkSender e NetworkListener. */
+		/* TODO: Criar NetworkSender. */
+		NetworkListener listener = new NetworkListener(32767);
+		listener.start();
 		
 		/*############ TODO: REMOVE! JUST FOR DEBUGGING. ############## */
 		SharedPerson james = new SharedPerson("James Stewart",String.valueOf(new Random().nextInt()), true, false);
