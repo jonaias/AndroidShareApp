@@ -64,7 +64,7 @@ public class NetworkManager {
 	    while (itr.hasNext()) {
 	      Person tempPerson = itr.next();
 	      /* If has the same ID, delete it */
-	      if (tempPerson.getDeviceID() == person.getDeviceID()){
+	      if (tempPerson.getDeviceID().compareTo(person.getDeviceID()) == 0){
 	    	  mPersonList.remove(tempPerson);
 	      }
 	    }
