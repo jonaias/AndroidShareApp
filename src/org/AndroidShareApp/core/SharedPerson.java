@@ -23,4 +23,12 @@ public class SharedPerson extends Person {
 	public boolean canWrite () {
 		return mWrite;
 	}
+	
+	public void setRead (boolean canRead) {
+		mRead = canRead;
+	}
+	
+	public void setWrite (boolean canWrite) {
+		mWrite = canWrite;
+	}
 }

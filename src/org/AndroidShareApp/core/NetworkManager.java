@@ -29,6 +29,17 @@ public class NetworkManager {
 		sender.start();
 		NetworkListener listener = new NetworkListener(9226);
 		listener.start();
+		
+		/* TODO: REMOVE!!!!!!!!!!!!! */
+		
+		SharedPerson paul = new SharedPerson("Paul", "PaulID", true, false);
+		SharedPerson john = new SharedPerson("John", "JohnID", false, false);
+		SharedByMeItem s1 = new SharedByMeItem("/path/to/nothing");
+		s1.getSharedPersonList().add(paul);
+		s1.getSharedPersonList().add(john);
+		mSharedByMeItems.add(s1);
+		
+		/*###########################*/
 	}
 
 	public static synchronized NetworkManager getInstance() {

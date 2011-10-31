@@ -30,7 +30,8 @@ import android.widget.TextView;
  * @author jonaias
  * 
  */
-public class SharedByMeConfigActivity extends ListActivity implements OnClickListener {
+public class SharedByMeConfigActivity extends ListActivity implements
+		OnClickListener {
 
 	private EfficientAdapter adap;
 	private static ArrayList<SharedByMeItem> mSharedByMeItems;
@@ -45,23 +46,23 @@ public class SharedByMeConfigActivity extends ListActivity implements OnClickLis
 
 		adap = new EfficientAdapter(this, this);
 		setListAdapter(adap);
-		
+
 		Button selectSharePathButton = (Button) findViewById(R.id.selectSharePathButton);
 		selectSharePathButton.setOnClickListener(this);
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.selectSharePathButton) {
 			((EditText) findViewById(R.id.sharedPathEditText))
-			.setText("User selected something.");
+					.setText("User selected something.");
 		}
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
 			Filterable {
 		private LayoutInflater mInflater;
-		//private Context mContext;
+		// private Context mContext;
 		private SharedByMeConfigActivity mActivity;
 		private int mClickPosition;
 
@@ -69,7 +70,7 @@ public class SharedByMeConfigActivity extends ListActivity implements OnClickLis
 				SharedByMeConfigActivity activity) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
-			//mContext = context;
+			// mContext = context;
 			mActivity = activity;
 
 			Bundle extras = mActivity.getIntent().getExtras();
@@ -111,22 +112,50 @@ public class SharedByMeConfigActivity extends ListActivity implements OnClickLis
 				holder.canWriteCheckBox = (CheckBox) convertView
 						.findViewById(R.id.canWriteCheckBox);
 
+				holder.canReadCheckBox
+						.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								CheckBox cb = (CheckBox) v;
+								ArrayList<SharedByMeItem> shares = NetworkManager
+										.getInstance().getSharedByMeItems();
+								shares.get(mClickPosition)
+										.getSharedPersonList().get(position)
+										.setRead(cb.isChecked());
+							}
+						});
+
+				holder.canWriteCheckBox
+						.setOnClickListener(new OnClickListener() {
+		
+							@Override
+							public void onClick(View v) {
+								CheckBox cb = (CheckBox) v;
+								ArrayList<SharedByMeItem> shares = NetworkManager
+										.getInstance().getSharedByMeItems();
+								shares.get(mClickPosition)
+										.getSharedPersonList().get(position)
+										.setWrite(cb.isChecked());
+							}
+						});
+				
 				if (mClickPosition != -1) {
 					ArrayList<SharedPerson> person = mSharedByMeItems.get(
 							mClickPosition).getSharedPersonList();
-	
+
 					holder.peerName.setText(person.get(position).getName());
 					holder.canReadCheckBox.setChecked(person.get(position)
 							.canRead());
 					holder.canWriteCheckBox.setChecked(person.get(position)
 							.canWrite());
-	
+
 					((EditText) mActivity.findViewById(R.id.sharedPathEditText))
 							.setText(mSharedByMeItems.get(mClickPosition)
 									.getSharedPath());
 				} else {
 					((EditText) mActivity.findViewById(R.id.sharedPathEditText))
-					.setText("Press 'Select' to set path");
+							.setText("Press 'Select' to set path");
 				}
 				convertView.setTag(holder);
 			} else {
@@ -156,7 +185,7 @@ public class SharedByMeConfigActivity extends ListActivity implements OnClickLis
 
 		@Override
 		public int getCount() {
-			if(mClickPosition == -1)
+			if (mClickPosition == -1)
 				return 0;
 			return mSharedByMeItems.get(mClickPosition).getSharedPersonList()
 					.size();
@@ -164,7 +193,7 @@ public class SharedByMeConfigActivity extends ListActivity implements OnClickLis
 
 		@Override
 		public Object getItem(int position) {
-			if(mClickPosition == -1)
+			if (mClickPosition == -1)
 				return null;
 			return mSharedByMeItems.get(mClickPosition).getSharedPath();
 		}
