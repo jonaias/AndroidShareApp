@@ -7,20 +7,18 @@ import org.AndroidShareApp.R;
 
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,7 +50,6 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		
 		EditText editText = (EditText) findViewById(R.id.shareNameText);
 		editText.setText(personId);
-		
 	}
 	
 	@Override

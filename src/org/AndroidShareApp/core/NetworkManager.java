@@ -28,7 +28,7 @@ public class NetworkManager {
 		NetworkSender sender = new NetworkSender();
 		sender.start();
 		NetworkListener listener = new NetworkListener(9226);
-		listener.execute((Void [])null);
+		listener.execute((Void[])null);
 		
 		/* TODO: REMOVE!!!!!!!!!!!!! */
 		
@@ -100,6 +100,4 @@ public class NetworkManager {
 	public String getThisDeviceName(){
 		return mThisDevideName;
 	}
-	
-	
 }
