@@ -8,7 +8,9 @@ import java.net.SocketException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NetworkListener extends Thread {
+import android.os.AsyncTask;
+
+public class NetworkListener extends AsyncTask<Void, Void, Void> {
 
 	private DatagramSocket mSocket;
 	private byte[] mBuffer;
@@ -21,12 +23,11 @@ public class NetworkListener extends Thread {
 			/* TODO: Emitir o erro. */
 		}
 		mBuffer = new byte[NetworkProtocol.BUFFER_SIZE];
-		setName("NetworkListener");
 	}
-
+	
 	@Override
-	public void run() {
-		while (!isInterrupted()) {
+	protected Void doInBackground(Void... params) {
+		while (!isCancelled()) {
 			try {
 
 				DatagramPacket currPacket = new DatagramPacket(mBuffer,
@@ -40,6 +41,7 @@ public class NetworkListener extends Thread {
 				/* TODO: Emitir o erro. */
 			}
 		}
+		return null;
 	}
 
 	private void parseJSON(String json) {

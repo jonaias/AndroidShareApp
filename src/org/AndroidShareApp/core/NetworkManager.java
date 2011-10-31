@@ -28,7 +28,7 @@ public class NetworkManager {
 		NetworkSender sender = new NetworkSender();
 		sender.start();
 		NetworkListener listener = new NetworkListener(9226);
-		listener.start();
+		listener.execute((Void [])null);
 		
 		/* TODO: REMOVE!!!!!!!!!!!!! */
 		
