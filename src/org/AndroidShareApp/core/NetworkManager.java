@@ -12,6 +12,8 @@ public class NetworkManager {
 	private ArrayList<SharedByMeItem> mSharedByMeItems;
 	private String mThisDeviceId;
 	private String mThisDevideName;
+	private NetworkSender mNetworkSender;
+	private NetworkListener mNetworkListener;
 
 	private NetworkManager() {
 		mPersonList = new ArrayList<Person>();
@@ -25,10 +27,10 @@ public class NetworkManager {
 		mThisDevideName = "jonaias";
 		
 		/* TODO: Criar NetworkSender. */
-		NetworkSender sender = new NetworkSender();
-		sender.start();
-		NetworkListener listener = new NetworkListener(9226);
-		listener.execute((Void[])null);
+		mNetworkSender = new NetworkSender();
+		mNetworkSender.start();
+		mNetworkListener = new NetworkListener(9226);
+		mNetworkListener.start();
 		
 		/* TODO: REMOVE!!!!!!!!!!!!! */
 		
@@ -99,5 +101,13 @@ public class NetworkManager {
 	
 	public String getThisDeviceName(){
 		return mThisDevideName;
+	}
+
+	public NetworkSender getNetworkSender() {
+		return mNetworkSender;
+	}
+
+	public NetworkListener getNetworkListener() {
+		return mNetworkListener;
 	}
 }

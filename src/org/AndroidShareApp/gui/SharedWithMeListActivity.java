@@ -37,11 +37,14 @@ public class SharedWithMeListActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shared_with_me_list_activity);
-		
+
 		personList = NetworkManager.getInstance().getPersonList();
-		
+
 		adapter = new EfficientAdapter(this);
 		setListAdapter(adapter);
+		
+		NetworkManager.getInstance().getNetworkListener()
+				.setContentAdapter(adapter);
 
 		Toast.makeText(getApplicationContext(), R.string.person_list_legend,
 				Toast.LENGTH_LONG).show();
@@ -98,8 +101,8 @@ public class SharedWithMeListActivity extends ListActivity {
 					public void onClick(View v) {
 						Intent tempIntent = new Intent(context,
 								SharedWithMeActivity.class);
-						tempIntent.putExtra("person",
-								personList.get(position).getName());
+						tempIntent.putExtra("person", personList.get(position)
+								.getName());
 						context.startActivity(tempIntent);
 					}
 				});
@@ -138,7 +141,8 @@ public class SharedWithMeListActivity extends ListActivity {
 
 		@Override
 		public Object getItem(int position) {
-			return personList.get(position);
+			// return personList.get(position);
+			return personList;
 		}
 
 	}
