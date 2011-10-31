@@ -59,7 +59,7 @@ public class SharedByMeActivity extends ListActivity implements
 
 	private EfficientAdapter adap;
 	private static ArrayList<SharedByMeItem> mSharedByMeItems;
-	private volatile int mCurrentSelectedItem;
+	//private volatile int mCurrentSelectedItem;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,11 +77,17 @@ public class SharedByMeActivity extends ListActivity implements
 		
 		getListView().setOnItemClickListener(this);
 	}
+	
+	@Override
+	protected void onResume () {
+		super.onResume();
+		getListView().invalidateViews();
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 		v.setSelected(true);
-		mCurrentSelectedItem = position;
+		//mCurrentSelectedItem = position;
 	}
 
 	@Override
@@ -97,14 +103,14 @@ public class SharedByMeActivity extends ListActivity implements
 		private LayoutInflater mInflater;
 		private Bitmap mIcon1;
 		private Context mContext;
-		private SharedByMeActivity mListActivity;
+		//private SharedByMeActivity mListActivity;
 
 		public EfficientAdapter(Context context,
 				SharedByMeActivity listActivity) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
 			mContext = context;
-			mListActivity = listActivity;
+			//mListActivity = listActivity;
 		}
 
 		/**

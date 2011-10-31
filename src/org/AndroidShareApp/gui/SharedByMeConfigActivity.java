@@ -10,8 +10,10 @@ import org.AndroidShareApp.core.NetworkManager;
 import org.AndroidShareApp.core.SharedByMeItem;
 import org.AndroidShareApp.core.SharedPerson;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 /**
@@ -35,6 +38,7 @@ public class SharedByMeConfigActivity extends ListActivity implements
 
 	private EfficientAdapter adap;
 	private static ArrayList<SharedByMeItem> mSharedByMeItems;
+	private static int mClickPosition;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,12 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.shared_by_me_config_activity);
 
+		Bundle extras = getIntent().getExtras();
+		if (extras != null)
+			mClickPosition = extras.getInt("position");
+		else
+			mClickPosition = -1;
+		
 		mSharedByMeItems = NetworkManager.getInstance().getSharedByMeItems();
 
 		adap = new EfficientAdapter(this, this);
@@ -49,6 +59,9 @@ public class SharedByMeConfigActivity extends ListActivity implements
 
 		Button selectSharePathButton = (Button) findViewById(R.id.selectSharePathButton);
 		selectSharePathButton.setOnClickListener(this);
+		
+		ImageButton buttonDelete = (ImageButton) findViewById(R.id.buttonDelete);
+		buttonDelete.setOnClickListener(this);
 	}
 
 	@Override
@@ -56,6 +69,23 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		if (v.getId() == R.id.selectSharePathButton) {
 			((EditText) findViewById(R.id.sharedPathEditText))
 					.setText("User selected something.");
+		} else if (v.getId() == R.id.buttonDelete) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure you want to delete the share?")
+			       .setCancelable(false)
+			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                mSharedByMeItems.remove(mClickPosition);
+			                SharedByMeConfigActivity.this.finish();
+			           }
+			       })
+			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			               dialog.cancel();
+			           }
+			       });
+			AlertDialog alert = builder.create();
+			alert.show();
 		}
 	}
 
@@ -64,7 +94,6 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		private LayoutInflater mInflater;
 		// private Context mContext;
 		private SharedByMeConfigActivity mActivity;
-		private int mClickPosition;
 
 		public EfficientAdapter(Context context,
 				SharedByMeConfigActivity activity) {
@@ -72,12 +101,6 @@ public class SharedByMeConfigActivity extends ListActivity implements
 			mInflater = LayoutInflater.from(context);
 			// mContext = context;
 			mActivity = activity;
-
-			Bundle extras = mActivity.getIntent().getExtras();
-			if (extras != null)
-				mClickPosition = extras.getInt("position");
-			else
-				mClickPosition = -1;
 		}
 
 		/**
