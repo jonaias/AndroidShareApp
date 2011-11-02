@@ -65,7 +65,8 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		buttonDelete.setOnClickListener(this);
 
 		ToggleButton activateToggleButton = (ToggleButton) findViewById(R.id.activateToggleButton);
-		activateToggleButton.setChecked(mSharedByMeItems.get(mClickPosition).isActive());
+		if(mClickPosition != -1)
+			activateToggleButton.setChecked(mSharedByMeItems.get(mClickPosition).isActive());
 		activateToggleButton.setOnClickListener(this);
 	}
 
