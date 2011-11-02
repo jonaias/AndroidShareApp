@@ -7,12 +7,14 @@ public class SharedByMeItem {
 	private String mSharedPath;
 	private String mFullPath;
 	private ArrayList<SharedPerson> mPerson;
+	private boolean mIsActive;
 
 	public SharedByMeItem(String fullPath, SharedPerson person) {
 		mFullPath = fullPath;
 		mPerson = new ArrayList<SharedPerson>();
 		mPerson.add(person);
 		/* TODO: Pegar o sharedPath a partir do fullPath. */
+		mIsActive = false;
 	}
 	
 	public SharedByMeItem(String sharedPath) {
@@ -38,6 +40,14 @@ public class SharedByMeItem {
 	
 	public ArrayList<SharedPerson> getSharedPersonList() {
 		return mPerson;
+	}
+	
+	public boolean isActive () {
+		return mIsActive;
+	}
+	
+	public void setActive (boolean isActive) {
+		mIsActive = isActive;
 	}
 
 	public void managePerson(SharedPerson person) {

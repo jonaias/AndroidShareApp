@@ -89,7 +89,8 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent">
 
-		<ToggleButton android:textOn="@string/deactivate_share"
+		<ToggleButton android:id="@+id/activateToggleButton" 
+		    android:textOn="@string/deactivate_share"
 			android:textOff="@string/activate_share"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

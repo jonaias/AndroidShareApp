@@ -28,6 +28,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 /**
  * @author jonaias
@@ -51,7 +52,7 @@ public class SharedByMeConfigActivity extends ListActivity implements
 			mClickPosition = extras.getInt("position");
 		else
 			mClickPosition = -1;
-		
+
 		mSharedByMeItems = NetworkManager.getInstance().getSharedByMeItems();
 
 		adap = new EfficientAdapter(this, this);
@@ -59,9 +60,13 @@ public class SharedByMeConfigActivity extends ListActivity implements
 
 		Button selectSharePathButton = (Button) findViewById(R.id.selectSharePathButton);
 		selectSharePathButton.setOnClickListener(this);
-		
+
 		ImageButton buttonDelete = (ImageButton) findViewById(R.id.buttonDelete);
 		buttonDelete.setOnClickListener(this);
+
+		ToggleButton activateToggleButton = (ToggleButton) findViewById(R.id.activateToggleButton);
+		activateToggleButton.setChecked(mSharedByMeItems.get(mClickPosition).isActive());
+		activateToggleButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -72,20 +77,27 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		} else if (v.getId() == R.id.buttonDelete) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Are you sure you want to delete the share?")
-			       .setCancelable(false)
-			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			                mSharedByMeItems.remove(mClickPosition);
-			                SharedByMeConfigActivity.this.finish();
-			           }
-			       })
-			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			               dialog.cancel();
-			           }
-			       });
+					.setCancelable(false)
+					.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									mSharedByMeItems.remove(mClickPosition);
+									SharedByMeConfigActivity.this.finish();
+								}
+							})
+					.setNegativeButton("No",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
 			AlertDialog alert = builder.create();
 			alert.show();
+		} else if (v.getId() == R.id.activateToggleButton) {
+			ToggleButton button = (ToggleButton) v;
+			mSharedByMeItems.get(mClickPosition).setActive(button.isChecked());
 		}
 	}
 
@@ -151,7 +163,7 @@ public class SharedByMeConfigActivity extends ListActivity implements
 
 				holder.canWriteCheckBox
 						.setOnClickListener(new OnClickListener() {
-		
+
 							@Override
 							public void onClick(View v) {
 								CheckBox cb = (CheckBox) v;
@@ -162,7 +174,7 @@ public class SharedByMeConfigActivity extends ListActivity implements
 										.setWrite(cb.isChecked());
 							}
 						});
-				
+
 				if (mClickPosition != -1) {
 					ArrayList<SharedPerson> person = mSharedByMeItems.get(
 							mClickPosition).getSharedPersonList();
