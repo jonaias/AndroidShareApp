@@ -90,10 +90,12 @@ public class NetworkSender extends Thread {
 			/* Decreases every person a timeout counter */
 			Iterator<Person> itr = NetworkManager.getInstance().getPersonList().iterator();
 		    while (itr.hasNext()) {
-			      Person tempPerson = itr.next();
+		    	  Person tempPerson = itr.next();
 			      /* If this person is Everybody, skip it */			      
 			      if(tempPerson.getName().compareTo("Everybody")!=0){
-			    	  tempPerson.decTimeoutLeft();
+			    	  if (--tempPerson.mTimeoutLeft<=1){
+			    		  itr.remove();
+			    	  }
 			      }
 		    }
 			

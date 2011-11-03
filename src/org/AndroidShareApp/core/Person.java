@@ -10,7 +10,7 @@ public class Person {
 	private String mDeviceId;
 	private ArrayList<SharedWithMeItem> mSharedItems;
 	private boolean mSharesWithMe;
-	private int mTimeoutLeft;
+	public int mTimeoutLeft;
 	private static final int mMaxTimeoutLeft = 6;
 
 	public Person(String name,String deviceId) {
@@ -54,12 +54,6 @@ public class Person {
 
 	public boolean sharesWithMe() {
 		return mSharesWithMe;
-	}
-	
-	public synchronized void decTimeoutLeft(){
-		if((--mTimeoutLeft)==0){
-			NetworkManager.getInstance().deletePerson(this);
-		}
 	}
 
 	public synchronized void resetTimeoutLeft(){
