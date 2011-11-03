@@ -50,6 +50,8 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		
 		EditText editText = (EditText) findViewById(R.id.shareNameText);
 		editText.setText(personId);
+		
+		
 	}
 	
 	@Override

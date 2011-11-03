@@ -2,6 +2,8 @@ package org.AndroidShareApp.core;
 
 import java.util.ArrayList;
 
+import android.content.SyncResult;
+
 public class Person {
 
 	private String mName;

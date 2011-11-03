@@ -43,13 +43,36 @@ public class SharedWithMeListActivity extends ListActivity {
 		adapter = new EfficientAdapter(this);
 		setListAdapter(adapter);
 		
-		NetworkManager.getInstance().getNetworkListener()
-				.setContentAdapter(adapter);
 
 		Toast.makeText(getApplicationContext(), R.string.person_list_legend,
 				Toast.LENGTH_LONG).show();
+	
 	}
+	
+	
+	
+	/*-------------- Callback functions start -----------*/
+	public void refreshUi(){
+		this.runOnUiThread(
+                new Runnable(){
+                    public void run(){
+                    	adapter.notifyDataSetChanged();
+                    }
+                });
+	}
+	@Override
+	protected void onResume(){
+		super.onResume();
+		NetworkManager.getInstance().getNetworkSender().registerCallBack(this);
+	}
+	@Override
+	protected void onPause(){
+		super.onPause();
+		NetworkManager.getInstance().getNetworkSender().registerCallBack(null);
+	}
+	/*-------------- Callback functions stop -----------*/
 
+	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -95,8 +118,7 @@ public class SharedWithMeListActivity extends ListActivity {
 						.findViewById(R.id.personListItemTextView);
 
 				convertView.setOnClickListener(new OnClickListener() {
-					private int pos = position;
-
+					
 					@Override
 					public void onClick(View v) {
 						Intent tempIntent = new Intent(context,
@@ -135,14 +157,14 @@ public class SharedWithMeListActivity extends ListActivity {
 		}
 
 		@Override
+		/* Dont count Everybody */
 		public int getCount() {
-			return personList.size();
+			return personList.size()-1;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// return personList.get(position);
-			return personList;
+			return personList.get(position+1);
 		}
 
 	}

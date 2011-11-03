@@ -8,13 +8,10 @@ import java.net.SocketException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.widget.BaseAdapter;
-
 public class NetworkListener extends Thread {
 
 	private DatagramSocket mSocket;
 	private byte[] mBuffer;
-	private BaseAdapter mContentAdapter;
 
 	public NetworkListener(int listenPort) {
 		try {
@@ -73,8 +70,6 @@ public class NetworkListener extends Thread {
 
 				NetworkManager.getInstance().deletePerson(
 						new Person(name, deviceID));
-				if(mContentAdapter != null)
-					mContentAdapter.notifyDataSetChanged();
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_SHARING_NOTIFICATION):
@@ -104,9 +99,5 @@ public class NetworkListener extends Thread {
 					+ e.getMessage() + "\n");
 			return;
 		}
-	}
-	
-	public void setContentAdapter (BaseAdapter adapter) {
-		mContentAdapter = adapter;
 	}
 }

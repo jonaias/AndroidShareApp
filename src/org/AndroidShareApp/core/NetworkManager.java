@@ -23,8 +23,13 @@ public class NetworkManager {
 		SharedPerson everybody = new SharedPerson("Everybody",String.valueOf(new Random().nextInt()),false,false);
 		mPersonList.add(everybody);
 		
-		mThisDeviceId = String.valueOf(new Random().nextInt());//TODO: Find the device ID. THIS IS A TEMPORARY FIX
-		mThisDevideName = "jonaias";
+		mPersonList.add(0,new Person("teste", "123121"));
+		mPersonList.add(0,new Person("teste1", "1231211"));
+		mPersonList.add(0,new Person("teste2", "1231212"));
+		
+		
+		mThisDeviceId = android.provider.Settings.Secure.ANDROID_ID;
+		mThisDevideName = android.os.Build.USER.concat("-"+android.os.Build.MODEL);
 		
 		/* TODO: Criar NetworkSender. */
 		mNetworkSender = new NetworkSender();
@@ -63,7 +68,7 @@ public class NetworkManager {
 		return mPersonList;
 	}
 	
-	public void addPerson(Person person){
+	public synchronized void addPerson(Person person){
 		/* If person exists, delete it */
 		deletePerson(person);
 		/* Add the new person */
@@ -71,7 +76,7 @@ public class NetworkManager {
 	}
 	
 	/* If person device ID does not exists, does nothing */
-	public void deletePerson(Person person){
+	public synchronized void deletePerson(Person person){
 		Iterator<Person> itr = mPersonList.iterator();
 		/* Search for Person with same device ID */
 	    while (itr.hasNext()) {
