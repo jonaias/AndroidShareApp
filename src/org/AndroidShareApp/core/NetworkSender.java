@@ -17,8 +17,10 @@ public class NetworkSender extends Thread {
 	DatagramSocket mSocket = null;
 	DatagramPacket mPacket = null;
 	JSONObject mJsonObjetct=null;
+	int mPort;
 	
-	public NetworkSender(){
+	public NetworkSender(int port){
+		mPort = port;
 	}
 	
 	
@@ -36,10 +38,10 @@ public class NetworkSender extends Thread {
 			
 			mJsonObjetct = new JSONObject();
 			mJsonObjetct.put("messageType", NetworkProtocol.MESSAGE_LIVE_ANNOUNCEMENT);
-			mJsonObjetct.put("nome", NetworkManager.getInstance().getThisDeviceName());
+			mJsonObjetct.put("name", NetworkManager.getInstance().getThisDeviceName());
 			mJsonObjetct.put("deviceId", NetworkManager.getInstance().getThisDeviceId());
 			mPacket = new DatagramPacket(mJsonObjetct.toString().getBytes(), mJsonObjetct.toString().getBytes().length ,
-					InetAddress.getByName("10.0.2.255"), 9764);
+					InetAddress.getByName("10.0.2.255"), mPort);
 			
 		} catch (SocketException e2) {
 			// TODO Auto-generated catch block
