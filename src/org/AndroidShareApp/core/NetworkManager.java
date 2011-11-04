@@ -71,7 +71,7 @@ public class NetworkManager {
 			/* If person exists, delete it */
 			deletePerson(person);
 			/* Add the new person, the last person(Everybody) will never be displayed */
-			mPersonList.add(0,person);
+			mPersonList.add(0, person);
 		}
 	}
 	
@@ -80,7 +80,7 @@ public class NetworkManager {
 		synchronized (mPersonList) {
 			for(int i=0; i<mPersonList.size(); i++) {
 				if (mPersonList.get(i).getDeviceID().compareTo(person.getDeviceID()) == 0){
-			    	  mPersonList.remove(i);
+			    	  mPersonList.remove(i--);
 			      }
 			}
 		}

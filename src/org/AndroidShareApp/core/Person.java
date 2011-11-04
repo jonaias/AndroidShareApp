@@ -2,7 +2,7 @@ package org.AndroidShareApp.core;
 
 import java.util.ArrayList;
 
-public class Person {
+public class Person implements Comparable<Person> {
 
 	private String mName;
 	private String mDeviceId;
@@ -56,5 +56,10 @@ public class Person {
 
 	public synchronized void resetTimeoutLeft(){
 		mTimeoutLeft = mMaxTimeoutLeft;
+	}
+
+	@Override
+	public int compareTo(Person other) {
+		return this.mName.compareTo(other.mName);
 	}
 }

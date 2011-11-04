@@ -4,6 +4,8 @@
 package org.AndroidShareApp.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.AndroidShareApp.R;
 import org.AndroidShareApp.core.NetworkManager;
@@ -97,6 +99,7 @@ public class SharedWithMeListActivity extends ListActivity {
 		 */
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
+			
 			// A ViewHolder keeps references to children views to avoid
 			// unnecessary calls
 			// to findViewById() on each row.
