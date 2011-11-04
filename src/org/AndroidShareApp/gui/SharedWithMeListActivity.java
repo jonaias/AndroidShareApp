@@ -123,8 +123,10 @@ public class SharedWithMeListActivity extends ListActivity {
 					public void onClick(View v) {
 						Intent tempIntent = new Intent(context,
 								SharedWithMeActivity.class);
-						tempIntent.putExtra("person", personList.get(position)
-								.getName());
+						synchronized (personList) { 
+							tempIntent.putExtra("person", personList.get(position)
+									.getName());
+						}
 						context.startActivity(tempIntent);
 					}
 				});
@@ -137,7 +139,9 @@ public class SharedWithMeListActivity extends ListActivity {
 			}
 
 			// Bind the data efficiently with the holder.
-			holder.textLine.setText(personList.get(position).getName());
+			synchronized (personList) {
+				holder.textLine.setText(personList.get(position).getName());
+			}
 
 			return convertView;
 		}
@@ -159,12 +163,20 @@ public class SharedWithMeListActivity extends ListActivity {
 		@Override
 		/* Dont count Everybody */
 		public int getCount() {
-			return personList.size()-1;
+			int ret;
+			synchronized (personList) {
+				ret = personList.size()-1;
+			}
+			return ret;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return personList.get(position+1);
+			Object ret;
+			synchronized (personList) {
+				ret = personList.get(position+1);
+			}
+			return ret;
 		}
 
 	}

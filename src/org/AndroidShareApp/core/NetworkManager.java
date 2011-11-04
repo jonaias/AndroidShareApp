@@ -1,7 +1,6 @@
 package org.AndroidShareApp.core;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 public class NetworkManager {
@@ -67,24 +66,24 @@ public class NetworkManager {
 		return mPersonList;
 	}
 	
-	public synchronized void addPerson(Person person){
-		/* If person exists, delete it */
-		deletePerson(person);
-		/* Add the new person, the last person(Everybody) will never be displayed */
-		mPersonList.add(0,person);
+	public void addPerson(Person person){
+		synchronized (mPersonList) {
+			/* If person exists, delete it */
+			deletePerson(person);
+			/* Add the new person, the last person(Everybody) will never be displayed */
+			mPersonList.add(0,person);
+		}
 	}
 	
 	/* If person device ID does not exists, does nothing */
-	public synchronized void deletePerson(Person person){
-		Iterator<Person> itr = mPersonList.iterator();
-		/* Search for Person with same device ID */
-	    while (itr.hasNext()) {
-	      Person tempPerson = itr.next();
-	      /* If has the same ID, delete it */
-	      if (tempPerson.getDeviceID().compareTo(person.getDeviceID()) == 0){
-	    	  mPersonList.remove(tempPerson);
-	      }
-	    }
+	public void deletePerson(Person person){
+		synchronized (mPersonList) {
+			for(int i=0; i<mPersonList.size(); i++) {
+				if (mPersonList.get(i).getDeviceID().compareTo(person.getDeviceID()) == 0){
+			    	  mPersonList.remove(i);
+			      }
+			}
+		}
 	}
 
 	public void addNewTransfer(FileTransferrer newTransfer) {
