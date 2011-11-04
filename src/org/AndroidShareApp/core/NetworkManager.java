@@ -1,6 +1,7 @@
 package org.AndroidShareApp.core;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 public class NetworkManager {
@@ -78,11 +79,13 @@ public class NetworkManager {
 	/* If person device ID does not exists, does nothing */
 	public void deletePerson(Person person){
 		synchronized (mPersonList) {
-			for(int i=0; i<mPersonList.size(); i++) {
-				if (mPersonList.get(i).getDeviceID().compareTo(person.getDeviceID()) == 0){
-			    	  mPersonList.remove(i--);
+			Iterator<Person> itr = mPersonList.iterator();
+		    while (itr.hasNext()) {
+		    	  Person tempPerson = itr.next();
+			      if(tempPerson.getDeviceID().compareTo(person.getDeviceID())==0) {
+			    	  itr.remove();
 			      }
-			}
+		    }
 		}
 	}
 
