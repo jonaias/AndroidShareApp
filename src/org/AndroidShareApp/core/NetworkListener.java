@@ -23,7 +23,6 @@ public class NetworkListener extends Thread {
 		mBuffer = new byte[NetworkProtocol.BUFFER_SIZE];
 	}
 
-
 	@Override
 	public void run() {
 		while (!isInterrupted()) {
@@ -41,7 +40,7 @@ public class NetworkListener extends Thread {
 			}
 		}
 	}
-	
+
 	private void parseJSON(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
