@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 public class FileTransferrer extends Thread {
 	private int mType;
 	private String mTransferPath;
-	private double mCurrentProgress;
+	private Double mCurrentProgress;
 	private String mIP;
 	private int mSize;
 
@@ -23,14 +23,14 @@ public class FileTransferrer extends Thread {
 		mType = type;
 		mTransferPath = transferPath;
 		mIP = IP;
-		mCurrentProgress = 0;
+		mCurrentProgress = 0.0;
 	}
 
 	public FileTransferrer(int type, String IP, String transferPath, int size) {
 		mType = type;
 		mTransferPath = transferPath;
 		mIP = IP;
-		mCurrentProgress = 0;
+		mCurrentProgress = 0.0;
 		mSize = size;
 	}
 
@@ -43,7 +43,11 @@ public class FileTransferrer extends Thread {
 	}
 
 	public double getCurrentProgress() {
-		return mCurrentProgress;
+		double ret;
+		synchronized (mCurrentProgress) {
+			ret = mCurrentProgress;
+		}
+		return ret;
 	}
 
 	@Override
@@ -57,29 +61,31 @@ public class FileTransferrer extends Thread {
 
 				/* First, we read the file. */
 				File currentFile = new File(mTransferPath);
-				byte[] byteArray = new byte[(int) currentFile.length()];
+				mSize = (int) currentFile.length();
+				byte[] bytesToSend = new byte[mSize];
 
 				FileInputStream fis = new FileInputStream(currentFile);
-				BufferedInputStream bis = new BufferedInputStream(fis);
+				BufferedInputStream in = new BufferedInputStream(fis);
 
-				bis.read(byteArray, 0, byteArray.length);
-				bis.close();
+				in.read(bytesToSend, 0, bytesToSend.length);
+				in.close();
 
 				/* Then, we send it, BLOCK_SIZE per BLOCK_SIZE. */
-				OutputStream os = socket.getOutputStream();
-				mCurrentProgress = 0;
-				byte[] aux = new byte[BLOCK_SIZE];
-				for (int i = 0; i < (int) currentFile.length(); i += BLOCK_SIZE) {
-					for (int j = 0; j < BLOCK_SIZE; j++)
-						aux[j] = byteArray[i + j];
+				OutputStream out = socket.getOutputStream();
+				mCurrentProgress = 0.0;
+				for (int i = 0; i < mSize; i += BLOCK_SIZE) {
+					int sizeToSend = (mSize - i * BLOCK_SIZE >= BLOCK_SIZE) ? BLOCK_SIZE
+							: mSize - i * BLOCK_SIZE;
 
-					os.write(aux, 0, BLOCK_SIZE);
-					os.flush();
-					mCurrentProgress += ((double) BLOCK_SIZE)
-							/ ((double) currentFile.length());
+					out.write(bytesToSend, i*BLOCK_SIZE, sizeToSend);
+					out.flush();
+					synchronized (mCurrentProgress) {
+						mCurrentProgress += ((double) BLOCK_SIZE)
+								/ ((double) mSize);
+					}
 				}
 
-				os.close();
+				out.close();
 				socket.close();
 
 			} catch (IOException e) {
@@ -91,8 +97,6 @@ public class FileTransferrer extends Thread {
 			try {
 				Socket socket = new Socket(mIP, 13562);
 
-				byte[] received = new byte[mSize];
-
 				InputStream in = socket.getInputStream();
 				FileOutputStream fos = new FileOutputStream(mTransferPath);
 				BufferedOutputStream out = new BufferedOutputStream(fos);
@@ -100,13 +104,21 @@ public class FileTransferrer extends Thread {
 				int nPackets = (int) Math.ceil(((double) mSize)
 						/ ((double) BLOCK_SIZE));
 
+				mCurrentProgress = 0.0;
+				int bytesReceived;
+				byte[] received = new byte[mSize];
+
 				for (int i = 0; i < nPackets; i++) {
-					in.read(received, i * BLOCK_SIZE, BLOCK_SIZE);
+					bytesReceived = in.read(received, i * BLOCK_SIZE,
+							BLOCK_SIZE);
+					synchronized (mCurrentProgress) {
+						mCurrentProgress += bytesReceived / mSize;
+					}
 				}
 
 				out.write(received, 0, mSize);
 				out.flush();
-				
+
 				out.close();
 				in.close();
 				socket.close();
