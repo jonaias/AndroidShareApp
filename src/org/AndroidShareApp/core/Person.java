@@ -10,8 +10,9 @@ public class Person implements Comparable<Person> {
 	private boolean mSharesWithMe;
 	public int mTimeoutLeft;
 	private static final int mMaxTimeoutLeft = 6;
+	private String mIP;
 
-	public Person(String name,String deviceId) {
+	public Person(String name, String deviceId, String IP) {
 		mName = name;
 		mDeviceId = deviceId;
 		/* At creation, person doesnt have any shares */
@@ -19,6 +20,8 @@ public class Person implements Comparable<Person> {
 		
 		mSharedItems = new ArrayList<SharedWithMeItem>();
 		resetTimeoutLeft();
+		
+		setIP(IP);
 	}
 
 	public String getName() {
@@ -61,5 +64,13 @@ public class Person implements Comparable<Person> {
 	@Override
 	public int compareTo(Person other) {
 		return this.mName.compareTo(other.mName);
+	}
+
+	public String getIP() {
+		return mIP;
+	}
+
+	public void setIP(String IP) {
+		mIP = IP;
 	}
 }

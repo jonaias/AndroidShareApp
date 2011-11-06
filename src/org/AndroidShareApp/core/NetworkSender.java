@@ -17,7 +17,7 @@ public class NetworkSender extends Thread {
 	SharedWithMeListActivity mSharedWithMeListActivity=null;
 	DatagramSocket mSocket = null;
 	DatagramPacket mPacket = null;
-	JSONObject mJsonObjetct=null;
+	JSONObject mJsonObject=null;
 	int mPort;
 	
 	public NetworkSender(int port){
@@ -37,11 +37,12 @@ public class NetworkSender extends Thread {
 			mSocket = new DatagramSocket();
 			mSocket.setBroadcast(true);
 			
-			mJsonObjetct = new JSONObject();
-			mJsonObjetct.put("messageType", NetworkProtocol.MESSAGE_LIVE_ANNOUNCEMENT);
-			mJsonObjetct.put("name", NetworkManager.getInstance().getThisDeviceName());
-			mJsonObjetct.put("deviceId", NetworkManager.getInstance().getThisDeviceId());
-			mPacket = new DatagramPacket(mJsonObjetct.toString().getBytes(), mJsonObjetct.toString().getBytes().length ,
+			mJsonObject = new JSONObject();
+			mJsonObject.put("messageType", NetworkProtocol.MESSAGE_LIVE_ANNOUNCEMENT);
+			mJsonObject.put("name", NetworkManager.getInstance().getThisDeviceName());
+			mJsonObject.put("deviceId", NetworkManager.getInstance().getThisDeviceId());
+			mJsonObject.put("IP", NetworkManager.getInstance().getIPAddress());
+			mPacket = new DatagramPacket(mJsonObject.toString().getBytes(), mJsonObject.toString().getBytes().length ,
 					InetAddress.getByName("10.0.2.255"), mPort);
 			
 		} catch (SocketException e2) {

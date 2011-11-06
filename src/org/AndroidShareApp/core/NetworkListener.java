@@ -8,6 +8,8 @@ import java.net.SocketException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class NetworkListener extends Thread {
 
 	private DatagramSocket mSocket;
@@ -55,8 +57,12 @@ public class NetworkListener extends Thread {
 				 */
 				String name = obj.getString("name");
 				String deviceID = obj.getString("deviceID");
+				String IP = obj.getString("IP");
+				
+				Log.i("NetworkListener", "MESSAGE_LIVE_ANN: " + obj);
+				
 				NetworkManager.getInstance().addPerson(
-						new Person(name, deviceID));
+						new Person(name, deviceID, IP));
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_LEAVING_ANNOUNCEMENT): {
@@ -68,7 +74,7 @@ public class NetworkListener extends Thread {
 				String deviceID = obj.getString("deviceID");
 
 				NetworkManager.getInstance().deletePerson(
-						new Person(name, deviceID));
+						new Person(name, deviceID, null));
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_SHARING_NOTIFICATION):

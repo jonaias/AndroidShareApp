@@ -6,8 +6,8 @@ public class SharedPerson extends Person {
 	private boolean mWrite;
 	
 
-	public SharedPerson (String name, String deviceId, boolean read, boolean write) {
-		super(name,deviceId);
+	public SharedPerson (String name, String deviceId, String IP, boolean read, boolean write) {
+		super(name, deviceId, IP);
 		setPermissions(read, write);
 	}
 	

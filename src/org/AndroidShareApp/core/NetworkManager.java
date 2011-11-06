@@ -25,13 +25,13 @@ public class NetworkManager {
 		mSharedByMeItems = new ArrayList<SharedByMeItem>();
 
 		SharedPerson everybody = new SharedPerson("Everybody",
-				String.valueOf(new Random().nextInt()), false, false);
+				String.valueOf(new Random().nextInt()), null, false, false);
 		addPerson(everybody);
 
 		/* TODO: REMOVE!!!!!!!!!!!!! */
-		addPerson(new Person("teste", "123121"));
-		addPerson(new Person("teste1", "1231211"));
-		addPerson(new Person("teste2", "1231212"));
+		addPerson(new Person("teste", "123121", null));
+		addPerson(new Person("teste1", "1231211", null));
+		addPerson(new Person("teste2", "1231212", null));
 		/* ########################### */
 
 		mThisDeviceId = android.provider.Settings.Secure.ANDROID_ID;
@@ -45,8 +45,8 @@ public class NetworkManager {
 		mNetworkListener.start();
 
 		/* TODO: REMOVE!!!!!!!!!!!!! */
-		SharedPerson paul = new SharedPerson("Paul", "PaulID", true, false);
-		SharedPerson john = new SharedPerson("John", "JohnID", false, false);
+		SharedPerson paul = new SharedPerson("Paul", "PaulID", null, true, false);
+		SharedPerson john = new SharedPerson("John", "JohnID", null, false, false);
 		SharedByMeItem s1 = new SharedByMeItem("/path/to/nothing");
 		s1.getSharedPersonList().add(paul);
 		s1.getSharedPersonList().add(john);
@@ -152,6 +152,7 @@ public class NetworkManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return ipAddr;
 	}
 }
