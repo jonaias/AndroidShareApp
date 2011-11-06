@@ -4,8 +4,6 @@
 package org.AndroidShareApp.gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import org.AndroidShareApp.R;
 import org.AndroidShareApp.core.NetworkManager;
