@@ -1,0 +1,5 @@
+A mensagem MESSAGE_SHARING_DETAILS_REQUEST terá como função única sobrescrever a variavel que
+determina o path corrente(currentPath na classe Person). O networkSender, a cada X segundos enviará 
+a mensagem MESSAGE_SHARING_DETAILS_SEND referente a variavel que determina o path corrente(currentPath 
+na classe Person). O path corrente inicial(currentPath na classe Person), determinado no constructor é "/".
+

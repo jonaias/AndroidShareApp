@@ -7,32 +7,32 @@ Aviso de saída (broadcast):
     messageType: "2" (MESSAGE_LEAVING_ANNOUNCEMENT)
     deviceID : "123456789"
 
-Aviso de compartilhamento:
-    messageType: "3" (MESSAGE_SHARING_NOTIFICATION)
-    deviceID : "123456789"
-
 Pedido de detalhes de compartilhamento:
-    messageType : "4" (MESSAGE_SHARING_DETAILS_REQUEST)
+    messageType : "3" (MESSAGE_SHARING_DETAILS_REQUEST)
     sharedPath : "/"
 
 Envio de detalhes de compartilhamento:
-    messageType : "5" (MESSAGE_SHARING_DETAILS_SEND)
+    messageType : "4" (MESSAGE_SHARING_DETAILS_SEND)
     sharedList : {{"Music/", "rw"}, {"file.pdf", "r"}}
 
 Requisição de download:
-    messageType : "6" (MESSAGE_DOWNLOAD_REQUEST)
+    messageType : "5" (MESSAGE_DOWNLOAD_REQUEST)
     downloadPath : "/file.pdf"
 
 Aceitamento de download:
-    messageType : "7" (MESSAGE_DOWNLOAD_ACCEPT)
+    messageType : "6" (MESSAGE_DOWNLOAD_ACCEPT)
     downloadPath : "/file.pdf"
 
 Negação de download:
-    messageType : "8" (MESSAGE_DOWNLOAD_DENY)
+    messageType : "7" (MESSAGE_DOWNLOAD_DENY)
     downloadPath : "/file.pdf"
 
 Requisição de upload:
-    messageType : "9" (MESSAGE_UPLOAD_REQUEST)
+    messageType : "8" (MESSAGE_UPLOAD_REQUEST)
+    uploadPath : "/file.doc"
+    
+Inicio de upload:
+    messageType : "9" (MESSAGE_UPLOAD_START)
     uploadPath : "/file.doc"
 
 Aceitamento de upload:
