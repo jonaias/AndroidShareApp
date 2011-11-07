@@ -11,6 +11,7 @@ public class Person implements Comparable<Person> {
 	public int mTimeoutLeft;
 	private static final int mMaxTimeoutLeft = 6;
 	private String mIP;
+	private String mCurrentPath;
 
 	public Person(String name, String deviceId, String IP) {
 		mName = name;
@@ -72,5 +73,13 @@ public class Person implements Comparable<Person> {
 
 	public void setIP(String IP) {
 		mIP = IP;
+	}
+
+	public String getCurrentPath() {
+		return mCurrentPath;
+	}
+
+	public void setCurrentPath(String currentPath) {
+		mCurrentPath = currentPath;
 	}
 }

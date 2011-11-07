@@ -1,9 +1,6 @@
 package org.AndroidShareApp.core;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -18,6 +15,8 @@ public class NetworkManager {
 	private String mThisDevideName;
 	private NetworkSender mNetworkSender;
 	private NetworkListener mNetworkListener;
+	private InetAddress mHostAddress;
+	private InetAddress mBroadcastAddress;
 
 	private NetworkManager() {
 		mPersonList = new ArrayList<Person>();
@@ -126,33 +125,19 @@ public class NetworkManager {
 		return mNetworkListener;
 	}
 
-	public String getIPAddress() {
-		String ipAddr = null;
-		try {
-			Socket sock = new Socket("whatismyipaddress.com", 80);
-			BufferedReader is = new BufferedReader(new InputStreamReader(
-					sock.getInputStream()));
-			PrintWriter os = new PrintWriter(sock.getOutputStream(), true);
+	public InetAddress getHostAddress() {
+		return mHostAddress;
+	}
 
-			os.println("GET / HTTP/1.0");
-			os.println();
+	public void setHostAddress(InetAddress hostAddress) {
+		mHostAddress = hostAddress;
+	}
 
-			String line = "";
-			while (line.indexOf("<h1>Your IP address is ") == -1) {
-				line = is.readLine();
-			}
+	public InetAddress getBroadcastAddress() {
+		return mBroadcastAddress;
+	}
 
-			ipAddr = line
-					.substring(line.indexOf("<h1>Your IP address is ")
-							+ "<h1>Your IP address is ".length(),
-							line.indexOf("</h1>"));
-
-			is.close();
-			os.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return ipAddr;
+	public void setBroadcastAddress(InetAddress broadcastAddress) {
+		mBroadcastAddress = broadcastAddress;
 	}
 }
