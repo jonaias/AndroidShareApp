@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +55,7 @@ public class NetworkListener extends Thread {
 		try {
 			JSONObject obj = new JSONObject(json);
 			int messageType = obj.getInt("messageType");
+			String deviceID;
 
 			switch (messageType) {
 			case (NetworkProtocol.MESSAGE_LIVE_ANNOUNCEMENT): {
@@ -63,7 +65,7 @@ public class NetworkListener extends Thread {
 				 * he/she is active.
 				 */
 				String name = obj.getString("name");
-				String deviceID = obj.getString("deviceID");
+				deviceID = obj.getString("deviceID");
 				InetAddress senderIP = packet.getAddress();
 
 				Log.i("NetworkListener", "MESSAGE_LIVE_ANN: " + obj);
@@ -78,7 +80,7 @@ public class NetworkListener extends Thread {
 				 * network.
 				 */
 				String name = obj.getString("name");
-				String deviceID = obj.getString("deviceID");
+				deviceID = obj.getString("deviceID");
 
 				NetworkManager.getInstance().deletePerson(
 						new Person(name, deviceID, null));
@@ -86,12 +88,42 @@ public class NetworkListener extends Thread {
 				break;
 			case (NetworkProtocol.MESSAGE_SHARING_DETAILS_REQUEST):
 				break;
-			case (NetworkProtocol.MESSAGE_SHARING_DETAILS_ANSWER):
+			case (NetworkProtocol.MESSAGE_SHARING_DETAILS_SEND): {
+
+				JSONArray sharedList = obj.getJSONArray("sharedList");
+				String currPath, currPermissions;
+				deviceID = obj.getString("deviceID");
+
+				Person person = NetworkManager.getInstance()
+						.getPersonByDeviceID(deviceID);
+
+				if (person != null) {
+					Log.i("NetworkListener", "Received sharing details from "
+							+ person.getName());
+					
+					for (int i = 0; i < sharedList.length(); i++) {
+						currPath = sharedList.getJSONObject(i)
+								.getString("path");
+						currPermissions = sharedList.getJSONObject(i)
+								.getString("permissions");
+
+						boolean read = false, write = false;
+
+						if (currPermissions.indexOf('r') != -1)
+							read = true;
+						if (currPermissions.indexOf('w') != -1)
+							write = true;
+
+						person.addSharedWithMeItem(new SharedWithMeItem(
+								currPath, read, write));
+					}
+				}
+			}
 				break;
 			case (NetworkProtocol.MESSAGE_SHARING_DETAILS_DENIED):
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_REQUEST): {
-				String deviceID = obj.getString("deviceID");
+				deviceID = obj.getString("deviceID");
 				String path = obj.getString("path");
 
 				JSONObject reply = new JSONObject();
