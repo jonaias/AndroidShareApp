@@ -83,7 +83,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	public void onClick(View v) {
 		if (v.getId() == R.id.backButton) {
 			finish();
-		}
+		} 
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements

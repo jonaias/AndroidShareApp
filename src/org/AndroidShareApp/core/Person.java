@@ -1,6 +1,7 @@
 package org.AndroidShareApp.core;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Person implements Comparable<Person> {
 
@@ -21,7 +22,7 @@ public class Person implements Comparable<Person> {
 		
 		mSharedItems = new ArrayList<SharedWithMeItem>();
 		resetTimeoutLeft();
-		
+		setCurrentPath("/");
 		setIP(IP);
 	}
 
@@ -47,7 +48,18 @@ public class Person implements Comparable<Person> {
 	}
 	
 	public ArrayList<SharedWithMeItem> getSharedWithMeItems () {
-		return mSharedItems;
+		ArrayList<SharedWithMeItem> tempSharedWithMeItems = new ArrayList<SharedWithMeItem>();
+		
+		Iterator<SharedWithMeItem> itr = mSharedItems.iterator();
+	    while (itr.hasNext()) {
+	    	  SharedWithMeItem tempItem = itr.next();
+		      /* If this person is Everybody, skip it */			      
+		      if(tempItem.getSharedPath().startsWith(mCurrentPath)){
+		    	 tempSharedWithMeItems.add(tempItem);
+		      }
+	    }
+		
+		return tempSharedWithMeItems;
 	}
 
 	public void setSharesWithMe(boolean sharesWithMe) {
