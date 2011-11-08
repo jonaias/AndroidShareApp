@@ -51,11 +51,11 @@ public class NetworkManager {
 		mThisDevideName = android.os.Build.USER.concat("-"
 				+ android.os.Build.MODEL);
 
-		mNetworkSender = new NetworkSender(
-				NetworkProtocol.BROADCAST_SEND_PORT);
+		mNetworkSender = new NetworkSender(NetworkProtocol.BROADCAST_SEND_PORT);
 		mNetworkSender.start();
 		mNetworkListener = new NetworkListener(
-				NetworkProtocol.BROADCAST_RECEIVE_PORT);
+				NetworkProtocol.BROADCAST_RECEIVE_PORT,
+				NetworkProtocol.REPLY_PORT);
 		mNetworkListener.start();
 		mFileServer = new FileServer(NetworkProtocol.FILE_PORT);
 		mFileServer.start();
@@ -118,6 +118,18 @@ public class NetworkManager {
 				}
 			}
 		}
+	}
+
+	public Person getPersonByDeviceID(String deviceID) {
+		synchronized (mPersonList) {
+			Iterator<Person> itr = mPersonList.iterator();
+			while (itr.hasNext()) {
+				Person temp = itr.next();
+				if (temp.getDeviceID().compareTo(deviceID) == 0)
+					return temp;
+			}
+		}
+		return null;
 	}
 
 	public void addNewTransfer(FileTransferrer newTransfer) {
