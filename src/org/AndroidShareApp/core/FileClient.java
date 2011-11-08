@@ -8,32 +8,39 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import android.util.Log;
+import android.widget.ProgressBar;
+
 public class FileClient implements Runnable {
 
-    private String mDeviceID;
+	private String mDeviceID;
 	private String mPath;
-    private String mDestination;
+	private String mDestination;
 	private Socket mSocket;
 	private int mSize;
-	private Double mCurrentProgress; // TODO: Trocar por callback.
+	private ProgressBar mProgressBar;
 
-	public FileClient(String deviceID, String path, String destination, int size, Socket socket) {
-        mDeviceID = deviceID;
+	public FileClient(String deviceID, String path, String destination,
+			int size, Socket socket) {
+		mDeviceID = deviceID;
 		mPath = path;
 		mSize = size;
 		mSocket = socket;
-		mCurrentProgress = 0.0;
-        mDestination = destination;
+		mDestination = destination;
+
+		Log.i("FileClient", "Created transfer with path \"" + mPath
+				+ "\" on socket \"" + mSocket + "\" to destination \""
+				+ mDestination + "\".");
 	}
 
 	@Override
 	public void run() {
+		double currentProgress = 0.0;
 		try {
 
-            OutputStream sout = mSocket.getOutputStream();
-            String s = mDeviceID + " " + mPath + "\n";
-            System.out.println("[FileClient] s = " + s);
-            sout.write(s.getBytes(), 0, s.getBytes().length);
+			OutputStream sout = mSocket.getOutputStream();
+			String s = mDeviceID + " " + mPath + "\n";
+			sout.write(s.getBytes(), 0, s.getBytes().length);
 
 			int BLOCK_SIZE = NetworkProtocol.BLOCK_SIZE;
 
@@ -44,22 +51,26 @@ public class FileClient implements Runnable {
 			InputStream in = mSocket.getInputStream();
 			int nPackets = (int) Math.ceil(((double) mSize)
 					/ ((double) BLOCK_SIZE));
-            
-            System.out.println("[FileServerThread] nPackets = " + nPackets);
 
-			mCurrentProgress = 0.0;
 			int bytesReceived;
 			byte[] received = new byte[mSize];
 
+			Log.i("FileClient", "Started transfer on socket \"" + mSocket
+					+ "\".");
+
 			for (int i = 0; i < nPackets; i++) {
-                System.out.println("[Client] i=" + i);
-                int sizeToReceive = (mSize - i * BLOCK_SIZE >= BLOCK_SIZE) ? BLOCK_SIZE
+				int sizeToReceive = (mSize - i * BLOCK_SIZE >= BLOCK_SIZE) ? BLOCK_SIZE
 						: mSize - i * BLOCK_SIZE;
 
-				bytesReceived = in.read(received, i * BLOCK_SIZE, sizeToReceive);
-				synchronized (mCurrentProgress) {
-					mCurrentProgress += ((double) bytesReceived) / ((double) mSize);
-                    System.out.println("FileServerThread: Progress = " + mCurrentProgress);
+				bytesReceived = in
+						.read(received, i * BLOCK_SIZE, sizeToReceive);
+				currentProgress += ((double) bytesReceived) / ((double) mSize);
+
+				synchronized (mProgressBar) {
+					if (mProgressBar != null) {
+						mProgressBar.setProgress((int) Math
+								.round(currentProgress));
+					}
 				}
 			}
 
@@ -73,6 +84,14 @@ public class FileClient implements Runnable {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+
+		Log.i("FileClient", "Ended transfer on socket \"" + mSocket + "\".");
+	}
+
+	public void registerCallback(ProgressBar progressBar) {
+		synchronized (mProgressBar) {
+			mProgressBar = progressBar;
 		}
 	}
 }

@@ -6,6 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class FileServer extends Thread {
 
 	private ArrayList<String> mPermissions;
@@ -17,8 +19,9 @@ public class FileServer extends Thread {
 	@Override
 	public void run() {
 		try {
-			ServerSocket serverSocket = new ServerSocket(9876);
-			//TODO: Colocar as portas no NetworkProtocol.
+			ServerSocket serverSocket = new ServerSocket(
+					NetworkProtocol.FILE_PORT);
+			// TODO: Colocar as portas no NetworkProtocol.
 			Socket socket;
 
 			while (!isInterrupted()) {
@@ -26,27 +29,27 @@ public class FileServer extends Thread {
 
 				InputStream is = socket.getInputStream();
 
-                byte[] buffer = new byte[1024];
-                int i=0;
-                do {
-                    is.read(buffer, i, 1);
-                    System.out.println((char) buffer[i]);
-                    i++;
-                } while (buffer[i-1] != '\n');
+				/* First, we receive the request. */
+				byte[] buffer = new byte[1024];
+				int i = 0;
+				do {
+					is.read(buffer, i, 1);
+					System.out.println((char) buffer[i]);
+					i++;
+				} while (buffer[i - 1] != '\n');
 
-                String currentLine = new String(buffer).substring(0,i-1);
-                System.out.println("[FileServer] currentLine = \"" + currentLine + "\"");
+				String currentRequest = new String(buffer).substring(0, i - 1);
+				Log.i("FileServer", "Received request \"" + currentRequest
+						+ "\"");
 
+				/* Then, we see if we can accept if. */
 				synchronized (mPermissions) {
-					if (mPermissions.contains(currentLine)) {
-					
-                        System.out.println("[FileServer] Tem permissão");    
-						/*XXX: Será que ele pega a string pelo conteúdo
-						 * ou pelo ponteiro para o objeto????? */
-						
-						Thread t = new Thread(new FileServerThread(currentLine,
-								socket));
-						mPermissions.remove(currentLine);
+					if (mPermissions.contains(currentRequest)) {
+						Thread t = new Thread(new FileServerThread(
+								currentRequest, socket));
+						mPermissions.remove(currentRequest);
+						Log.i("FileServer", "Removed permission \""
+								+ currentRequest + "\".");
 						t.start();
 					}
 				}
@@ -62,6 +65,7 @@ public class FileServer extends Thread {
 		synchronized (mPermissions) {
 			mPermissions.add(deviceID + " " + path);
 		}
-        System.out.println("Added permission " + deviceID + " " + path);
+		Log.i("FileServer", "Added permission \"" + deviceID + " " + path
+				+ "\".");
 	}
 }
