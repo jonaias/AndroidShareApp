@@ -106,6 +106,8 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		 */
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
+			
+			SharedWithMeItem sharedWithMeItem = itemList.get(position);
 			// A ViewHolder keeps references to children views to avoid
 			// unnecessary calls
 			// to findViewById() on each row.
@@ -151,8 +153,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 				
 			
 			// Get flag name and id
-			String filename = "flag_" + String.valueOf(position);
-			int id = context.getResources().getIdentifier(filename, "drawable",
+			int id = context.getResources().getIdentifier(sharedWithMeItem.typeString(), "drawable",
 					context.getString(R.string.package_str));
 
 			// Icons bound to the rows.
@@ -163,10 +164,12 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 
 			// Bind the data efficiently with the holder.
 			holder.iconLine.setImageBitmap(mIcon1);
-			if (itemList.get(position).isPath())
-				holder.textLine.setText(itemList.get(position).getSharedPath());
-			else
-				holder.textLine.setText("It is not a PATH");
+			holder.textLine.setText(sharedWithMeItem.getSharedPath());
+			
+			if(sharedWithMeItem.isPath()){
+				holder.downPathIconLine.setVisibility(View.VISIBLE);
+			}
+			
 			
 			return convertView;
 		}

@@ -34,9 +34,11 @@ public class NetworkManager {
 		SharedWithMeItem sharedWithMeItem1 = new SharedWithMeItem("/Documents/", true, false);
 		SharedWithMeItem sharedWithMeItem2 = new SharedWithMeItem("/cool music.mp3", true, true);
 		SharedWithMeItem sharedWithMeItem3 = new SharedWithMeItem("/picture.png", true, true);
+		SharedWithMeItem sharedWithMeItem4 = new SharedWithMeItem("/Movies/", true, true);
 		teste2.addSharedwithMeItem(sharedWithMeItem1);
 		teste2.addSharedwithMeItem(sharedWithMeItem2);
 		teste2.addSharedwithMeItem(sharedWithMeItem3);
+		teste2.addSharedwithMeItem(sharedWithMeItem4);
 		addPerson(teste2);
 		/* ########################### */
 

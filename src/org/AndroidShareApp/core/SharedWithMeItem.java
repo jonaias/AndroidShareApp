@@ -27,5 +27,14 @@ public class SharedWithMeItem {
 	public boolean isPath(){
 		return (mSharedPath.charAt(mSharedPath.length()-1)=='/');
 	}
+	
+	public String typeString(){
+		if (isPath()){
+			return "folder";
+		}
+		else{
+			return "file";
+		}
+	}
 
 }
