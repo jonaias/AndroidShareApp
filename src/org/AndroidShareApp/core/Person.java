@@ -1,5 +1,6 @@
 package org.AndroidShareApp.core;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -13,10 +14,10 @@ public class Person implements Comparable<Person> {
 	private boolean mSharesWithMe;
 	public int mTimeoutLeft;
 	private static final int mMaxTimeoutLeft = 6;
-	private String mIP;
+	private InetAddress mIP;
 	private String mCurrentPath;
 
-	public Person(String name, String deviceId, String IP) {
+	public Person(String name, String deviceId, InetAddress IP) {
 		Log.i("Person", this.mName+ ":constructor("+name+","+deviceId+","+IP+")");
 		mName = name;
 		mDeviceId = deviceId;
@@ -25,7 +26,7 @@ public class Person implements Comparable<Person> {
 		
 		mSharedItems = new ArrayList<SharedWithMeItem>();
 		resetTimeoutLeft();
-		setCurrentPath("/Movies/");
+		setCurrentPath("/");
 		setIP(IP);
 	}
 
@@ -102,11 +103,11 @@ public class Person implements Comparable<Person> {
 		return this.mDeviceId.compareTo(other.mDeviceId);
 	}
 
-	public String getIP() {
+	public InetAddress getIP() {
 		return mIP;
 	}
 
-	public void setIP(String IP) {
+	public void setIP(InetAddress IP) {
 		mIP = IP;
 	}
 

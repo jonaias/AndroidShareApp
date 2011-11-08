@@ -41,7 +41,6 @@ public class NetworkSender extends Thread {
 			mJsonObject.put("messageType", NetworkProtocol.MESSAGE_LIVE_ANNOUNCEMENT);
 			mJsonObject.put("name", NetworkManager.getInstance().getThisDeviceName());
 			mJsonObject.put("deviceId", NetworkManager.getInstance().getThisDeviceId());
-			mJsonObject.put("IP", NetworkManager.getInstance().getHostAddress());
 			mPacket = new DatagramPacket(mJsonObject.toString().getBytes(), mJsonObject.toString().getBytes().length ,
 					InetAddress.getByName("10.0.2.255"), mPort);
 			

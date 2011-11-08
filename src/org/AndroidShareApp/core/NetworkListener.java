@@ -3,6 +3,7 @@ package org.AndroidShareApp.core;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 import org.json.JSONException;
@@ -12,12 +13,14 @@ import android.util.Log;
 
 public class NetworkListener extends Thread {
 
-	private DatagramSocket mSocket;
+	private DatagramSocket mListenSocket;
+	private DatagramSocket mReplySocket;
 	private byte[] mBuffer;
 
-	public NetworkListener(int listenPort) {
+	public NetworkListener(int listenPort, int replyPort) {
 		try {
-			mSocket = new DatagramSocket(listenPort);
+			mListenSocket = new DatagramSocket(listenPort);
+			mReplySocket = new DatagramSocket();
 		} catch (SocketException e) {
 			e.printStackTrace();
 			/* TODO: Emitir o erro. */
@@ -33,8 +36,12 @@ public class NetworkListener extends Thread {
 				DatagramPacket currPacket = new DatagramPacket(mBuffer,
 						mBuffer.length);
 
-				mSocket.receive(currPacket);
-				parseJSON(new String(mBuffer));
+				mListenSocket.receive(currPacket);
+
+				Log.i("NetworkListener",
+						"Received message from " + currPacket.getAddress());
+
+				parseJSON(new String(mBuffer), currPacket);
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -43,7 +50,7 @@ public class NetworkListener extends Thread {
 		}
 	}
 
-	private void parseJSON(String json) {
+	private void parseJSON(String json, DatagramPacket packet) {
 		try {
 			JSONObject obj = new JSONObject(json);
 			int messageType = obj.getInt("messageType");
@@ -57,12 +64,12 @@ public class NetworkListener extends Thread {
 				 */
 				String name = obj.getString("name");
 				String deviceID = obj.getString("deviceID");
-				String IP = obj.getString("IP");
+				InetAddress senderIP = packet.getAddress();
 
 				Log.i("NetworkListener", "MESSAGE_LIVE_ANN: " + obj);
 
 				NetworkManager.getInstance().addPerson(
-						new Person(name, deviceID, IP));
+						new Person(name, deviceID, senderIP));
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_LEAVING_ANNOUNCEMENT): {
@@ -91,7 +98,7 @@ public class NetworkListener extends Thread {
 				reply.put("deviceID", deviceID);
 				reply.put("path", path);
 
-				if (!hasPermission(deviceID, path)) {
+				if (!hasPermission(deviceID, path) || hasPendingUploads(path)) {
 					reply.put("messageType",
 							NetworkProtocol.MESSAGE_DOWNLOAD_DENY);
 				} else {
@@ -101,8 +108,18 @@ public class NetworkListener extends Thread {
 							NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT);
 				}
 
-				// TODO: Mandar a mensagem. Tentar colocar esses envios no
-				// NetworkManager. Colocar um getByDeviceID no NetworkManager.
+				DatagramPacket replyPacket = new DatagramPacket(reply
+						.toString().getBytes(),
+						reply.toString().getBytes().length,
+						packet.getAddress(),
+						NetworkProtocol.BROADCAST_RECEIVE_PORT);
+
+				try {
+					mReplySocket.send(replyPacket);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT):
@@ -118,8 +135,8 @@ public class NetworkListener extends Thread {
 			}
 
 		} catch (JSONException e) {
-			System.err.println("ERROR: Malformed JSON string: "
-					+ e.getMessage() + "\n");
+			Log.i("NetworkListener",
+					"Malformed JSON string: \"" + e.getMessage() + "\".");
 			return;
 		}
 	}
@@ -127,5 +144,10 @@ public class NetworkListener extends Thread {
 	private static boolean hasPermission(String deviceID, String path) {
 		// TODO: Ver como fazer isso!
 		return true;
+	}
+
+	private static boolean hasPendingUploads(String path) {
+		// TODO: Verificar como fazer isso.
+		return false;
 	}
 }

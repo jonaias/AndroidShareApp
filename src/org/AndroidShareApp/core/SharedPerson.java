@@ -1,12 +1,14 @@
 package org.AndroidShareApp.core;
 
+import java.net.InetAddress;
+
 public class SharedPerson extends Person {
 
 	private boolean mRead;
 	private boolean mWrite;
 	
 
-	public SharedPerson (String name, String deviceId, String IP, boolean read, boolean write) {
+	public SharedPerson (String name, String deviceId, InetAddress IP, boolean read, boolean write) {
 		super(name, deviceId, IP);
 		setPermissions(read, write);
 	}

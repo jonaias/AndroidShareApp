@@ -13,10 +13,10 @@ public class NetworkManager {
 	private ArrayList<SharedByMeItem> mSharedByMeItems;
 	private String mThisDeviceId;
 	private String mThisDevideName;
-	private NetworkSender mNetworkSender;
-	private NetworkListener mNetworkListener;
 	private InetAddress mHostAddress;
 	private InetAddress mBroadcastAddress;
+	private NetworkSender mNetworkSender;
+	private NetworkListener mNetworkListener;
 	private FileServer mFileServer;
 
 	private NetworkManager() {
@@ -27,7 +27,7 @@ public class NetworkManager {
 		SharedPerson everybody = new SharedPerson("Everybody",
 				String.valueOf(new Random().nextInt()), null, false, false);
 		addPerson(everybody);
-		
+
 		/* TODO: REMOVE!!!!!!!!!!!!! */
 		addPerson(new Person("teste", "123121", null));
 		addPerson(new Person("teste1", "1231211", null));
@@ -50,18 +50,23 @@ public class NetworkManager {
 		mThisDeviceId = android.provider.Settings.Secure.ANDROID_ID;
 		mThisDevideName = android.os.Build.USER.concat("-"
 				+ android.os.Build.MODEL);
-		
-		mNetworkSender = new NetworkSender(9764);
+
+		mNetworkSender = new NetworkSender(NetworkProtocol.BROADCAST_SEND_PORT);
 		mNetworkSender.start();
-		mNetworkListener = new NetworkListener(9226);
+		mNetworkListener = new NetworkListener(
+				NetworkProtocol.BROADCAST_RECEIVE_PORT,
+				NetworkProtocol.REPLY_PORT);
 		mNetworkListener.start();
-		mFileServer = new FileServer();
+		mFileServer = new FileServer(NetworkProtocol.FILE_PORT);
 		mFileServer.start();
-		
-		
+
 		/* TODO: REMOVE!!!!!!!!!!!!! */
-		SharedPerson paul = new SharedPerson("Paul", "PaulID", null, true, false);
-		SharedPerson john = new SharedPerson("John", "JohnID", null, false, false);
+
+		SharedPerson paul = new SharedPerson("Paul", "PaulID", null, true,
+				false);
+		SharedPerson john = new SharedPerson("John", "JohnID", null, false,
+				false);
+		
 		SharedByMeItem s1 = new SharedByMeItem("/path/to/nothing");
 		s1.getSharedPersonList().add(paul);
 		s1.getSharedPersonList().add(john);
@@ -113,6 +118,18 @@ public class NetworkManager {
 		}
 	}
 
+	public Person getPersonByDeviceID(String deviceID) {
+		synchronized (mPersonList) {
+			Iterator<Person> itr = mPersonList.iterator();
+			while (itr.hasNext()) {
+				Person temp = itr.next();
+				if (temp.getDeviceID().compareTo(deviceID) == 0)
+					return temp;
+			}
+		}
+		return null;
+	}
+
 	public void addNewTransfer(FileTransferrer newTransfer) {
 		mCurrentTransfers.add(newTransfer);
 	}
@@ -140,8 +157,8 @@ public class NetworkManager {
 	public NetworkListener getNetworkListener() {
 		return mNetworkListener;
 	}
-	
-	public FileServer getFileServer () {
+
+	public FileServer getFileServer() {
 		return mFileServer;
 	}
 

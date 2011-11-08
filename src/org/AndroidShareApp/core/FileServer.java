@@ -5,41 +5,56 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
+
+import android.util.Log;
 
 public class FileServer extends Thread {
 
 	private ArrayList<String> mPermissions;
+	private int mPort;
 
-	public FileServer() {
+	public FileServer(int port) {
 		mPermissions = new ArrayList<String>();
+		mPort = port;
 	}
 
 	@Override
 	public void run() {
 		try {
-			ServerSocket serverSocket = new ServerSocket(9876);
+			ServerSocket serverSocket = new ServerSocket(mPort);
+			// TODO: Colocar as portas no NetworkProtocol.
 			Socket socket;
 
 			while (!isInterrupted()) {
 				socket = serverSocket.accept();
 
 				InputStream is = socket.getInputStream();
-				Scanner in = new Scanner(is);
 
-				String currentLine = in.nextLine();
+				/* First, we receive the request. */
+				byte[] buffer = new byte[1024];
+				int i = 0;
+				do {
+					is.read(buffer, i, 1);
+					System.out.println((char) buffer[i]);
+					i++;
+				} while (buffer[i - 1] != '\n');
+
+				String currentRequest = new String(buffer).substring(0, i - 1);
+				Log.i("FileServer", "Received request \"" + currentRequest
+						+ "\"");
+
+				/* Then, we see if we can accept if. */
 				synchronized (mPermissions) {
-					if (mPermissions.contains(currentLine)) {
-						
-						/*XXX: Será que ele pega a string pelo conteúdo
-						 * ou pelo ponteiro para o objeto????? */
-						
-						Thread t = new Thread(new FileServerThread(currentLine,
-								socket));
-						mPermissions.remove(currentLine);
+					if (mPermissions.contains(currentRequest)) {
+						Thread t = new Thread(new FileServerThread(
+								currentRequest, socket));
+						mPermissions.remove(currentRequest);
+						Log.i("FileServer", "Removed permission \""
+								+ currentRequest + "\".");
 						t.start();
 					}
 				}
+				is.close();
 			}
 
 		} catch (IOException e) {
@@ -51,5 +66,7 @@ public class FileServer extends Thread {
 		synchronized (mPermissions) {
 			mPermissions.add(deviceID + " " + path);
 		}
+		Log.i("FileServer", "Added permission \"" + deviceID + " " + path
+				+ "\".");
 	}
 }
