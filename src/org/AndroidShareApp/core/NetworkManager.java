@@ -28,6 +28,19 @@ public class NetworkManager {
 				String.valueOf(new Random().nextInt()), null, false, false);
 		addPerson(everybody);
 		
+		/* TODO: REMOVE!!!!!!!!!!!!! */
+		addPerson(new Person("teste", "123121", null));
+		addPerson(new Person("teste1", "1231211", null));
+		Person teste2 = new Person("teste2", "1231212", null); 
+		SharedWithMeItem sharedWithMeItem1 = new SharedWithMeItem("/Documents/", true, false);
+		SharedWithMeItem sharedWithMeItem2 = new SharedWithMeItem("/cool music.mp3", true, true);
+		SharedWithMeItem sharedWithMeItem3 = new SharedWithMeItem("/picture.png", true, true);
+		teste2.addSharedwithMeItem(sharedWithMeItem1);
+		teste2.addSharedwithMeItem(sharedWithMeItem2);
+		teste2.addSharedwithMeItem(sharedWithMeItem3);
+		addPerson(teste2);
+		/* ########################### */
+
 		mThisDeviceId = android.provider.Settings.Secure.ANDROID_ID;
 		mThisDevideName = android.os.Build.USER.concat("-"
 				+ android.os.Build.MODEL);

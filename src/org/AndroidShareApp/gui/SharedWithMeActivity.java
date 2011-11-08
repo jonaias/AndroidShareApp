@@ -3,7 +3,13 @@
  */
 package org.AndroidShareApp.gui;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.AndroidShareApp.R;
+import org.AndroidShareApp.core.NetworkManager;
+import org.AndroidShareApp.core.Person;
+import org.AndroidShareApp.core.SharedWithMeItem;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -33,20 +39,32 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	private EfficientAdapter adap;
 	private static String[] data = new String[] { "0", "1", "2", "3", "4" };
 	private String personId;
+	private static ArrayList<SharedWithMeItem> itemList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shared_with_me_activity);
 		
-		adap = new EfficientAdapter(this);
+		Bundle bundle = this.getIntent().getExtras();
+		personId = bundle.getString("person");
+		
+		ArrayList<Person> personList = NetworkManager.getInstance().getPersonList();
+		Iterator<Person> itr = personList.iterator();
+	    while (itr.hasNext()) {
+	    	  Person tempPerson = itr.next();
+		      /* If this person is Everybody, skip it */			      
+		      if(tempPerson.getName().compareTo(personId)==0){
+		    	  itemList = tempPerson.getSharedWithMeItems();
+		    	  break;
+		      }
+	    }
+		
+	    adap = new EfficientAdapter(this);
 		setListAdapter(adap);
 		
 		Button backButton = (Button) findViewById(R.id.backButton);
 		backButton.setOnClickListener(this);
-		
-		Bundle bundle = this.getIntent().getExtras();
-		personId = bundle.getString("person");
 		
 		EditText editText = (EditText) findViewById(R.id.shareNameText);
 		editText.setText(personId);
@@ -109,7 +127,10 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 						.findViewById(R.id.textLine);
 				holder.iconLine = (ImageView) convertView
 						.findViewById(R.id.iconLine);
-
+				holder.downPathIconLine = (ImageView) convertView
+						.findViewById(R.id.downPathIcon);
+				
+				
 				convertView.setOnClickListener(new OnClickListener() {
 					private int pos = position;
 
@@ -127,7 +148,8 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 				// and the ImageView.
 				holder = (ViewHolder) convertView.getTag();
 			}
-
+				
+			
 			// Get flag name and id
 			String filename = "flag_" + String.valueOf(position);
 			int id = context.getResources().getIdentifier(filename, "drawable",
@@ -141,14 +163,18 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 
 			// Bind the data efficiently with the holder.
 			holder.iconLine.setImageBitmap(mIcon1);
-			holder.textLine.setText("Share " + String.valueOf(position));
-
+			if (itemList.get(position).isPath())
+				holder.textLine.setText(itemList.get(position).getSharedPath());
+			else
+				holder.textLine.setText("It is not a PATH");
+			
 			return convertView;
 		}
 
 		static class ViewHolder {
 			TextView textLine;
 			ImageView iconLine;
+			ImageView downPathIconLine;
 		}
 
 		@Override
@@ -163,12 +189,12 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 
 		@Override
 		public int getCount() {
-			return data.length;
+			return itemList.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return data[position];
+			return itemList.get(position);
 		}
 
 	}
