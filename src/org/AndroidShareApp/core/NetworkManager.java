@@ -17,6 +17,7 @@ public class NetworkManager {
 	private NetworkListener mNetworkListener;
 	private InetAddress mHostAddress;
 	private InetAddress mBroadcastAddress;
+	private FileServer mFileServer;
 
 	private NetworkManager() {
 		mPersonList = new ArrayList<Person>();
@@ -26,24 +27,24 @@ public class NetworkManager {
 		SharedPerson everybody = new SharedPerson("Everybody",
 				String.valueOf(new Random().nextInt()), null, false, false);
 		addPerson(everybody);
-
-		/* TODO: REMOVE!!!!!!!!!!!!! */
-		addPerson(new Person("teste", "123121", null));
-		addPerson(new Person("teste1", "1231211", null));
-		addPerson(new Person("teste2", "1231212", null));
-		/* ########################### */
-
+		
 		mThisDeviceId = android.provider.Settings.Secure.ANDROID_ID;
 		mThisDevideName = android.os.Build.USER.concat("-"
 				+ android.os.Build.MODEL);
-
-		/* TODO: Criar NetworkSender. */
+		
 		mNetworkSender = new NetworkSender(9764);
 		mNetworkSender.start();
 		mNetworkListener = new NetworkListener(9226);
 		mNetworkListener.start();
-
+		mFileServer = new FileServer();
+		mFileServer.start();
+		
+		
 		/* TODO: REMOVE!!!!!!!!!!!!! */
+		addPerson(new Person("teste", "123121", null));
+		addPerson(new Person("teste1", "1231211", null));
+		addPerson(new Person("teste2", "1231212", null));
+
 		SharedPerson paul = new SharedPerson("Paul", "PaulID", null, true, false);
 		SharedPerson john = new SharedPerson("John", "JohnID", null, false, false);
 		SharedByMeItem s1 = new SharedByMeItem("/path/to/nothing");
@@ -123,6 +124,10 @@ public class NetworkManager {
 
 	public NetworkListener getNetworkListener() {
 		return mNetworkListener;
+	}
+	
+	public FileServer getFileServer () {
+		return mFileServer;
 	}
 
 	public InetAddress getHostAddress() {
