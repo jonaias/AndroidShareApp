@@ -11,16 +11,17 @@ import android.util.Log;
 public class FileServer extends Thread {
 
 	private ArrayList<String> mPermissions;
+	private int mPort;
 
-	public FileServer() {
+	public FileServer(int port) {
 		mPermissions = new ArrayList<String>();
+		mPort = port;
 	}
 
 	@Override
 	public void run() {
 		try {
-			ServerSocket serverSocket = new ServerSocket(
-					NetworkProtocol.FILE_PORT);
+			ServerSocket serverSocket = new ServerSocket(mPort);
 			// TODO: Colocar as portas no NetworkProtocol.
 			Socket socket;
 

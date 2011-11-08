@@ -17,4 +17,6 @@ public abstract class NetworkProtocol {
 	public static final int BLOCK_SIZE 						= 1024;
 	public static final int BUFFER_SIZE						= 128 * 1024;
 	public static final int FILE_PORT						= 23753;
+	public static final int BROADCAST_SEND_PORT				= 9764;
+	public static final int BROADCAST_RECEIVE_PORT			= 9226;
 }

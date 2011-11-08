@@ -91,7 +91,7 @@ public class NetworkListener extends Thread {
 				reply.put("deviceID", deviceID);
 				reply.put("path", path);
 
-				if (!hasPermission(deviceID, path)) {
+				if (!hasPermission(deviceID, path) || hasPendingUploads(path)) {
 					reply.put("messageType",
 							NetworkProtocol.MESSAGE_DOWNLOAD_DENY);
 				} else {
@@ -127,5 +127,10 @@ public class NetworkListener extends Thread {
 	private static boolean hasPermission(String deviceID, String path) {
 		// TODO: Ver como fazer isso!
 		return true;
+	}
+	
+	private static boolean hasPendingUploads(String path) {
+		//TODO: Verificar como fazer isso.
+		return false;
 	}
 }
