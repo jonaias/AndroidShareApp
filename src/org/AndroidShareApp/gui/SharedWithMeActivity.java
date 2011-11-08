@@ -4,7 +4,6 @@
 package org.AndroidShareApp.gui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.AndroidShareApp.R;
 import org.AndroidShareApp.core.NetworkManager;
@@ -13,8 +12,6 @@ import org.AndroidShareApp.core.SharedWithMeItem;
 
 import android.app.ListActivity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +33,8 @@ import android.widget.Toast;
  */
 public class SharedWithMeActivity extends ListActivity implements OnClickListener {
 
-	private EfficientAdapter adap;
-	private String personId;
+	private EfficientAdapter adapter;
+	private Person mPerson;
 	private static ArrayList<SharedWithMeItem> itemList;
 
 	@Override
@@ -46,27 +43,19 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		setContentView(R.layout.shared_with_me_activity);
 		
 		Bundle bundle = this.getIntent().getExtras();
-		personId = bundle.getString("person");
 		
-		ArrayList<Person> personList = NetworkManager.getInstance().getPersonList();
-		Iterator<Person> itr = personList.iterator();
-	    while (itr.hasNext()) {
-	    	  Person tempPerson = itr.next();
-		      /* If this person is Everybody, skip it */			      
-		      if(tempPerson.getName().compareTo(personId)==0){
-		    	  itemList = tempPerson.getSharedWithMeItems();
-		    	  break;
-		      }
-	    }
+		mPerson = NetworkManager.getInstance().getPersonByDeviceID(bundle.getString("deviceID"));
 		
-	    adap = new EfficientAdapter(this);
-		setListAdapter(adap);
+		itemList = mPerson.getSharedWithMeItems();
+		
+	    adapter = new EfficientAdapter(this);
+		setListAdapter(adapter);
 		
 		Button backButton = (Button) findViewById(R.id.backButton);
 		backButton.setOnClickListener(this);
 		
 		EditText editText = (EditText) findViewById(R.id.shareNameText);
-		editText.setText(personId);
+		editText.setText(mPerson.getName());
 		
 		
 	}
@@ -88,7 +77,6 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	public static class EfficientAdapter extends BaseAdapter implements
 			Filterable {
 		private LayoutInflater mInflater;
-		private Bitmap mIcon1;
 		private Context context;
 
 		public EfficientAdapter(Context context) {
@@ -120,9 +108,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 				//convertView = mInflater.inflate(R.layout.adaptor_content, null);
 				convertView = mInflater.inflate(R.layout.shared_with_me_item, null);
 
-				// Creates a ViewHolder and store references to the two children
-				// views
-				// we want to bind data to.
+				// Creates a ViewHolder and store references to objects
 				holder = new ViewHolder();
 				holder.textLine = (TextView) convertView
 						.findViewById(R.id.textLine);
@@ -130,18 +116,6 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 						.findViewById(R.id.iconLine);
 				holder.downPathIconLine = (ImageView) convertView
 						.findViewById(R.id.downPathIcon);
-				
-				
-				convertView.setOnClickListener(new OnClickListener() {
-					private int pos = position;
-
-					@Override
-					public void onClick(View v) {
-						Toast.makeText(context,
-								"Got click on share " + String.valueOf(pos),
-								Toast.LENGTH_SHORT).show();
-					}
-				});
 
 				convertView.setTag(holder);
 			} else {
@@ -150,27 +124,61 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 				holder = (ViewHolder) convertView.getTag();
 			}
 				
-			
-			// Get flag name and id
-			int id = context.getResources().getIdentifier(sharedWithMeItem.typeString(), "drawable",
-					context.getString(R.string.package_str));
-
-			// Icons bound to the rows.
-			if (id != 0x0) {
-				mIcon1 = BitmapFactory.decodeResource(context.getResources(),
-						id);
-			}
 
 			// Bind the data efficiently with the holder.
-			holder.iconLine.setImageBitmap(mIcon1);
 			holder.textLine.setText(sharedWithMeItem.getSharedPath());
 			
+			
 			if(sharedWithMeItem.isPath()){
+				holder.iconLine.setImageResource(R.drawable.folder) ;
 				holder.downPathIconLine.setVisibility(View.VISIBLE);
 				if(sharedWithMeItem.getSharedPath().compareTo("/")==0){
+					/* A directory "/" will be considered folder up level */  
 					holder.downPathIconLine.setImageResource(R.drawable.left_arrow);
+					
+					holder.downPathIconLine.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Toast.makeText(context,
+									"Got click on up path " + String.valueOf(position),
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+				else{
+					holder.downPathIconLine.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Toast.makeText(context,
+									"Got click on down path " + String.valueOf(position),
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+					
 				}
 			}
+			else{
+				holder.iconLine.setImageResource(R.drawable.file);
+			}
+			
+			
+			holder.iconLine.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context,
+							"Got click on icon " + String.valueOf(position),
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+			
+			holder.textLine.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context,
+							"Got click on text " + String.valueOf(position),
+							Toast.LENGTH_SHORT).show();
+				}
+			});		
 			
 			
 			return convertView;

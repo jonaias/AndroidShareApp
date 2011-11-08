@@ -125,8 +125,8 @@ public class SharedWithMeListActivity extends ListActivity {
 						Intent tempIntent = new Intent(context,
 								SharedWithMeActivity.class);
 						synchronized (personList) { 
-							tempIntent.putExtra("person", personList.get(position)
-									.getName());
+							tempIntent.putExtra("deviceID", personList.get(position)
+									.getDeviceID());
 						}
 						context.startActivity(tempIntent);
 					}
