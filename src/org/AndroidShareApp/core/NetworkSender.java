@@ -100,7 +100,8 @@ public class NetworkSender extends Thread {
 				      /* If this person is Everybody, skip it */			      
 				      if(tempPerson.getName().compareTo("Everybody")!=0){
 				    	  if (--tempPerson.mTimeoutLeft<=1){
-				    		  itr.remove();
+				    		  /* TODO: REMOVE comment below */
+				    		  //itr.remove();
 				    	  }
 				      }
 			    }

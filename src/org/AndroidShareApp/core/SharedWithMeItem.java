@@ -23,5 +23,9 @@ public class SharedWithMeItem {
 	public boolean canWrite () {
 		return mWrite;
 	}
+	
+	public boolean isPath(){
+		return (mSharedPath.charAt(mSharedPath.length()-1)=='/');
+	}
 
 }
