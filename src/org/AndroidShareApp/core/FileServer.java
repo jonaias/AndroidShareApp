@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class FileServer extends Thread {
 
@@ -19,18 +18,29 @@ public class FileServer extends Thread {
 	public void run() {
 		try {
 			ServerSocket serverSocket = new ServerSocket(9876);
+			//TODO: Colocar as portas no NetworkProtocol.
 			Socket socket;
 
 			while (!isInterrupted()) {
 				socket = serverSocket.accept();
 
 				InputStream is = socket.getInputStream();
-				Scanner in = new Scanner(is);
 
-				String currentLine = in.nextLine();
+                byte[] buffer = new byte[1024];
+                int i=0;
+                do {
+                    is.read(buffer, i, 1);
+                    System.out.println((char) buffer[i]);
+                    i++;
+                } while (buffer[i-1] != '\n');
+
+                String currentLine = new String(buffer).substring(0,i-1);
+                System.out.println("[FileServer] currentLine = \"" + currentLine + "\"");
+
 				synchronized (mPermissions) {
 					if (mPermissions.contains(currentLine)) {
-						
+					
+                        System.out.println("[FileServer] Tem permissão");    
 						/*XXX: Será que ele pega a string pelo conteúdo
 						 * ou pelo ponteiro para o objeto????? */
 						
@@ -40,6 +50,7 @@ public class FileServer extends Thread {
 						t.start();
 					}
 				}
+				is.close();
 			}
 
 		} catch (IOException e) {
@@ -51,5 +62,6 @@ public class FileServer extends Thread {
 		synchronized (mPermissions) {
 			mPermissions.add(deviceID + " " + path);
 		}
+        System.out.println("Added permission " + deviceID + " " + path);
 	}
 }

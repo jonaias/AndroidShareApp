@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import android.util.Log;
-
 public class FileServerThread implements Runnable {
 
 	private String mPath;
@@ -18,16 +16,13 @@ public class FileServerThread implements Runnable {
 
 	public FileServerThread(String transfer, Socket socket) {
 		mPath = transfer.substring(transfer.indexOf(' ') + 1);
+        System.out.println("[FileServerThread] mPath = " + mPath);
 		mSocket = socket;
-		Log.i("FileServerThread", "Added transfer with path \"" + mPath
-				+ "\" on socket " + mSocket);
 		mCurrentProgress = 0.0;
 	}
 
 	@Override
 	public void run() {
-		Log.i("FileServerThread", "Started transfer on socket" + mSocket);
-
 		try {
 			int BLOCK_SIZE = NetworkProtocol.BLOCK_SIZE;
 			
@@ -46,7 +41,13 @@ public class FileServerThread implements Runnable {
 			OutputStream out = mSocket.getOutputStream();
 			mCurrentProgress = 0.0;
 
-			for (int i = 0; i < mSize; i += BLOCK_SIZE) {
+			int nPackets = (int) Math.ceil(((double) mSize)
+					/ ((double) BLOCK_SIZE));
+
+            System.out.println("[FileServerThread] nPackets = " + nPackets);
+
+			for (int i = 0; i<nPackets; i++) {
+                System.out.println("[Server] i=" + i);
 				int sizeToSend = (mSize - i * BLOCK_SIZE >= BLOCK_SIZE) ? BLOCK_SIZE
 						: mSize - i * BLOCK_SIZE;
 
@@ -55,6 +56,7 @@ public class FileServerThread implements Runnable {
 				synchronized (mCurrentProgress) {
 					mCurrentProgress += ((double) BLOCK_SIZE)
 							/ ((double) mSize);
+                    System.out.println("FileServerThread: Progress = " + mCurrentProgress);
 				}
 			}
 
@@ -66,7 +68,6 @@ public class FileServerThread implements Runnable {
 			return;
 		}
 		
-		Log.i("FileServerThread", "Finished transfer on socket" + mSocket);
 	}
 
 	public double getCurrentProgress() {
