@@ -58,9 +58,9 @@ public class NetworkListener extends Thread {
 				String name = obj.getString("name");
 				String deviceID = obj.getString("deviceID");
 				String IP = obj.getString("IP");
-				
+
 				Log.i("NetworkListener", "MESSAGE_LIVE_ANN: " + obj);
-				
+
 				NetworkManager.getInstance().addPerson(
 						new Person(name, deviceID, IP));
 			}
@@ -77,15 +77,33 @@ public class NetworkListener extends Thread {
 						new Person(name, deviceID, null));
 			}
 				break;
-			case (NetworkProtocol.MESSAGE_SHARING_NOTIFICATION):
-				break;
 			case (NetworkProtocol.MESSAGE_SHARING_DETAILS_REQUEST):
 				break;
 			case (NetworkProtocol.MESSAGE_SHARING_DETAILS_ANSWER):
 				break;
 			case (NetworkProtocol.MESSAGE_SHARING_DETAILS_DENIED):
 				break;
-			case (NetworkProtocol.MESSAGE_DOWNLOAD_REQUEST):
+			case (NetworkProtocol.MESSAGE_DOWNLOAD_REQUEST): {
+				String deviceID = obj.getString("deviceID");
+				String path = obj.getString("path");
+
+				JSONObject reply = new JSONObject();
+				reply.put("deviceID", deviceID);
+				reply.put("path", path);
+
+				if (!hasPermission(deviceID, path)) {
+					reply.put("messageType",
+							NetworkProtocol.MESSAGE_DOWNLOAD_DENY);
+				} else {
+					NetworkManager.getInstance().getFileServer()
+							.addPermission(deviceID, path);
+					reply.put("messageType",
+							NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT);
+				}
+
+				// TODO: Mandar a mensagem. Tentar colocar esses envios no
+				// NetworkManager. Colocar um getByDeviceID no NetworkManager.
+			}
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT):
 				break;
@@ -104,5 +122,10 @@ public class NetworkListener extends Thread {
 					+ e.getMessage() + "\n");
 			return;
 		}
+	}
+
+	private static boolean hasPermission(String deviceID, String path) {
+		// TODO: Ver como fazer isso!
+		return true;
 	}
 }
