@@ -37,7 +37,6 @@ import android.widget.Toast;
 public class SharedWithMeActivity extends ListActivity implements OnClickListener {
 
 	private EfficientAdapter adap;
-	private static String[] data = new String[] { "0", "1", "2", "3", "4" };
 	private String personId;
 	private static ArrayList<SharedWithMeItem> itemList;
 
@@ -168,6 +167,9 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 			
 			if(sharedWithMeItem.isPath()){
 				holder.downPathIconLine.setVisibility(View.VISIBLE);
+				if(sharedWithMeItem.getSharedPath().compareTo("/")==0){
+					holder.downPathIconLine.setImageResource(R.drawable.left_arrow);
+				}
 			}
 			
 			

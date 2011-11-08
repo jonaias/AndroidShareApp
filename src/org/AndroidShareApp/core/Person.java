@@ -3,6 +3,8 @@ package org.AndroidShareApp.core;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import android.util.Log;
+
 public class Person implements Comparable<Person> {
 
 	private String mName;
@@ -15,6 +17,7 @@ public class Person implements Comparable<Person> {
 	private String mCurrentPath;
 
 	public Person(String name, String deviceId, String IP) {
+		Log.i("Person", this.mName+ ":constructor("+name+","+deviceId+","+IP+")");
 		mName = name;
 		mDeviceId = deviceId;
 		/* At creation, person doesnt have any shares */
@@ -22,7 +25,7 @@ public class Person implements Comparable<Person> {
 		
 		mSharedItems = new ArrayList<SharedWithMeItem>();
 		resetTimeoutLeft();
-		setCurrentPath("/");
+		setCurrentPath("/Movies/");
 		setIP(IP);
 	}
 
@@ -43,19 +46,39 @@ public class Person implements Comparable<Person> {
 		return mDeviceId;
 	}
 	
-	public void addSharedwithMeItem(SharedWithMeItem item) {
+	public void addSharedWithMeItem(SharedWithMeItem item) {
+		Log.i("Person", this.mName+ ":addSharedWithMeItem("+item.getSharedPath()+")");
+		/* If item exists, delete it */
+		deleteSharedWithMeItem(item);
 		mSharedItems.add(item);
+	}
+
+	/* If person device ID does not exists, does nothing */
+	public void deleteSharedWithMeItem(SharedWithMeItem item) {
+		Log.i("Person", this.mName+ ":deleteSharedWithMeItem("+item.getSharedPath()+")");
+		Iterator<SharedWithMeItem> itr = mSharedItems.iterator();
+		while (itr.hasNext()) {
+			SharedWithMeItem tempItem = itr.next();
+			if (tempItem.compareTo(item) == 0) {
+				itr.remove();
+			}
+		}
 	}
 	
 	public ArrayList<SharedWithMeItem> getSharedWithMeItems () {
+		Log.i("Person", this.mName+ ":getSharedWithMeItems ()");
 		ArrayList<SharedWithMeItem> tempSharedWithMeItems = new ArrayList<SharedWithMeItem>();
-		
 		Iterator<SharedWithMeItem> itr = mSharedItems.iterator();
 	    while (itr.hasNext()) {
-	    	  SharedWithMeItem tempItem = itr.next();
-		      /* If this person is Everybody, skip it */			      
+	    	  SharedWithMeItem tempItem = itr.next();		
 		      if(tempItem.getSharedPath().startsWith(mCurrentPath)){
-		    	 tempSharedWithMeItems.add(tempItem);
+		    	  String buff;
+		    	  buff = tempItem.getSharedPath();
+		    	  buff = buff.substring(mCurrentPath.length()-1);
+	    		  if(buff.matches("[/]?[^/]*[/]?")){
+		    		  SharedWithMeItem itemToAdd = new SharedWithMeItem(buff, tempItem.canRead(),tempItem.canWrite());
+		    		  tempSharedWithMeItems.add(itemToAdd);
+		    	  }
 		      }
 	    }
 		
@@ -76,7 +99,7 @@ public class Person implements Comparable<Person> {
 
 	@Override
 	public int compareTo(Person other) {
-		return this.mName.compareTo(other.mName);
+		return this.mDeviceId.compareTo(other.mDeviceId);
 	}
 
 	public String getIP() {
@@ -93,5 +116,8 @@ public class Person implements Comparable<Person> {
 
 	public void setCurrentPath(String currentPath) {
 		mCurrentPath = currentPath;
+		if (mCurrentPath.compareTo("/")!=0){
+			mSharedItems.add(new SharedWithMeItem(mCurrentPath, true, true));
+		}
 	}
 }

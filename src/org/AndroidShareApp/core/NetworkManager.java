@@ -36,10 +36,14 @@ public class NetworkManager {
 		SharedWithMeItem sharedWithMeItem2 = new SharedWithMeItem("/cool music.mp3", true, true);
 		SharedWithMeItem sharedWithMeItem3 = new SharedWithMeItem("/picture.png", true, true);
 		SharedWithMeItem sharedWithMeItem4 = new SharedWithMeItem("/Movies/", true, true);
-		teste2.addSharedwithMeItem(sharedWithMeItem1);
-		teste2.addSharedwithMeItem(sharedWithMeItem2);
-		teste2.addSharedwithMeItem(sharedWithMeItem3);
-		teste2.addSharedwithMeItem(sharedWithMeItem4);
+		SharedWithMeItem sharedWithMeItem5 = new SharedWithMeItem("/Movies/alternative movie.mpg", true, true);
+		SharedWithMeItem sharedWithMeItem6 = new SharedWithMeItem("/Movies/unknown.mpg", true, true);
+		teste2.addSharedWithMeItem(sharedWithMeItem1);
+		teste2.addSharedWithMeItem(sharedWithMeItem2);
+		teste2.addSharedWithMeItem(sharedWithMeItem3);
+		teste2.addSharedWithMeItem(sharedWithMeItem4);
+		teste2.addSharedWithMeItem(sharedWithMeItem5);
+		teste2.addSharedWithMeItem(sharedWithMeItem6);
 		addPerson(teste2);
 		/* ########################### */
 
@@ -56,10 +60,6 @@ public class NetworkManager {
 		
 		
 		/* TODO: REMOVE!!!!!!!!!!!!! */
-		addPerson(new Person("teste", "123121", null));
-		addPerson(new Person("teste1", "1231211", null));
-		addPerson(new Person("teste2", "1231212", null));
-
 		SharedPerson paul = new SharedPerson("Paul", "PaulID", null, true, false);
 		SharedPerson john = new SharedPerson("John", "JohnID", null, false, false);
 		SharedByMeItem s1 = new SharedByMeItem("/path/to/nothing");

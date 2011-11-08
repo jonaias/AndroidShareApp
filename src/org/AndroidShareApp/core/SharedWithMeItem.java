@@ -1,6 +1,6 @@
 package org.AndroidShareApp.core;
 
-public class SharedWithMeItem {
+public class SharedWithMeItem implements Comparable<SharedWithMeItem> {
 	
 	private String mSharedPath;
 	private boolean mRead;
@@ -25,7 +25,7 @@ public class SharedWithMeItem {
 	}
 	
 	public boolean isPath(){
-		return (mSharedPath.charAt(mSharedPath.length()-1)=='/');
+		return mSharedPath.matches("\\p{ASCII}*/");
 	}
 	
 	public String typeString(){
@@ -35,6 +35,11 @@ public class SharedWithMeItem {
 		else{
 			return "file";
 		}
+	}
+	
+	@Override
+	public int compareTo(SharedWithMeItem other) {
+		return this.mSharedPath.compareTo(other.mSharedPath);
 	}
 
 }
