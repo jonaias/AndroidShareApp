@@ -1,6 +1,11 @@
 package org.AndroidShareApp.core;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -64,16 +69,40 @@ public class NetworkManager {
 
 		/* TODO: REMOVE!!!!!!!!!!!!! */
 
-		SharedPerson paul = new SharedPerson("Paul", "PaulID", null, true,
+		InetAddress address = null;
+		try {
+			address = InetAddress.getByName("10.0.2.2");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		SharedPerson paul = new SharedPerson("Paul", "PaulID", address, true,
 				false);
-		SharedPerson john = new SharedPerson("John", "JohnID", null, false,
+		SharedPerson john = new SharedPerson("John", "JohnID", address, false,
 				false);
 		
-		SharedByMeItem s1 = new SharedByMeItem("/path/to/nothing");
+		SharedByMeItem s1 = new SharedByMeItem("/mnt/sdcard/teste.txt");
 		s1.getSharedPersonList().add(paul);
 		s1.getSharedPersonList().add(john);
 		mSharedByMeItems.add(s1);
+		createFile();
 		/* ########################### */
+	}
+	
+	private static void createFile () {
+		File f = new File ("/mnt/sdcard/teste.txt");
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(f);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		PrintWriter out = new PrintWriter(fos);
+		
+		out.print("This is a sample file.");
+		out.close();
 	}
 
 	public static synchronized NetworkManager getInstance() {

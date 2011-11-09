@@ -22,6 +22,7 @@ public class NetworkSender extends Thread {
 	
 	public NetworkSender(int port){
 		mPort = port;
+		setName("Network Sender");
 	}
 	
 	

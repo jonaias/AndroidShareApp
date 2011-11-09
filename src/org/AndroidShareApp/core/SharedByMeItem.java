@@ -14,6 +14,7 @@ public class SharedByMeItem {
 		mPerson = new ArrayList<SharedPerson>();
 		mPerson.add(person);
 		/* TODO: Pegar o sharedPath a partir do fullPath. */
+		mSharedPath = fullPath;
 		mIsActive = false;
 	}
 	

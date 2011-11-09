@@ -16,6 +16,7 @@ public class FileServer extends Thread {
 	public FileServer(int port) {
 		mPermissions = new ArrayList<String>();
 		mPort = port;
+		setName("FileServer");
 	}
 
 	@Override

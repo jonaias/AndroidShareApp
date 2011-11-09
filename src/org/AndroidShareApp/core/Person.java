@@ -85,8 +85,8 @@ public class Person implements Comparable<Person> {
 		      if(tempItem.getSharedPath().startsWith(mCurrentPath)){
 		    	  String buff;
 		    	  buff = tempItem.getSharedPath();
-		    	  Log.i("Person", this.mName+ ":testing "+buff);
 		    	  buff = buff.substring(mCurrentPath.length()-1);
+		    	  Log.i("Person", this.mName+ ":testing "+buff);
 	    		  if(buff.matches("[/]?[^/]*[/]?")){
 	    			  Log.i("Person", this.mName+ ":added "+buff);
 		    		  SharedWithMeItem itemToAdd = new SharedWithMeItem(buff, tempItem.canRead(),tempItem.canWrite());

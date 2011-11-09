@@ -24,12 +24,14 @@ public class NetworkListener extends Thread {
 	public NetworkListener(int listenPort, int replyPort) {
 		try {
 			mListenSocket = new DatagramSocket(listenPort);
+			Log.i("NetworkListener", "Listening on port " + listenPort + ".");
 			mReplySocket = new DatagramSocket();
 		} catch (SocketException e) {
 			e.printStackTrace();
 			/* TODO: Emitir o erro. */
 		}
 		mBuffer = new byte[NetworkProtocol.BUFFER_SIZE];
+		setName("NetworkListener");
 	}
 
 	@Override
@@ -82,6 +84,9 @@ public class NetworkListener extends Thread {
 				 * In this case, a person is announcing his/her exit from the
 				 * network.
 				 */
+
+				Log.i("NetworkListener", "MESSAGE_LEAVING_ANN: " + obj);
+
 				String name = obj.getString("name");
 				deviceID = obj.getString("deviceID");
 
@@ -101,8 +106,8 @@ public class NetworkListener extends Thread {
 						.getPersonByDeviceID(deviceID);
 
 				if (person != null) {
-					Log.i("NetworkListener", "Received sharing details from "
-							+ person.getName());
+					Log.i("NetworkListener", "Received sharing details from \""
+							+ person.getName() + "\".");
 
 					for (int i = 0; i < sharedList.length(); i++) {
 						currPath = sharedList.getJSONObject(i)
@@ -126,6 +131,9 @@ public class NetworkListener extends Thread {
 			case (NetworkProtocol.MESSAGE_SHARING_DETAILS_DENIED):
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_REQUEST): {
+
+				Log.i("NetworkListener", "MESSAGE_DOWNLOAD_REQUEST: " + obj);
+
 				deviceID = obj.getString("deviceID");
 				String path = obj.getString("path");
 
@@ -159,10 +167,13 @@ public class NetworkListener extends Thread {
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT): {
+				Log.i("NetworkListener", "MESSAGE_DOWNLOAD_ACCEPT: " + obj);
+
 				deviceID = obj.getString("deviceID");
 				String path = obj.getString("path");
-				String destination = null; /* TODO: Pegar o destino. */
-				int size = 0; /* TODO: Como pegar o tamanho??? Ele pode mandar.... */
+				String destination = null; // TODO: Pegar o destino.
+				int size = 0; // TODO: Como pegar o tamanho??? Ele pode
+								// mandar....
 				size = Integer.valueOf(obj.getString("size"));
 
 				Socket socket = null;
@@ -178,6 +189,7 @@ public class NetworkListener extends Thread {
 				FileClient client = new FileClient(deviceID, path, destination,
 						size, socket);
 				Thread t = new Thread(client);
+				t.setName("FileClient:" + destination);
 				t.start();
 			}
 				break;
@@ -199,6 +211,7 @@ public class NetworkListener extends Thread {
 	}
 
 	private static boolean hasPermission(String deviceID, String path) {
+
 		Person person = NetworkManager.getInstance().getPersonByDeviceID(
 				deviceID);
 
