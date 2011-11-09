@@ -4,6 +4,7 @@
 package org.AndroidShareApp.gui;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.AndroidShareApp.R;
 import org.AndroidShareApp.core.NetworkManager;
@@ -12,7 +13,9 @@ import org.AndroidShareApp.core.SharedWithMeItem;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +39,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	private static EfficientAdapter adapter;
 	private static Person mPerson;
 	private static ArrayList<SharedWithMeItem> itemList;
+	private static ArrayList<String> mFilesToDownload;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,34 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	
 	
 	
+	/*------ Path management ------*/
+	private static void addItemToDownload(String path){
+		mFilesToDownload.add(path);
+	}
+	
+	private static void removeItemToDownload(String path){
+		Iterator<String> itr = mFilesToDownload.iterator();
+		while (itr.hasNext()) {
+			String tempItem = itr.next();
+			if (tempItem.compareTo(path) == 0) {
+				itr.remove();
+			}
+		}
+	}
+	
+	private static boolean existsItemToDownload(String path){
+		Iterator<String> itr = mFilesToDownload.iterator();
+		while (itr.hasNext()) {
+			String tempItem = itr.next();
+			if (tempItem.compareTo(path) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*-----------------------------*/
+	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -115,6 +147,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
 			this.context = context;
+			mFilesToDownload = new ArrayList<String>();
 		}
 
 		/**
@@ -130,31 +163,21 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 			// A ViewHolder keeps references to children views to avoid
 			// unnecessary calls
 			// to findViewById() on each row.
-			ViewHolder holder;
+			final ViewHolder holder;
 
-			// When convertView is not null, we can reuse it directly, there is
-			// no need to reinflate it. We only inflate a new View when the
-			// convertView
-			// supplied by ListView is null.
-			if (convertView == null) {
-				//convertView = mInflater.inflate(R.layout.adaptor_content, null);
-				convertView = mInflater.inflate(R.layout.shared_with_me_item, null);
+			//convertView = mInflater.inflate(R.layout.adaptor_content, null);
+			convertView = mInflater.inflate(R.layout.shared_with_me_item, null);
 
-				// Creates a ViewHolder and store references to objects
-				holder = new ViewHolder();
-				holder.textLine = (TextView) convertView
-						.findViewById(R.id.textLine);
-				holder.iconLine = (ImageView) convertView
-						.findViewById(R.id.iconLine);
-				holder.downPathIconLine = (ImageView) convertView
-						.findViewById(R.id.downPathIcon);
+			// Creates a ViewHolder and store references to objects
+			holder = new ViewHolder();
+			holder.textLine = (TextView) convertView
+					.findViewById(R.id.textLine);
+			holder.iconLine = (ImageView) convertView
+					.findViewById(R.id.iconLine);
+			holder.downPathIconLine = (ImageView) convertView
+					.findViewById(R.id.downPathIcon);
 
-				convertView.setTag(holder);
-			} else {
-				// Get the ViewHolder back to get fast access to the TextView
-				// and the ImageView.
-				holder = (ViewHolder) convertView.getTag();
-			}
+			convertView.setTag(holder);
 				
 
 			// Bind the data efficiently with the holder.
@@ -218,6 +241,22 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 			holder.textLine.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if (holder.textLine.isSelected()){
+						holder.textLine.setBackgroundColor(Color.TRANSPARENT);
+						holder.textLine.setSelected(false);
+						String buffer = mPerson.getCurrentPath();
+						buffer = buffer.concat(sharedWithMeItem.getSharedPath().substring(1));
+						removeItemToDownload(buffer);
+						Log.i("SharedWithMeActivity", "Removed from mFilesToDownload "+ buffer);
+					}
+					else{
+						holder.textLine.setBackgroundColor(R.drawable.list_background);
+						holder.textLine.setSelected(true);
+						String buffer = mPerson.getCurrentPath();
+						buffer = buffer.concat(sharedWithMeItem.getSharedPath().substring(1));
+						addItemToDownload(buffer);
+						Log.i("SharedWithMeActivity", "Added to mFilesToDownload "+ buffer);	
+					}
 					Toast.makeText(context,
 							"Got click on text " + String.valueOf(position),
 							Toast.LENGTH_SHORT).show();
