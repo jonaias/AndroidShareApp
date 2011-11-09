@@ -21,6 +21,10 @@ public class SharedByMeItem {
 		mSharedPath = sharedPath;
 		mPerson = new ArrayList<SharedPerson>();
 	}
+	
+	public SharedByMeItem () {
+		mPerson = new ArrayList<SharedPerson>();
+	}
 
 	public String getSharedPath() {
 		return mSharedPath;

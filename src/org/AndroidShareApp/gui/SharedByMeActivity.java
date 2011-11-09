@@ -57,9 +57,10 @@ import android.widget.TextView;
 public class SharedByMeActivity extends ListActivity implements
 		OnClickListener, OnItemClickListener {
 
-	private EfficientAdapter adap;
+	private EfficientAdapter mAdapter;
 	private static ArrayList<SharedByMeItem> mSharedByMeItems;
-	//private volatile int mCurrentSelectedItem;
+
+	// private volatile int mCurrentSelectedItem;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,25 +70,33 @@ public class SharedByMeActivity extends ListActivity implements
 
 		mSharedByMeItems = NetworkManager.getInstance().getSharedByMeItems();
 
-		adap = new EfficientAdapter(this, this);
-		setListAdapter(adap);
+		mAdapter = new EfficientAdapter(this, this);
+		setListAdapter(mAdapter);
 
 		Button createShareButton = (Button) findViewById(R.id.createShareButton);
 		createShareButton.setOnClickListener(this);
-		
+
 		getListView().setOnItemClickListener(this);
 	}
-	
+
 	@Override
-	protected void onResume () {
+	public void onResume() {
 		super.onResume();
-		getListView().invalidateViews();
+		refreshUi();
+	}
+
+	public void refreshUi() {
+		this.runOnUiThread(new Runnable() {
+			public void run() {
+				mAdapter.notifyDataSetChanged();
+			}
+		});
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 		v.setSelected(true);
-		//mCurrentSelectedItem = position;
+		// mCurrentSelectedItem = position;
 	}
 
 	@Override
@@ -97,20 +106,20 @@ public class SharedByMeActivity extends ListActivity implements
 			startActivity(intent);
 		}
 	}
-	
+
 	public static class EfficientAdapter extends BaseAdapter implements
 			Filterable {
 		private LayoutInflater mInflater;
 		private Bitmap mIcon1;
 		private Context mContext;
-		//private SharedByMeActivity mListActivity;
 
-		public EfficientAdapter(Context context,
-				SharedByMeActivity listActivity) {
+		// private SharedByMeActivity mListActivity;
+
+		public EfficientAdapter(Context context, SharedByMeActivity listActivity) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
 			mContext = context;
-			//mListActivity = listActivity;
+			// mListActivity = listActivity;
 		}
 
 		/**
@@ -126,39 +135,30 @@ public class SharedByMeActivity extends ListActivity implements
 			// to findViewById() on each row.
 			ViewHolder holder;
 
-			// When convertView is not null, we can reuse it directly, there is
-			// no need to reinflate it. We only inflate a new View when the
-			// convertView
-			// supplied by ListView is null.
-			if (convertView == null) {
-				convertView = mInflater.inflate(
-						R.layout.shared_by_me_list_item, null);
+			convertView = mInflater.inflate(R.layout.shared_by_me_list_item,
+					null);
 
-				// Creates a ViewHolder and store references to the two children
-				// views
-				// we want to bind data to.
-				holder = new ViewHolder();
-				holder.textLine = (TextView) convertView
-						.findViewById(R.id.textLine);
-				holder.iconLine = (ImageView) convertView
-						.findViewById(R.id.iconLine);
+			// Creates a ViewHolder and store references to the two children
+			// views
+			// we want to bind data to.
+			holder = new ViewHolder();
+			holder.textLine = (TextView) convertView
+					.findViewById(R.id.textLine);
+			holder.iconLine = (ImageView) convertView
+					.findViewById(R.id.iconLine);
 
-				//convertView.setOnClickListener(mListActivity);
-				convertView.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(mContext, SharedByMeConfigActivity.class);
-						intent.putExtra("position", position);
-						mContext.startActivity(intent);
-					}
-				});
+			// convertView.setOnClickListener(mListActivity);
+			convertView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(mContext,
+							SharedByMeConfigActivity.class);
+					intent.putExtra("position", position);
+					mContext.startActivity(intent);
+				}
+			});
 
-				convertView.setTag(holder);
-			} else {
-				// Get the ViewHolder back to get fast access to the TextView
-				// and the ImageView.
-				holder = (ViewHolder) convertView.getTag();
-			}
+			convertView.setTag(holder);
 
 			int id = mContext.getResources().getIdentifier("flag_0",
 					"drawable", mContext.getString(R.string.package_str));

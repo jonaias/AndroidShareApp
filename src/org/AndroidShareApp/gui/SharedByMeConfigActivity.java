@@ -11,10 +11,8 @@ import org.AndroidShareApp.core.Person;
 import org.AndroidShareApp.core.SharedByMeItem;
 import org.AndroidShareApp.core.SharedPerson;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,6 +40,8 @@ public class SharedByMeConfigActivity extends ListActivity implements
 	private EfficientAdapter mAdapter;
 	private static ArrayList<SharedByMeItem> mSharedByMeItems;
 	private static int mClickPosition;
+	private static SharedByMeItem mNewItem;
+	private static boolean mIsCreating;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,13 +49,18 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.shared_by_me_config_activity);
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null)
-			mClickPosition = extras.getInt("position");
-		else
-			mClickPosition = -1;
-
 		mSharedByMeItems = NetworkManager.getInstance().getSharedByMeItems();
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			mIsCreating = false;
+			mClickPosition = extras.getInt("position");
+		} else {
+			mIsCreating = true;
+			mNewItem = new SharedByMeItem();
+			mSharedByMeItems.add(mNewItem);
+			mClickPosition = mSharedByMeItems.indexOf(mNewItem);
+		}
 
 		mAdapter = new EfficientAdapter(this, this);
 		setListAdapter(mAdapter);
@@ -64,7 +69,8 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		selectSharePathButton.setOnClickListener(this);
 
 		ImageButton buttonDelete = (ImageButton) findViewById(R.id.buttonDelete);
-		buttonDelete.setOnClickListener(this);
+		buttonDelete.setEnabled(false);
+		buttonDelete.setVisibility(Button.INVISIBLE);
 
 		ToggleButton activateToggleButton = (ToggleButton) findViewById(R.id.activateToggleButton);
 		if (mClickPosition != -1)
@@ -74,6 +80,9 @@ public class SharedByMeConfigActivity extends ListActivity implements
 
 		Button addPersonToShareButton = (Button) findViewById(R.id.addPersonToShareButton);
 		addPersonToShareButton.setOnClickListener(this);
+
+		Button sharedByMeBackButton = (Button) findViewById(R.id.sharedByMeBackButton);
+		sharedByMeBackButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -81,34 +90,14 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		if (v.getId() == R.id.selectSharePathButton) {
 			((EditText) findViewById(R.id.sharedPathEditText))
 					.setText("User selected something.");
-		} else if (v.getId() == R.id.buttonDelete) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Are you sure you want to delete the share?")
-					.setCancelable(false)
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									mSharedByMeItems.remove(mClickPosition);
-									SharedByMeConfigActivity.this.finish();
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alert = builder.create();
-			alert.show();
 		} else if (v.getId() == R.id.activateToggleButton) {
 			ToggleButton button = (ToggleButton) v;
 			mSharedByMeItems.get(mClickPosition).setActive(button.isChecked());
 		} else if (v.getId() == R.id.addPersonToShareButton) {
 			Intent intent = new Intent(this, PersonListActivity.class);
 			startActivityForResult(intent, 1);
-		}
+		} else if (v.getId() == R.id.sharedByMeBackButton)
+			finish();
 	}
 
 	@Override
@@ -120,15 +109,22 @@ public class SharedByMeConfigActivity extends ListActivity implements
 				.getPersonByDeviceID(deviceID);
 		SharedPerson selectedSharedPerson = new SharedPerson(
 				selectedPerson.getName(), selectedPerson.getDeviceID(),
-				selectedPerson.getIP(), false, false);
-		mSharedByMeItems.get(mClickPosition).managePerson(selectedSharedPerson);
+				selectedPerson.getIP(), true, false);
+
+		synchronized (mSharedByMeItems) {
+			mSharedByMeItems.get(mClickPosition).managePerson(
+					selectedSharedPerson);
+		}
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
+		refreshUi();
+	}
+
+	public void refreshUi() {
 		this.runOnUiThread(new Runnable() {
-			@Override
 			public void run() {
 				mAdapter.notifyDataSetChanged();
 			}
@@ -157,81 +153,67 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		 */
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
+
 			// A ViewHolder keeps references to children views to avoid
 			// unnecessary calls
 			// to findViewById() on each row.
 			ViewHolder holder;
+			convertView = mInflater.inflate(R.layout.shared_by_me_config_item,
+					null);
 
-			// When convertView is not null, we can reuse it directly, there is
-			// no need to reinflate it. We only inflate a new View when the
-			// convertView
-			// supplied by ListView is null.
-			if (convertView == null) {
-				convertView = mInflater.inflate(
-						R.layout.shared_by_me_config_item, null);
+			// Creates a ViewHolder and store references to the two children
+			// views
+			// we want to bind data to.
+			holder = new ViewHolder();
+			holder.peerName = (TextView) convertView
+					.findViewById(R.id.peerNameTextBox);
+			holder.canReadCheckBox = (CheckBox) convertView
+					.findViewById(R.id.canReadCheckBox);
+			holder.canWriteCheckBox = (CheckBox) convertView
+					.findViewById(R.id.canWriteCheckBox);
 
-				// Creates a ViewHolder and store references to the two children
-				// views
-				// we want to bind data to.
-				holder = new ViewHolder();
-				holder.peerName = (TextView) convertView
-						.findViewById(R.id.peerNameTextBox);
-				holder.canReadCheckBox = (CheckBox) convertView
-						.findViewById(R.id.canReadCheckBox);
-				holder.canWriteCheckBox = (CheckBox) convertView
-						.findViewById(R.id.canWriteCheckBox);
+			holder.canReadCheckBox.setOnClickListener(new OnClickListener() {
 
-				holder.canReadCheckBox
-						.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								CheckBox cb = (CheckBox) v;
-								ArrayList<SharedByMeItem> shares = NetworkManager
-										.getInstance().getSharedByMeItems();
-								shares.get(mClickPosition)
-										.getSharedPersonList().get(position)
-										.setRead(cb.isChecked());
-							}
-						});
-
-				holder.canWriteCheckBox
-						.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								CheckBox cb = (CheckBox) v;
-								ArrayList<SharedByMeItem> shares = NetworkManager
-										.getInstance().getSharedByMeItems();
-								shares.get(mClickPosition)
-										.getSharedPersonList().get(position)
-										.setWrite(cb.isChecked());
-							}
-						});
-
-				if (mClickPosition != -1) {
-					ArrayList<SharedPerson> person = mSharedByMeItems.get(
-							mClickPosition).getSharedPersonList();
-
-					holder.peerName.setText(person.get(position).getName());
-					holder.canReadCheckBox.setChecked(person.get(position)
-							.canRead());
-					holder.canWriteCheckBox.setChecked(person.get(position)
-							.canWrite());
-
-					((EditText) mActivity.findViewById(R.id.sharedPathEditText))
-							.setText(mSharedByMeItems.get(mClickPosition)
-									.getSharedPath());
-				} else {
-					((EditText) mActivity.findViewById(R.id.sharedPathEditText))
-							.setText("Press 'Select' to set path");
+				@Override
+				public void onClick(View v) {
+					CheckBox cb = (CheckBox) v;
+					ArrayList<SharedByMeItem> shares = NetworkManager
+							.getInstance().getSharedByMeItems();
+					shares.get(mClickPosition).getSharedPersonList()
+							.get(position).setRead(cb.isChecked());
 				}
-				convertView.setTag(holder);
+			});
+
+			holder.canWriteCheckBox.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					CheckBox cb = (CheckBox) v;
+					ArrayList<SharedByMeItem> shares = NetworkManager
+							.getInstance().getSharedByMeItems();
+					shares.get(mClickPosition).getSharedPersonList()
+							.get(position).setWrite(cb.isChecked());
+				}
+			});
+
+			if (!mIsCreating) {
+				ArrayList<SharedPerson> person = mSharedByMeItems.get(
+						mClickPosition).getSharedPersonList();
+
+				holder.peerName.setText(person.get(position).getName());
+				holder.canReadCheckBox.setChecked(person.get(position)
+						.canRead());
+				holder.canWriteCheckBox.setChecked(person.get(position)
+						.canWrite());
+
+				((EditText) mActivity.findViewById(R.id.sharedPathEditText))
+						.setText(mSharedByMeItems.get(mClickPosition)
+								.getSharedPath());
 			} else {
-				// Get the ViewHolder back to get fast access to the TextView
-				// and the ImageView.
-				holder = (ViewHolder) convertView.getTag();
+				((EditText) mActivity.findViewById(R.id.sharedPathEditText))
+						.setText("Press 'Select' to set path");
 			}
+			convertView.setTag(holder);
 
 			return convertView;
 		}
