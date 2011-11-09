@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -197,8 +199,29 @@ public class NetworkListener extends Thread {
 	}
 
 	private static boolean hasPermission(String deviceID, String path) {
-		// TODO: Ver como fazer isso!
-		return true;
+		Person person = NetworkManager.getInstance().getPersonByDeviceID(
+				deviceID);
+
+		ArrayList<SharedByMeItem> sharedItems = NetworkManager.getInstance()
+				.getSharedByMeItems();
+
+		Iterator<SharedByMeItem> itr = sharedItems.iterator();
+		while (itr.hasNext()) {
+			SharedByMeItem currItem = itr.next();
+			if (currItem.getSharedPath().compareTo(path) != 0)
+				continue;
+			ArrayList<SharedPerson> persons = currItem.getSharedPersonList();
+
+			Iterator<SharedPerson> sitr = persons.iterator();
+			while (sitr.hasNext()) {
+				SharedPerson currPerson = sitr.next();
+				if ((currPerson.getDeviceID().compareTo(person.getDeviceID()) == 0)
+						&& (currPerson.canRead()))
+					return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static boolean hasPendingUploads(String path) {
