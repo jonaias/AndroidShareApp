@@ -121,15 +121,15 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		}
 		return false;
 	}
+	/*----Path management stop----*/
 	
-	/*-----------------------------*/
-	
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Toast.makeText(this, "Got click on share" + String.valueOf(position),
-				Toast.LENGTH_SHORT).show();
+	/* Concatenate Path with file */
+	private static String fullPath(String path, String file){
+		String buffer = path;
+		buffer = buffer.concat(file.substring(1));
+		return buffer;
 	}
+	
 	
 	@Override
 	public void onClick(View v) {
@@ -210,11 +210,8 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 					holder.downPathIconLine.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							/* buffer = ./ + sharedWithMeItem.getSharedPath() */
-							String buffer = mPerson.getCurrentPath();
-							buffer = buffer.concat(sharedWithMeItem.getSharedPath().substring(1));
 							/* Change person current Path */
-							mPerson.setCurrentPath(buffer);
+							mPerson.setCurrentPath(fullPath(mPerson.getCurrentPath(), sharedWithMeItem.getSharedPath()));
 							/* Refresh list */
 							refreshItemList();
 
@@ -237,6 +234,11 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 							Toast.LENGTH_SHORT).show();
 				}
 			});
+			
+			if( existsItemToDownload(fullPath(mPerson.getCurrentPath(), sharedWithMeItem.getSharedPath()) )){
+				holder.textLine.setBackgroundColor(R.drawable.list_background);
+				holder.textLine.setSelected(true);
+			}
 			
 			holder.textLine.setOnClickListener(new OnClickListener() {
 				@Override

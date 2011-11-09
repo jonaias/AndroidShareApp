@@ -38,12 +38,14 @@ public class NetworkManager {
 		SharedWithMeItem sharedWithMeItem4 = new SharedWithMeItem("/Movies/", true, true);
 		SharedWithMeItem sharedWithMeItem5 = new SharedWithMeItem("/Movies/alternative movie.mpg", true, true);
 		SharedWithMeItem sharedWithMeItem6 = new SharedWithMeItem("/Movies/unknown.mpg", true, true);
+		SharedWithMeItem sharedWithMeItem7 = new SharedWithMeItem("/Movies/Bad movie/unknown.mpg", true, true);
 		teste2.addSharedWithMeItem(sharedWithMeItem1);
 		teste2.addSharedWithMeItem(sharedWithMeItem2);
 		teste2.addSharedWithMeItem(sharedWithMeItem3);
 		teste2.addSharedWithMeItem(sharedWithMeItem4);
 		teste2.addSharedWithMeItem(sharedWithMeItem5);
 		teste2.addSharedWithMeItem(sharedWithMeItem6);
+		teste2.addSharedWithMeItem(sharedWithMeItem7);
 		addPerson(teste2);
 		/* ########################### */
 
