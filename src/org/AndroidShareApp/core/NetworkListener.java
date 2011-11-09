@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketException;
 
 import org.json.JSONArray;
@@ -100,7 +101,7 @@ public class NetworkListener extends Thread {
 				if (person != null) {
 					Log.i("NetworkListener", "Received sharing details from "
 							+ person.getName());
-					
+
 					for (int i = 0; i < sharedList.length(); i++) {
 						currPath = sharedList.getJSONObject(i)
 								.getString("path");
@@ -151,10 +152,32 @@ public class NetworkListener extends Thread {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					return;
 				}
 			}
 				break;
-			case (NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT):
+			case (NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT): {
+				deviceID = obj.getString("deviceID");
+				String path = obj.getString("path");
+				String destination = null; /* TODO: Pegar o destino. */
+				int size = 0; /* TODO: Como pegar o tamanho??? Ele pode mandar.... */
+				size = Integer.valueOf(obj.getString("size"));
+
+				Socket socket = null;
+				try {
+					socket = new Socket(packet.getAddress(),
+							NetworkProtocol.FILE_PORT);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}
+
+				FileClient client = new FileClient(deviceID, path, destination,
+						size, socket);
+				Thread t = new Thread(client);
+				t.start();
+			}
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_DENY):
 				break;

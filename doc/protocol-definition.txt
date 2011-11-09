@@ -18,29 +18,32 @@ Envio de detalhes de compartilhamento:
 
 Requisição de download:
     messageType : "5" (MESSAGE_DOWNLOAD_REQUEST)
-    downloadPath : "/file.pdf"
+    deviceID : "123456"
+    path : "/file.pdf"
 
 Aceitamento de download:
     messageType : "6" (MESSAGE_DOWNLOAD_ACCEPT)
-    downloadPath : "/file.pdf"
+    deviceID : "123456"
+    path : "/file.pdf"
 
 Negação de download:
     messageType : "7" (MESSAGE_DOWNLOAD_DENY)
-    downloadPath : "/file.pdf"
+    deviceID : "123456"
+    path : "/file.pdf"
 
 Requisição de upload:
     messageType : "8" (MESSAGE_UPLOAD_REQUEST)
-    uploadPath : "/file.doc"
+    path : "/file.doc"
     
 Inicio de upload:
     messageType : "9" (MESSAGE_UPLOAD_START)
-    uploadPath : "/file.doc"
+    path : "/file.doc"
 
 Aceitamento de upload:
     messageType : "10" (MESSAGE_UPLOAD_ACCEPT)
-    uploadPath : "/file.doc"
+    path : "/file.doc"
 
 Negação de upload:
     messageType : "11" (MESSAGE_UPLOAD_DENY)
-    uploadPath : "/file.doc"
+    path : "/file.doc"
 
