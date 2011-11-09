@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.AndroidShareApp.R;
 import org.AndroidShareApp.core.NetworkManager;
+import org.AndroidShareApp.core.Person;
 import org.AndroidShareApp.core.SharedByMeItem;
 import org.AndroidShareApp.core.SharedPerson;
 
@@ -14,6 +15,7 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +39,7 @@ import android.widget.ToggleButton;
 public class SharedByMeConfigActivity extends ListActivity implements
 		OnClickListener {
 
-	private EfficientAdapter adap;
+	private EfficientAdapter mAdapter;
 	private static ArrayList<SharedByMeItem> mSharedByMeItems;
 	private static int mClickPosition;
 
@@ -55,8 +57,8 @@ public class SharedByMeConfigActivity extends ListActivity implements
 
 		mSharedByMeItems = NetworkManager.getInstance().getSharedByMeItems();
 
-		adap = new EfficientAdapter(this, this);
-		setListAdapter(adap);
+		mAdapter = new EfficientAdapter(this, this);
+		setListAdapter(mAdapter);
 
 		Button selectSharePathButton = (Button) findViewById(R.id.selectSharePathButton);
 		selectSharePathButton.setOnClickListener(this);
@@ -65,9 +67,13 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		buttonDelete.setOnClickListener(this);
 
 		ToggleButton activateToggleButton = (ToggleButton) findViewById(R.id.activateToggleButton);
-		if(mClickPosition != -1)
-			activateToggleButton.setChecked(mSharedByMeItems.get(mClickPosition).isActive());
+		if (mClickPosition != -1)
+			activateToggleButton.setChecked(mSharedByMeItems
+					.get(mClickPosition).isActive());
 		activateToggleButton.setOnClickListener(this);
+
+		Button addPersonToShareButton = (Button) findViewById(R.id.addPersonToShareButton);
+		addPersonToShareButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -99,7 +105,34 @@ public class SharedByMeConfigActivity extends ListActivity implements
 		} else if (v.getId() == R.id.activateToggleButton) {
 			ToggleButton button = (ToggleButton) v;
 			mSharedByMeItems.get(mClickPosition).setActive(button.isChecked());
+		} else if (v.getId() == R.id.addPersonToShareButton) {
+			Intent intent = new Intent(this, PersonListActivity.class);
+			startActivityForResult(intent, 1);
 		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Bundle returnedData = data.getExtras();
+		String deviceID = returnedData.getString("selectedPerson");
+		Person selectedPerson = NetworkManager.getInstance()
+				.getPersonByDeviceID(deviceID);
+		SharedPerson selectedSharedPerson = new SharedPerson(
+				selectedPerson.getName(), selectedPerson.getDeviceID(),
+				selectedPerson.getIP(), false, false);
+		mSharedByMeItems.get(mClickPosition).managePerson(selectedSharedPerson);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		this.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				mAdapter.notifyDataSetChanged();
+			}
+		});
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
