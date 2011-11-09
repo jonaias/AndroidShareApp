@@ -4,7 +4,7 @@ public abstract class NetworkProtocol {
 	public static final int MESSAGE_LIVE_ANNOUNCEMENT 		= 1;
 	public static final int MESSAGE_LEAVING_ANNOUNCEMENT 	= 2;
 	public static final int MESSAGE_SHARING_DETAILS_REQUEST = 3;
-	public static final int MESSAGE_SHARING_DETAILS_ANSWER 	= 4;
+	public static final int MESSAGE_SHARING_DETAILS_SEND 	= 4;
 	public static final int MESSAGE_SHARING_DETAILS_DENIED 	= 5;
 	public static final int MESSAGE_DOWNLOAD_REQUEST 		= 6;
 	public static final int MESSAGE_DOWNLOAD_ACCEPT 		= 7;

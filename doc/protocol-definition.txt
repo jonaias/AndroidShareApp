@@ -13,7 +13,8 @@ Pedido de detalhes de compartilhamento:
 
 Envio de detalhes de compartilhamento:
     messageType : "4" (MESSAGE_SHARING_DETAILS_SEND)
-    sharedList : {{"Music/", "rw"}, {"file.pdf", "r"}}
+    deviceID : "123456"
+    sharedList : {{"path":"Music/", "permissions":"rw"}, {"path":"file.pdf", "permissions": "r"}}
 
 Requisição de download:
     messageType : "5" (MESSAGE_DOWNLOAD_REQUEST)
