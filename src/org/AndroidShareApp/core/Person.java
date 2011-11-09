@@ -69,14 +69,21 @@ public class Person implements Comparable<Person> {
 	public ArrayList<SharedWithMeItem> getSharedWithMeItems () {
 		Log.i("Person", this.mName+ ":getSharedWithMeItems ()");
 		ArrayList<SharedWithMeItem> tempSharedWithMeItems = new ArrayList<SharedWithMeItem>();
+		
+		/*if (mCurrentPath.compareTo("/")!=0){
+			tempSharedWithMeItems.add(new SharedWithMeItem(mCurrentPath, true, true));
+		}*/
+		
 		Iterator<SharedWithMeItem> itr = mSharedItems.iterator();
 	    while (itr.hasNext()) {
 	    	  SharedWithMeItem tempItem = itr.next();		
 		      if(tempItem.getSharedPath().startsWith(mCurrentPath)){
 		    	  String buff;
 		    	  buff = tempItem.getSharedPath();
+		    	  Log.i("Person", this.mName+ ":testing "+buff);
 		    	  buff = buff.substring(mCurrentPath.length()-1);
 	    		  if(buff.matches("[/]?[^/]*[/]?")){
+	    			  Log.i("Person", this.mName+ ":added "+buff);
 		    		  SharedWithMeItem itemToAdd = new SharedWithMeItem(buff, tempItem.canRead(),tempItem.canWrite());
 		    		  tempSharedWithMeItems.add(itemToAdd);
 		    	  }
@@ -117,8 +124,7 @@ public class Person implements Comparable<Person> {
 
 	public void setCurrentPath(String currentPath) {
 		mCurrentPath = currentPath;
-		if (mCurrentPath.compareTo("/")!=0){
-			mSharedItems.add(new SharedWithMeItem(mCurrentPath, true, true));
-		}
+		/* TODO:Clear shares to receive next level list .. needed?? */
+		//mSharedItems.clear();
 	}
 }

@@ -33,8 +33,8 @@ import android.widget.Toast;
  */
 public class SharedWithMeActivity extends ListActivity implements OnClickListener {
 
-	private EfficientAdapter adapter;
-	private Person mPerson;
+	private static EfficientAdapter adapter;
+	private static Person mPerson;
 	private static ArrayList<SharedWithMeItem> itemList;
 
 	@Override
@@ -57,8 +57,40 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		EditText editText = (EditText) findViewById(R.id.shareNameText);
 		editText.setText(mPerson.getName());
 		
+		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		getListView().setItemsCanFocus(false);
 		
 	}
+	
+	/*-------------- Callback functions start -----------*/
+	
+	public static void refreshItemList(){
+		itemList = mPerson.getSharedWithMeItems();
+		adapter.notifyDataSetChanged();
+	}
+	
+	public void refreshUi(){
+		refreshItemList();
+		this.runOnUiThread(
+                new Runnable(){
+                    public void run(){
+                    	adapter.notifyDataSetChanged();
+                    }
+                });
+	}
+	@Override
+	protected void onResume(){
+		super.onResume();
+		//NetworkManager.getInstance().getNetworkSender().registerCallBack(this);
+	}
+	@Override
+	protected void onPause(){
+		super.onPause();
+		//NetworkManager.getInstance().getNetworkSender().registerCallBack(null);
+	}
+	/*-------------- Callback functions stop -----------*/
+	
+	
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -94,7 +126,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			
-			SharedWithMeItem sharedWithMeItem = itemList.get(position);
+			final SharedWithMeItem sharedWithMeItem = itemList.get(position);
 			// A ViewHolder keeps references to children views to avoid
 			// unnecessary calls
 			// to findViewById() on each row.
@@ -135,23 +167,34 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 				if(sharedWithMeItem.getSharedPath().compareTo("/")==0){
 					/* A directory "/" will be considered folder up level */  
 					holder.downPathIconLine.setImageResource(R.drawable.left_arrow);
-					
 					holder.downPathIconLine.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							Toast.makeText(context,
-									"Got click on up path " + String.valueOf(position),
-									Toast.LENGTH_SHORT).show();
+							/* buffer = ../ */
+							String buffer = mPerson.getCurrentPath();
+							buffer = buffer.substring(0, buffer.length()-2);
+							buffer = buffer.substring(0,buffer.lastIndexOf('/')+1);
+							/* Change person current Path */
+							mPerson.setCurrentPath(buffer);
+							/* Refresh List */
+							refreshItemList();
+		
 						}
 					});
 				}
 				else{
+					holder.downPathIconLine.setImageResource(R.drawable.right_arrow);
 					holder.downPathIconLine.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							Toast.makeText(context,
-									"Got click on down path " + String.valueOf(position),
-									Toast.LENGTH_SHORT).show();
+							/* buffer = ./ + sharedWithMeItem.getSharedPath() */
+							String buffer = mPerson.getCurrentPath();
+							buffer = buffer.concat(sharedWithMeItem.getSharedPath().substring(1));
+							/* Change person current Path */
+							mPerson.setCurrentPath(buffer);
+							/* Refresh list */
+							refreshItemList();
+
 						}
 					});
 					
@@ -159,6 +202,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 			}
 			else{
 				holder.iconLine.setImageResource(R.drawable.file);
+				holder.downPathIconLine.setVisibility(View.INVISIBLE);
 			}
 			
 			
