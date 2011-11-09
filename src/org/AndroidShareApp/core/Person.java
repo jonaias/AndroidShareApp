@@ -129,13 +129,5 @@ public class Person implements Comparable<Person> {
 
 	public void setCurrentPath(String currentPath) {
 		mCurrentPath = currentPath;
-<<<<<<< HEAD
-		/* TODO:Clear shares to receive next level list .. needed?? */
-		//mSharedItems.clear();
-=======
-		if (mCurrentPath.compareTo("/") != 0) {
-			mSharedItems.add(new SharedWithMeItem(mCurrentPath, true, true));
-		}
->>>>>>> d6b430b885ef36359632de78cda598802bb04356
 	}
 }
