@@ -103,41 +103,31 @@ public class SharedWithMeListActivity extends ListActivity {
 			// to findViewById() on each row.
 			ViewHolder holder;
 
-			// When convertView is not null, we can reuse it directly, there is
-			// no need to reinflate it. We only inflate a new View when the
-			// convertView
-			// supplied by ListView is null.
-			if (convertView == null) {
-				convertView = mInflater.inflate(
-						R.layout.shared_with_me_list_item, null);
+			convertView = mInflater.inflate(R.layout.shared_with_me_list_item, null);
 
-				// Creates a ViewHolder and store references to the two children
-				// views
-				// we want to bind data to.
-				holder = new ViewHolder();
-				holder.textLine = (TextView) convertView
-						.findViewById(R.id.personListItemTextView);
+			// Creates a ViewHolder and store references to the two children
+			// views
+			// we want to bind data to.
+			holder = new ViewHolder();
+			holder.textLine = (TextView) convertView
+					.findViewById(R.id.personListItemTextView);
 
-				convertView.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						Intent tempIntent = new Intent(context,
-								SharedWithMeActivity.class);
-						synchronized (personList) { 
-							tempIntent.putExtra("deviceID", personList.get(position)
-									.getDeviceID());
-						}
-						context.startActivity(tempIntent);
+			convertView.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent tempIntent = new Intent(context,
+							SharedWithMeActivity.class);
+					synchronized (personList) { 
+						tempIntent.putExtra("deviceID", personList.get(position)
+								.getDeviceID());
 					}
-				});
+					context.startActivity(tempIntent);
+				}
+			});
 
-				convertView.setTag(holder);
-			} else {
-				// Get the ViewHolder back to get fast access to the TextView
-				// and the ImageView.
-				holder = (ViewHolder) convertView.getTag();
-			}
+			convertView.setTag(holder);
+		
 
 			// Bind the data efficiently with the holder.
 			synchronized (personList) {
