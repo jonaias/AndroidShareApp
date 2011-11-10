@@ -1,5 +1,6 @@
 package org.AndroidShareApp.core;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class SharedByMeItem {
@@ -14,16 +15,29 @@ public class SharedByMeItem {
 		mPerson = new ArrayList<SharedPerson>();
 		mPerson.add(person);
 		/* TODO: Pegar o sharedPath a partir do fullPath. */
-		mSharedPath = fullPath;
+		mSharedPath = getSharedPath(fullPath);
 		mIsActive = false;
 	}
-	
-	public SharedByMeItem(String sharedPath) {
-		mSharedPath = sharedPath;
+
+	public SharedByMeItem(String fullPath) {
+		mFullPath = fullPath;
+		/* TODO: Pegar o sharedPath a partir do fullPath. */
+		mSharedPath = getSharedPath(fullPath);
 		mPerson = new ArrayList<SharedPerson>();
 	}
-	
-	public SharedByMeItem () {
+
+	private static String getSharedPath(String fullPath) {
+		File f = new File(fullPath);
+		if (!f.isDirectory()) {
+			return fullPath.substring(fullPath.lastIndexOf('/'));
+		} else {
+			return fullPath.substring(
+					fullPath.substring(0, 
+							fullPath.length() - 1).lastIndexOf('/'));
+		}
+	}
+
+	public SharedByMeItem() {
 		mPerson = new ArrayList<SharedPerson>();
 	}
 
@@ -31,27 +45,24 @@ public class SharedByMeItem {
 		return mSharedPath;
 	}
 
-	public void setSharedPath(String SharedPath) {
-		this.mSharedPath = SharedPath;
-	}
-
 	public String getFullPath() {
 		return mFullPath;
 	}
 
 	public void setFullPath(String fullPath) {
-		this.mFullPath = fullPath;
+		mFullPath = fullPath;
+		mSharedPath = getSharedPath(fullPath);
 	}
-	
+
 	public ArrayList<SharedPerson> getSharedPersonList() {
 		return mPerson;
 	}
-	
-	public boolean isActive () {
+
+	public boolean isActive() {
 		return mIsActive;
 	}
-	
-	public void setActive (boolean isActive) {
+
+	public void setActive(boolean isActive) {
 		mIsActive = isActive;
 	}
 

@@ -14,4 +14,11 @@
     <string name="active_transfers">Active Transfers</string>
     <string name="send">Send</string>
     <string name="select_a_file_tip">Select a file\nUse arrows to navigate through folders</string>
+    <string name="please_select_a_file">Please select a file</string>
+    <string name="delete_question">Are you sure you want to delete?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="file_select_activity_title">Select a file or folder to share</string>
+    <string name="file_select_button_label">Select</string>
+    <string name="cannot_find_file_manager">Cannot find a suitable file manager</string>
 </resources>

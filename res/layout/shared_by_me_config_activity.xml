@@ -21,8 +21,9 @@
 		<EditText android:id="@+id/sharedPathEditText"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:text="Press 'Select' to set a path."
 			android:enabled="false"
+			android:focusable="false"
+			android:focusableInTouchMode="false"
 			android:layout_weight="1"
 			android:padding="3dip"
 			android:textStyle="italic"/>
