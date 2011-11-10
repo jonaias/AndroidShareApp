@@ -13,6 +13,8 @@ import org.AndroidShareApp.gui.SharedWithMeListActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class NetworkSender extends Thread {
 	SharedWithMeListActivity mSharedWithMeListActivity=null;
 	DatagramSocket mSocket = null;
@@ -22,6 +24,15 @@ public class NetworkSender extends Thread {
 	
 	public NetworkSender(int port){
 		mPort = port;
+		
+		try {
+			mSocket = new DatagramSocket();
+			mSocket.setBroadcast(true);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		setName("Network Sender");
 	}
 	
@@ -30,28 +41,60 @@ public class NetworkSender extends Thread {
 			mSharedWithMeListActivity = sharedWithMeListActivity;
 	}
 	
+	public void requestDownload(Person person, ArrayList<String> itemsToDownload){
+		Log.i("NetworkSender", "requestDownload("+person.getName()+","+itemsToDownload);
+		DatagramPacket tempPacket = null;
+		JSONObject tempJsonObject = null;
+		
+		Iterator<String> itr = itemsToDownload.iterator();
+		while (itr.hasNext()) {
+			String tempItem = itr.next();
+			try {
+				tempJsonObject = new JSONObject();
+				tempJsonObject.put("messageType", NetworkProtocol.MESSAGE_DOWNLOAD_REQUEST);
+				tempJsonObject.put("deviceID", NetworkManager.getInstance().getThisDeviceId());
+				tempJsonObject.put("path", tempItem);
+				Log.i("NetworkSender", "Sending packet "+tempJsonObject.toString()+" adress " + person.getIP().toString());
+				tempPacket = new DatagramPacket(tempJsonObject.toString().getBytes(), tempJsonObject.toString().getBytes().length ,
+						person.getIP(), mPort);
+				
+				synchronized (mSocket) {
+					mSocket.send(tempPacket);
+				}
+				
+			} catch (SocketException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (UnknownHostException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (JSONException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	@Override
 	public void run() {
 		
 		/* Creates broadcast message */
-		try {
-			mSocket = new DatagramSocket();
-			mSocket.setBroadcast(true);
-			
+		try {			
 			mJsonObject = new JSONObject();
 			mJsonObject.put("messageType", NetworkProtocol.MESSAGE_LIVE_ANNOUNCEMENT);
 			mJsonObject.put("name", NetworkManager.getInstance().getThisDeviceName());
-			mJsonObject.put("deviceId", NetworkManager.getInstance().getThisDeviceId());
+			mJsonObject.put("deviceID", NetworkManager.getInstance().getThisDeviceId());
 			mPacket = new DatagramPacket(mJsonObject.toString().getBytes(), mJsonObject.toString().getBytes().length ,
-					InetAddress.getByName("10.0.2.255"), mPort);
+						InetAddress.getByName("10.0.2.255"), mPort);
+			/* TODO:NetworkManager.getInstance().getBroadcastAddress() */ 
 			
-		} catch (SocketException e2) {
+		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (UnknownHostException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (JSONException e3) {
+			e.printStackTrace();
+		}  catch (JSONException e3) {
 			// TODO Auto-generated catch block
 			e3.printStackTrace();
 		}
@@ -67,7 +110,9 @@ public class NetworkSender extends Thread {
 			
 			/* Broadcasts live announcement */
 			try {	
-				mSocket.send(mPacket);
+				synchronized (mSocket) {
+					mSocket.send(mPacket);
+				}
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

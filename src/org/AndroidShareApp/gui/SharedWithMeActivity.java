@@ -39,7 +39,9 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	private static EfficientAdapter adapter;
 	private static Person mPerson;
 	private static ArrayList<SharedWithMeItem> itemList;
-	private static ArrayList<String> mFilesToDownload;
+	private static ArrayList<String> mItemsToDownload;
+	private static Button mDownloadButton;
+	private static EditText mInfoText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,11 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		
 		EditText editText = (EditText) findViewById(R.id.shareNameText);
 		editText.setText(mPerson.getName());
+		
+		mDownloadButton = (Button) findViewById(R.id.downloadButton);
+		mDownloadButton.setOnClickListener(this);
+		
+		mInfoText = (EditText) findViewById(R.id.infoText);
 		
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		getListView().setItemsCanFocus(false);
@@ -98,21 +105,34 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	
 	/*------ Path management ------*/
 	private static void addItemToDownload(String path){
-		mFilesToDownload.add(path);
+		mItemsToDownload.add(path);
+		if (mItemsToDownload.size()>0){
+			mDownloadButton.setVisibility(View.VISIBLE);
+			mInfoText.setText(mItemsToDownload.size()+" file(s) and/or folder(s) selected."+
+					"\nUse right arrow to download");
+		}
 	}
 	
 	private static void removeItemToDownload(String path){
-		Iterator<String> itr = mFilesToDownload.iterator();
+		Iterator<String> itr = mItemsToDownload.iterator();
 		while (itr.hasNext()) {
 			String tempItem = itr.next();
 			if (tempItem.compareTo(path) == 0) {
 				itr.remove();
 			}
 		}
+		if (mItemsToDownload.size()==0){
+			mDownloadButton.setVisibility(View.INVISIBLE);
+			mInfoText.setText(R.string.select_a_file_tip);
+		}
+		else{
+			mInfoText.setText(mItemsToDownload.size()+" file(s) and/or folder(s) selected." +
+					"\nUse right arrow to download");
+		}
 	}
 	
 	private static boolean existsItemToDownload(String path){
-		Iterator<String> itr = mFilesToDownload.iterator();
+		Iterator<String> itr = mItemsToDownload.iterator();
 		while (itr.hasNext()) {
 			String tempItem = itr.next();
 			if (tempItem.compareTo(path) == 0) {
@@ -136,6 +156,9 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		if (v.getId() == R.id.backButton) {
 			finish();
 		} 
+		else if ( v.getId() == R.id.downloadButton){
+			NetworkManager.getInstance().getNetworkSender().requestDownload(mPerson, mItemsToDownload);
+		}
 	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
@@ -147,7 +170,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
 			this.context = context;
-			mFilesToDownload = new ArrayList<String>();
+			mItemsToDownload = new ArrayList<String>();
 		}
 
 		/**

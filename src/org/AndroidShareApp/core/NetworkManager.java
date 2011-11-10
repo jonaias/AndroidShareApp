@@ -37,6 +37,12 @@ public class NetworkManager {
 		addPerson(new Person("teste", "123121", null));
 		addPerson(new Person("teste1", "1231211", null));
 		Person teste2 = new Person("teste2", "1231212", null); 
+		try {
+			teste2.setIP(InetAddress.getByName("10.0.2.2"));
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		SharedWithMeItem sharedWithMeItem1 = new SharedWithMeItem("/Documents/", true, false);
 		SharedWithMeItem sharedWithMeItem2 = new SharedWithMeItem("/cool music.mp3", true, true);
 		SharedWithMeItem sharedWithMeItem3 = new SharedWithMeItem("/picture.png", true, true);
