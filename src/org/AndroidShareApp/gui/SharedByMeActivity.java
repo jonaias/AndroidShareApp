@@ -160,8 +160,13 @@ public class SharedByMeActivity extends ListActivity implements
 
 			convertView.setTag(holder);
 
-			int id = mContext.getResources().getIdentifier("flag_0",
-					"drawable", mContext.getString(R.string.package_str));
+			int id = 0x0;
+			if (mSharedByMeItems.get(position).getSharedPath().endsWith("/"))
+				id = mContext.getResources().getIdentifier("folder",
+						"drawable", mContext.getString(R.string.package_str));
+			else
+				id = mContext.getResources().getIdentifier("file",
+						"drawable", mContext.getString(R.string.package_str));
 
 			if (id != 0x0) {
 				mIcon1 = BitmapFactory.decodeResource(mContext.getResources(),

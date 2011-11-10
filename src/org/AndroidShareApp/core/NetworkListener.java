@@ -214,6 +214,9 @@ public class NetworkListener extends Thread {
 
 		Person person = NetworkManager.getInstance().getPersonByDeviceID(
 				deviceID);
+		
+		if(person == null)
+			return false;
 
 		ArrayList<SharedByMeItem> sharedItems = NetworkManager.getInstance()
 				.getSharedByMeItems();
