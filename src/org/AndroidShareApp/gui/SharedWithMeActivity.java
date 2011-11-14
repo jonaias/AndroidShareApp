@@ -160,16 +160,34 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 			NetworkManager.getInstance().getNetworkSender().requestDownload(mPerson, mItemsToDownload);
 		}
 	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		//super.onListItemClick(l, v, position, id);
+		String fullItemPath = mPerson.getCurrentPath();
+		fullItemPath = fullItemPath.concat(itemList.get(position).getSharedPath().substring(1));
+		
+		if (existsItemToDownload(fullItemPath)){
+			v.setBackgroundColor(Color.TRANSPARENT);
+			v.setSelected(false);
+			removeItemToDownload(fullItemPath);
+			Log.i("SharedWithMeActivity", "Removed from mFilesToDownload "+ fullItemPath);
+		}
+		else{
+			v.setBackgroundColor(R.drawable.list_background);
+			v.setSelected(true);
+			addItemToDownload(fullItemPath);
+			Log.i("SharedWithMeActivity", "Added to mFilesToDownload "+ fullItemPath);	
+		}
+	}
 
 	public static class EfficientAdapter extends BaseAdapter implements
 			Filterable {
 		private LayoutInflater mInflater;
-		private Context context;
 
 		public EfficientAdapter(Context context) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
-			this.context = context;
 			mItemsToDownload = new ArrayList<String>();
 		}
 
@@ -206,7 +224,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 			// Bind the data efficiently with the holder.
 			holder.textLine.setText(sharedWithMeItem.getSharedPath());
 			
-			
+			/* Parse item and add needed icons and arrows*/
 			if(sharedWithMeItem.isPath()){
 				holder.iconLine.setImageResource(R.drawable.folder) ;
 				holder.downPathIconLine.setVisibility(View.VISIBLE);
@@ -248,46 +266,10 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 				holder.downPathIconLine.setVisibility(View.INVISIBLE);
 			}
 			
-			
-			holder.iconLine.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Toast.makeText(context,
-							"Got click on icon " + String.valueOf(position),
-							Toast.LENGTH_SHORT).show();
-				}
-			});
-			
 			if( existsItemToDownload(fullPath(mPerson.getCurrentPath(), sharedWithMeItem.getSharedPath()) )){
-				holder.textLine.setBackgroundColor(R.drawable.list_background);
-				holder.textLine.setSelected(true);
+				convertView.setBackgroundColor(R.drawable.list_background);
+				convertView.setSelected(true);
 			}
-			
-			holder.textLine.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (holder.textLine.isSelected()){
-						holder.textLine.setBackgroundColor(Color.TRANSPARENT);
-						holder.textLine.setSelected(false);
-						String buffer = mPerson.getCurrentPath();
-						buffer = buffer.concat(sharedWithMeItem.getSharedPath().substring(1));
-						removeItemToDownload(buffer);
-						Log.i("SharedWithMeActivity", "Removed from mFilesToDownload "+ buffer);
-					}
-					else{
-						holder.textLine.setBackgroundColor(R.drawable.list_background);
-						holder.textLine.setSelected(true);
-						String buffer = mPerson.getCurrentPath();
-						buffer = buffer.concat(sharedWithMeItem.getSharedPath().substring(1));
-						addItemToDownload(buffer);
-						Log.i("SharedWithMeActivity", "Added to mFilesToDownload "+ buffer);	
-					}
-					Toast.makeText(context,
-							"Got click on text " + String.valueOf(position),
-							Toast.LENGTH_SHORT).show();
-				}
-			});		
-			
 			
 			return convertView;
 		}
