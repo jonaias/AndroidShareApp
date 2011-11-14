@@ -58,19 +58,20 @@ public class NetworkSender extends Thread {
 				tempPacket = new DatagramPacket(tempJsonObject.toString().getBytes(), tempJsonObject.toString().getBytes().length ,
 						person.getIP(), mPort);
 				
-				synchronized (mSocket) {
-					mSocket.send(tempPacket);
-				}
+				sendDatagram(tempPacket);
 				
-			} catch (SocketException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			} catch (UnknownHostException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
 			} catch (JSONException e3) {
 				// TODO Auto-generated catch block
 				e3.printStackTrace();
+			}
+		}
+	}
+	
+	
+	public void sendDatagram(DatagramPacket packet){
+		synchronized (mSocket) {
+			try {
+				mSocket.send(packet);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -109,17 +110,7 @@ public class NetworkSender extends Thread {
 			
 			
 			/* Broadcasts live announcement */
-			try {	
-				synchronized (mSocket) {
-					mSocket.send(mPacket);
-				}
-			} catch (SocketException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}  catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			sendDatagram(mPacket);
 			
 			/* Wait 5s 
 			 * TODO: improve broadcast interval*/

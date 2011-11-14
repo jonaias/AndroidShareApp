@@ -18,14 +18,12 @@ import android.util.Log;
 public class NetworkListener extends Thread {
 
 	private DatagramSocket mListenSocket;
-	private DatagramSocket mReplySocket;
 	private byte[] mBuffer;
 
 	public NetworkListener(int listenPort, int replyPort) {
 		try {
 			mListenSocket = new DatagramSocket(listenPort);
 			Log.i("NetworkListener", "Listening on port " + listenPort + ".");
-			mReplySocket = new DatagramSocket();
 		} catch (SocketException e) {
 			e.printStackTrace();
 			/* TODO: Emitir o erro. */
@@ -157,13 +155,7 @@ public class NetworkListener extends Thread {
 						packet.getAddress(),
 						NetworkProtocol.BROADCAST_RECEIVE_PORT);
 
-				try {
-					mReplySocket.send(replyPacket);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return;
-				}
+				NetworkManager.getInstance().getNetworkSender().sendDatagram(replyPacket);
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT): {
