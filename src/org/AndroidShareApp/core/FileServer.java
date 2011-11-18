@@ -55,7 +55,7 @@ public class FileServer extends Thread {
 						t.start();
 					}
 				}
-				is.close();
+				//is.close();
 			}
 
 		} catch (IOException e) {

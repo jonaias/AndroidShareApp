@@ -23,7 +23,7 @@ public class NetworkListener extends Thread {
 	public NetworkListener(int listenPort, int replyPort) {
 		try {
 			mListenSocket = new DatagramSocket(listenPort);
-			Log.i("NetworkListener", "Listening on port " + listenPort + ".");
+			Log.i("NetworkListener", "Listening on posrt " + listenPort + ".");
 		} catch (SocketException e) {
 			e.printStackTrace();
 			/* TODO: Emitir o erro. */

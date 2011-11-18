@@ -19,6 +19,7 @@ public class FileServerThread implements Runnable {
 
 	public FileServerThread(String transfer, Socket socket) {
 		mPath = transfer.substring(transfer.indexOf(' ') + 1);
+		mPath = NetworkManager.getInstance().getSharedByMeItemFullPath(mPath);
 		mSocket = socket;
 
 		Log.i("FileServerThread", "Created transfer with path \"" + mPath

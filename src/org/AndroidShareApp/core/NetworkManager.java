@@ -214,4 +214,9 @@ public class NetworkManager {
 	public void setBroadcastAddress(InetAddress broadcastAddress) {
 		mBroadcastAddress = broadcastAddress;
 	}
+	
+	/** TODO: this function **/
+	public String getSharedByMeItemFullPath(String relativePath){
+		return "/mnt/sdcard/teste.txt";
+	}
 }

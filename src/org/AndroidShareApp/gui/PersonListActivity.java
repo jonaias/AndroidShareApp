@@ -59,7 +59,7 @@ public class PersonListActivity extends ListActivity {
 			mInflater = LayoutInflater.from(context);
 			mPersonListActivity = personListActivity;
 			mPersonList = NetworkManager.getInstance().getPersonList();
-			Collections.sort(mPersonList);
+			//Collections.sort(mPersonList);
 		}
 
 		/**
