@@ -41,7 +41,7 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	private static ArrayList<SharedWithMeItem> itemList;
 	private static ArrayList<String> mItemsToDownload;
 	private static Button mDownloadButton;
-	private static EditText mInfoText;
+	private static TextView mInfoText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,13 +60,13 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		Button backButton = (Button) findViewById(R.id.backButton);
 		backButton.setOnClickListener(this);
 		
-		EditText editText = (EditText) findViewById(R.id.shareNameText);
-		editText.setText(mPerson.getName());
+		TextView textView = (TextView) findViewById(R.id.shareNameText);
+		textView.setText(mPerson.getName());
 		
 		mDownloadButton = (Button) findViewById(R.id.downloadButton);
 		mDownloadButton.setOnClickListener(this);
 		
-		mInfoText = (EditText) findViewById(R.id.infoText);
+		mInfoText = (TextView) findViewById(R.id.infoText);
 		
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		getListView().setItemsCanFocus(false);
