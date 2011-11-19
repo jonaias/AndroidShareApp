@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import android.provider.Settings.Secure;
+
 public class NetworkManager {
 
 	private static NetworkManager mSingleton = null;
@@ -17,7 +19,7 @@ public class NetworkManager {
 	private ArrayList<FileTransferrer> mCurrentTransfers;
 	private ArrayList<SharedByMeItem> mSharedByMeItems;
 	private String mThisDeviceId;
-	private String mThisDevideName;
+	private String mThisDeviceName;
 	private InetAddress mHostAddress;
 	private InetAddress mBroadcastAddress;
 	private NetworkSender mNetworkSender;
@@ -60,18 +62,13 @@ public class NetworkManager {
 		addPerson(teste2);
 		/* ########################### */
 
-		mThisDeviceId = android.provider.Settings.Secure.ANDROID_ID;
-		mThisDevideName = android.os.Build.USER.concat("-"
-				+ android.os.Build.MODEL);
-
 		mNetworkSender = new NetworkSender(NetworkProtocol.BROADCAST_SEND_PORT);
-		mNetworkSender.start();
+		
 		mNetworkListener = new NetworkListener(
 				NetworkProtocol.BROADCAST_RECEIVE_PORT,
 				NetworkProtocol.REPLY_PORT);
-		mNetworkListener.start();
 		mFileServer = new FileServer(NetworkProtocol.FILE_PORT);
-		mFileServer.start();
+		
 
 		/* TODO: REMOVE!!!!!!!!!!!!! */
 
@@ -179,12 +176,20 @@ public class NetworkManager {
 		return mCurrentTransfers;
 	}
 
+	public void setThisDeviceId(String deviceId) {
+		mThisDeviceId = deviceId;
+	}
+	
 	public String getThisDeviceId() {
 		return mThisDeviceId;
 	}
+	
+	public void setThisDeviceName(String deviceName) {
+		mThisDeviceName = deviceName;
+	}
 
 	public String getThisDeviceName() {
-		return mThisDevideName;
+		return mThisDeviceName;
 	}
 
 	public NetworkSender getNetworkSender() {
@@ -218,5 +223,12 @@ public class NetworkManager {
 	/** TODO: this function **/
 	public String getSharedByMeItemFullPath(String relativePath){
 		return "/mnt/sdcard/teste.txt";
+	}
+	
+	/** Start servers **/
+	public void startServers(){
+		mNetworkSender.start();
+		mNetworkListener.start();
+		mFileServer.start();
 	}
 }

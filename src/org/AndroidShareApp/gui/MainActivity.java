@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.util.Log;
 import android.widget.TabHost;
 
@@ -61,9 +62,25 @@ public class MainActivity extends TabActivity {
 		
 		NetworkManager.getInstance().setBroadcastAddress(bcast);
 		NetworkManager.getInstance().setHostAddress(host);
+		NetworkManager.getInstance().setThisDeviceName(android.os.Build.USER.concat("-"	+ android.os.Build.MODEL));
+		NetworkManager.getInstance().setThisDeviceId(Secure.getString(getBaseContext().getContentResolver(), Secure.ANDROID_ID));
 		
-		Log.i("MainActivity", "Broadcast address: " + bcast);
-		Log.i("MainActivity", "Host address: " + host);
+		
+		/* TODO: Delete this block
+		 * If its running inside emulator */
+		if (NetworkManager.getInstance().getThisDeviceName().equals("android-build-sdk")){
+			try {
+				NetworkManager.getInstance().setBroadcastAddress(InetAddress.getByName("10.0.2.255"));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		NetworkManager.getInstance().startServers();
+		
+		Log.i("MainActivity", "Broadcast address: " + NetworkManager.getInstance().getBroadcastAddress());
+		Log.i("MainActivity", "Host address: " + NetworkManager.getInstance().getHostAddress());
 	}
 
 	private InetAddress getBroadcastAddress() {

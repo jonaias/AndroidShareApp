@@ -89,13 +89,10 @@ public class NetworkSender extends Thread {
 			mJsonObject.put("name", NetworkManager.getInstance().getThisDeviceName());
 			mJsonObject.put("deviceID", NetworkManager.getInstance().getThisDeviceId());
 			mPacket = new DatagramPacket(mJsonObject.toString().getBytes(), mJsonObject.toString().getBytes().length ,
-						InetAddress.getByName("10.0.2.255"), mPort);
+					NetworkManager.getInstance().getBroadcastAddress(), mPort);
 			/* TODO:NetworkManager.getInstance().getBroadcastAddress() */ 
 			
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  catch (JSONException e3) {
+		} catch (JSONException e3) {
 			// TODO Auto-generated catch block
 			e3.printStackTrace();
 		}
