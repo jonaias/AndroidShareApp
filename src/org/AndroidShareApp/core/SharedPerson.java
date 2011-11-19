@@ -33,4 +33,21 @@ public class SharedPerson extends Person {
 	public void setWrite (boolean canWrite) {
 		mWrite = canWrite;
 	}
+	
+	/* Return permission string */
+	public String getPermissionString() {
+		String temp = "";
+		if(mRead){
+			temp+="r";
+		}
+		if(mWrite){
+			temp+="w";
+		}
+		return temp;
+	}
+	
+	/* Returns ( canRead() || carWrite() )*/
+	public boolean hasAnyAcess(){
+		return canRead() || canWrite();
+	}
 }

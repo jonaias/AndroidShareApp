@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.AndroidShareApp.gui.SharedWithMeListActivity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,6 +80,51 @@ public class NetworkSender extends Thread {
 		}
 	}
 	
+	
+	/* Sends share info for everybody which 
+	 * this devices has shares 
+	 * TODO: Send every shared once*/
+	public void sendShareInfoForEverbody(){
+		Iterator<SharedByMeItem> sharedByMeItemIterator = NetworkManager.getInstance().getSharedByMeItems().iterator();
+		/* For each shared item */
+		while (sharedByMeItemIterator.hasNext()) {
+			SharedByMeItem sharedByMeItem = sharedByMeItemIterator.next();
+			Iterator<SharedPerson> sharedPersonIterator = sharedByMeItem.getSharedPersonList().iterator();
+			/* For each person which the item is shared */
+			while (sharedPersonIterator.hasNext()){
+				SharedPerson sharedPerson = sharedPersonIterator.next();
+				/* If shared person has access to the path */
+				if(sharedPerson.hasAnyAcess()){
+					JSONObject tempJsonObject = new JSONObject();
+					JSONArray sharedListJSON = new JSONArray();
+					JSONObject sharedItemJSON = new JSONObject();
+					/* Create and send shared item */
+					try {
+						tempJsonObject.put("messageType", NetworkProtocol.MESSAGE_SHARING_DETAILS_SEND);
+						tempJsonObject.put("deviceID", NetworkManager.getInstance().getThisDeviceId());
+						
+						sharedItemJSON.put("path", sharedByMeItem.getSharedPath());
+						
+						sharedItemJSON.put("permissions", sharedPerson.getPermissionString());
+						
+						sharedListJSON.put(sharedItemJSON);
+						
+						tempJsonObject.accumulate("sharedList",sharedListJSON);
+						
+						DatagramPacket tempPacket = new DatagramPacket(tempJsonObject.toString().getBytes(), tempJsonObject.toString().getBytes().length ,
+								sharedPerson.getIP(), mPort);
+						sendDatagram(tempPacket);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		}
+				
+	}
+	
 	@Override
 	public void run() {
 		
@@ -108,6 +154,9 @@ public class NetworkSender extends Thread {
 			
 			/* Broadcasts live announcement */
 			sendDatagram(mPacket);
+			
+			/* Broadcasts share info */
+			sendShareInfoForEverbody();
 			
 			/* Wait 5s 
 			 * TODO: improve broadcast interval*/
