@@ -62,11 +62,10 @@ public class NetworkManager {
 		addPerson(teste2);
 		/* ########################### */
 
-		mNetworkSender = new NetworkSender(NetworkProtocol.BROADCAST_SEND_PORT);
+		mNetworkSender = new NetworkSender(NetworkProtocol.UDP_PORT);
 		
-		mNetworkListener = new NetworkListener(
-				NetworkProtocol.BROADCAST_RECEIVE_PORT,
-				NetworkProtocol.REPLY_PORT);
+		mNetworkListener = new NetworkListener(NetworkProtocol.UDP_PORT);
+		
 		mFileServer = new FileServer(NetworkProtocol.FILE_PORT);
 		
 

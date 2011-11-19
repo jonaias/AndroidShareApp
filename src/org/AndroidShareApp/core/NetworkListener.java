@@ -20,7 +20,7 @@ public class NetworkListener extends Thread {
 	private DatagramSocket mListenSocket;
 	private byte[] mBuffer;
 
-	public NetworkListener(int listenPort, int replyPort) {
+	public NetworkListener(int listenPort) {
 		try {
 			mListenSocket = new DatagramSocket(listenPort);
 			Log.i("NetworkListener", "Listening on posrt " + listenPort + ".");
@@ -58,7 +58,12 @@ public class NetworkListener extends Thread {
 		try {
 			JSONObject obj = new JSONObject(json);
 			int messageType = obj.getInt("messageType");
-			String deviceID;
+			String deviceID = obj.getString("deviceID");
+			
+			/* Ignore self packets */
+			if (deviceID.equals(NetworkManager.getInstance().getThisDeviceId())){
+				return;
+			}
 
 			switch (messageType) {
 			case (NetworkProtocol.MESSAGE_LIVE_ANNOUNCEMENT): {
@@ -68,7 +73,6 @@ public class NetworkListener extends Thread {
 				 * he/she is active.
 				 */
 				String name = obj.getString("name");
-				deviceID = obj.getString("deviceID");
 				InetAddress senderIP = packet.getAddress();
 
 				Log.i("NetworkListener", "MESSAGE_LIVE_ANN: " + obj);
@@ -86,7 +90,6 @@ public class NetworkListener extends Thread {
 				Log.i("NetworkListener", "MESSAGE_LEAVING_ANN: " + obj);
 
 				String name = obj.getString("name");
-				deviceID = obj.getString("deviceID");
 
 				NetworkManager.getInstance().deletePerson(
 						new Person(name, deviceID, null));
@@ -98,7 +101,6 @@ public class NetworkListener extends Thread {
 
 				JSONArray sharedList = obj.getJSONArray("sharedList");
 				String currPath, currPermissions;
-				deviceID = obj.getString("deviceID");
 
 				Person person = NetworkManager.getInstance()
 						.getPersonByDeviceID(deviceID);
@@ -132,7 +134,6 @@ public class NetworkListener extends Thread {
 
 				Log.i("NetworkListener", "MESSAGE_DOWNLOAD_REQUEST: " + obj);
 
-				deviceID = obj.getString("deviceID");
 				String path = obj.getString("path");
 
 				JSONObject reply = new JSONObject();
@@ -153,7 +154,7 @@ public class NetworkListener extends Thread {
 						.toString().getBytes(),
 						reply.toString().getBytes().length,
 						packet.getAddress(),
-						NetworkProtocol.BROADCAST_RECEIVE_PORT);
+						NetworkProtocol.UDP_PORT);
 
 				NetworkManager.getInstance().getNetworkSender().sendDatagram(replyPacket);
 			}
@@ -161,7 +162,6 @@ public class NetworkListener extends Thread {
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT): {
 				Log.i("NetworkListener", "MESSAGE_DOWNLOAD_ACCEPT: " + obj);
 
-				deviceID = obj.getString("deviceID");
 				String path = obj.getString("path");
 				String destination = null; // TODO: Pegar o destino.
 				int size = 0; // TODO: Como pegar o tamanho??? Ele pode
