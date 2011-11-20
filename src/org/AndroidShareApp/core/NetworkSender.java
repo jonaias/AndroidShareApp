@@ -21,7 +21,7 @@ public class NetworkSender extends Thread {
 	private DatagramPacket mPacket = null;
 	private JSONObject mJsonObject = null;
 	private int mPort;
-	private TransferActivity mTransferActivity;
+	private TransferActivity mTransferActivity = null;
 
 	public NetworkSender(int port) {
 		mPort = port;
@@ -187,7 +187,7 @@ public class NetworkSender extends Thread {
 			}
 
 			if (mTransferActivity != null) {
-				
+				mTransferActivity.refreshUi();
 			}
 
 			/* Decreases every person a timeout counter */

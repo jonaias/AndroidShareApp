@@ -127,6 +127,8 @@ public class TransferActivity extends ListActivity {
 				// TODO: Colocar o nome da pessoa na classe FileTransfer e
 				// colocá-lo
 				// no holder.transferPersonText
+				holder.transferProgress.setProgress((int) Math
+						.round(mCurrentTransfers.get(position).getProgress()));
 			}
 
 			return convertView;

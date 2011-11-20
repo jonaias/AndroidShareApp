@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import android.util.Log;
-import android.widget.ProgressBar;
 
 public class FileClient extends Thread {
 
@@ -18,7 +17,7 @@ public class FileClient extends Thread {
 	private String mDestination;
 	private Socket mSocket;
 	private int mSize;
-	private ProgressBar mProgressBar;
+	private Double mCurrentProgress;
 
 	public FileClient(String deviceID, String path, String destination,
 			int size, Socket socket) {
@@ -35,7 +34,7 @@ public class FileClient extends Thread {
 
 	@Override
 	public void run() {
-		double currentProgress = 0.0;
+		mCurrentProgress = 0.0;
 		try {
 
 			OutputStream sout = mSocket.getOutputStream();
@@ -64,13 +63,9 @@ public class FileClient extends Thread {
 
 				bytesReceived = in
 						.read(received, i * BLOCK_SIZE, sizeToReceive);
-				currentProgress += ((double) bytesReceived) / ((double) mSize);
-
-				synchronized (mProgressBar) {
-					if (mProgressBar != null) {
-						mProgressBar.setProgress((int) Math
-								.round(currentProgress));
-					}
+				
+				synchronized (mCurrentProgress) {
+					mCurrentProgress += ((double) bytesReceived) / ((double) mSize);
 				}
 			}
 
@@ -88,14 +83,16 @@ public class FileClient extends Thread {
 
 		Log.i("FileClient", "Ended transfer on socket \"" + mSocket + "\".");
 	}
-
-	public void registerCallback(ProgressBar progressBar) {
-		synchronized (mProgressBar) {
-			mProgressBar = progressBar;
-		}
-	}
 	
 	public String getPath () {
 		return mPath;
+	}
+
+	public double getProgress() {
+		double ret;
+		synchronized (mCurrentProgress) {
+			ret = mCurrentProgress;
+		}
+		return ret;
 	}
 }
