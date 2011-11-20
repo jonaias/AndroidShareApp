@@ -68,7 +68,8 @@ public class SharedWithMeListActivity extends ListActivity {
 	@Override
 	protected void onPause(){
 		super.onPause();
-		NetworkManager.getInstance().getNetworkSender().registerCallBack(null);
+		/*TODO: Verificar se pode dar problema!!!*/
+		NetworkManager.getInstance().getNetworkSender().registerCallBack((SharedWithMeListActivity)null);
 	}
 	/*-------------- Callback functions stop -----------*/
 

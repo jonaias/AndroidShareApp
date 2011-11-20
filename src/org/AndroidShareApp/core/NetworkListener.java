@@ -180,9 +180,8 @@ public class NetworkListener extends Thread {
 
 				FileClient client = new FileClient(deviceID, path, destination,
 						size, socket);
-				Thread t = new Thread(client);
-				t.setName("FileClient:" + destination);
-				t.start();
+				client.setName("FileClient:" + destination);
+				client.start();
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_DENY):

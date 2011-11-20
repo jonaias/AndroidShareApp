@@ -10,13 +10,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-import android.provider.Settings.Secure;
-
 public class NetworkManager {
 
 	private static NetworkManager mSingleton = null;
 	private ArrayList<Person> mPersonList;
-	private ArrayList<FileTransferrer> mCurrentTransfers;
 	private ArrayList<SharedByMeItem> mSharedByMeItems;
 	private String mThisDeviceId;
 	private String mThisDeviceName;
@@ -25,11 +22,12 @@ public class NetworkManager {
 	private NetworkSender mNetworkSender;
 	private NetworkListener mNetworkListener;
 	private FileServer mFileServer;
+	private ArrayList<FileClient> mCurrentTransfers;
 
 	private NetworkManager() {
 		mPersonList = new ArrayList<Person>();
-		mCurrentTransfers = new ArrayList<FileTransferrer>();
 		mSharedByMeItems = new ArrayList<SharedByMeItem>();
+		mCurrentTransfers = new ArrayList<FileClient>();
 
 		SharedPerson everybody = new SharedPerson("Everybody",
 				String.valueOf(new Random().nextInt()), null, false, false);
@@ -163,15 +161,23 @@ public class NetworkManager {
 		return null;
 	}
 
-	public void addNewTransfer(FileTransferrer newTransfer) {
-		mCurrentTransfers.add(newTransfer);
+	public void addTransfer(FileClient transfer) {
+		mCurrentTransfers.add(transfer);
 	}
 
-	public void deleteTransfer(FileTransferrer item) {
-		mCurrentTransfers.remove(item);
+	public void deleteCompletedTransfers() {
+		synchronized (mCurrentTransfers) {
+			Iterator<FileClient> itr = mCurrentTransfers.iterator();
+			while (itr.hasNext()) {
+				FileClient currClient = itr.next();
+				if (!currClient.isAlive()) {
+					itr.remove();
+				}
+			}
+		}
 	}
 
-	public ArrayList<FileTransferrer> getTransfers() {
+	public ArrayList<FileClient> getTransfers() {
 		return mCurrentTransfers;
 	}
 

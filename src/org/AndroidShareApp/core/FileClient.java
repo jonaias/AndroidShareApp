@@ -11,7 +11,7 @@ import java.net.Socket;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-public class FileClient implements Runnable {
+public class FileClient extends Thread {
 
 	private String mDeviceID;
 	private String mPath;
@@ -93,5 +93,9 @@ public class FileClient implements Runnable {
 		synchronized (mProgressBar) {
 			mProgressBar = progressBar;
 		}
+	}
+	
+	public String getPath () {
+		return mPath;
 	}
 }

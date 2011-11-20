@@ -54,7 +54,6 @@
 		style="?android:attr/progressBarStyleHorizontal"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:progressDrawable="@drawable/transfer_progress_background"
 		android:background="#EEEEEE"
 		android:progress="30" />
 		

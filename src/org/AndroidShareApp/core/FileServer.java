@@ -29,6 +29,8 @@ public class FileServer extends Thread {
 			while (!isInterrupted()) {
 				socket = serverSocket.accept();
 
+				// "is" is not closed here, but it is on FileServer.
+				@SuppressWarnings("resource")
 				InputStream is = socket.getInputStream();
 
 				/* First, we receive the request. */
