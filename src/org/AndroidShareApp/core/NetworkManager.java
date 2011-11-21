@@ -225,9 +225,17 @@ public class NetworkManager {
 		mBroadcastAddress = broadcastAddress;
 	}
 	
-	/** TODO: this function **/
+	/** Return fullPath using a relativePath
+	 *  if there is no item with relativePath, returns null **/
 	public String getSharedByMeItemFullPath(String relativePath){
-		return "/mnt/sdcard/teste.txt";
+		Iterator<SharedByMeItem> itr = mSharedByMeItems.iterator();
+		while (itr.hasNext()) {
+			SharedByMeItem sharedByMeItem = itr.next();
+			if (sharedByMeItem.getSharedPath().compareTo(relativePath) == 0) {
+				return sharedByMeItem.getFullPath();
+			}
+		}
+		return null;
 	}
 	
 	/** Start servers **/
