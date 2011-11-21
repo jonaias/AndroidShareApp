@@ -240,8 +240,14 @@ public class NetworkManager {
 	
 	/** Start servers **/
 	public void startServers(){
-		mNetworkSender.start();
-		mNetworkListener.start();
-		mFileServer.start();
+		if (!mNetworkSender.isAlive()){
+			mNetworkSender.start();
+		}
+		if (!mNetworkListener.isAlive()){
+			mNetworkListener.start();
+		}
+		if (!mFileServer.isAlive()){
+			mFileServer.start();
+		}
 	}
 }
