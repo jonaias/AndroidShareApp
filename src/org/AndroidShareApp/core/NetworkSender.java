@@ -1,5 +1,6 @@
 package org.AndroidShareApp.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -115,6 +116,8 @@ public class NetworkSender extends Thread {
 						sharedItemJSON.put("path", sharedByMeItem.getSharedPath());
 						
 						sharedItemJSON.put("permissions", sharedPerson.getPermissionString());
+						
+						sharedItemJSON.put("size", sharedByMeItem.getFileSize());
 						
 						sharedListJSON.put(sharedItemJSON);
 						

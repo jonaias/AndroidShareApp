@@ -43,13 +43,13 @@ public class NetworkManager {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		SharedWithMeItem sharedWithMeItem1 = new SharedWithMeItem("/Documents/", true, false);
-		SharedWithMeItem sharedWithMeItem2 = new SharedWithMeItem("/cool music.mp3", true, true);
-		SharedWithMeItem sharedWithMeItem3 = new SharedWithMeItem("/picture.png", true, true);
-		SharedWithMeItem sharedWithMeItem4 = new SharedWithMeItem("/Movies/", true, true);
-		SharedWithMeItem sharedWithMeItem5 = new SharedWithMeItem("/Movies/alternative movie.mpg", true, true);
-		SharedWithMeItem sharedWithMeItem6 = new SharedWithMeItem("/Movies/unknown.mpg", true, true);
-		SharedWithMeItem sharedWithMeItem7 = new SharedWithMeItem("/Movies/Bad movie/unknown.mpg", true, true);
+		SharedWithMeItem sharedWithMeItem1 = new SharedWithMeItem("/Documents/", true, false,0);
+		SharedWithMeItem sharedWithMeItem2 = new SharedWithMeItem("/cool music.mp3", true, true,0);
+		SharedWithMeItem sharedWithMeItem3 = new SharedWithMeItem("/picture.png", true, true,0);
+		SharedWithMeItem sharedWithMeItem4 = new SharedWithMeItem("/Movies/", true, true,0);
+		SharedWithMeItem sharedWithMeItem5 = new SharedWithMeItem("/Movies/alternative movie.mpg", true, true,0);
+		SharedWithMeItem sharedWithMeItem6 = new SharedWithMeItem("/Movies/unknown.mpg", true, true,0);
+		SharedWithMeItem sharedWithMeItem7 = new SharedWithMeItem("/Movies/Bad movie/unknown.mpg", true, true,0);
 		teste2.addSharedWithMeItem(sharedWithMeItem1);
 		teste2.addSharedWithMeItem(sharedWithMeItem2);
 		teste2.addSharedWithMeItem(sharedWithMeItem3);

@@ -89,7 +89,7 @@ public class Person implements Comparable<Person> {
 		    	  Log.i("Person", this.mName+ ":testing "+buff);
 	    		  if(buff.matches("[/]?[^/]*[/]?")){
 	    			  Log.i("Person", this.mName+ ":added "+buff);
-		    		  SharedWithMeItem itemToAdd = new SharedWithMeItem(buff, tempItem.canRead(),tempItem.canWrite());
+		    		  SharedWithMeItem itemToAdd = new SharedWithMeItem(buff, tempItem.canRead(),tempItem.canWrite(),tempItem.getFileSize());
 		    		  tempSharedWithMeItems.add(itemToAdd);
 		    	  }
 		      }
