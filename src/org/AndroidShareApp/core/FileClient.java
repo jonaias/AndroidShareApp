@@ -8,8 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import android.app.Application;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 public class FileClient extends Thread {
 
@@ -61,6 +63,11 @@ public class FileClient extends Thread {
 				int BLOCK_SIZE = NetworkProtocol.BLOCK_SIZE;
 	
 				File file = new File(mDestination);
+				int i=0;
+				while (file.exists()){
+					file = new File(mDestination+"("+(++i)+")");
+				}
+				//Toast.makeText(, text, duration)
 				FileOutputStream fos = new FileOutputStream(file);
 				BufferedOutputStream out = new BufferedOutputStream(fos);
 	

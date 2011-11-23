@@ -64,7 +64,7 @@ public class TransferActivity extends ListActivity implements RefreshInterface {
 		super.onPause();
 		/* TODO: Verificar se pode dar problema!!! */
 		NetworkManager.getInstance().getNetworkSender()
-				.registerCallBack((TransferActivity) null);
+				.registerCallBack(null);
 	}
 
 	/*-------------- Callback functions stop -----------*/
