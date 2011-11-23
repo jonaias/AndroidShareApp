@@ -44,8 +44,8 @@ public class SharedWithMeListActivity extends ListActivity implements RefreshInt
 		setListAdapter(adapter);
 		
 
-		Toast.makeText(getApplicationContext(), R.string.person_list_legend,
-				Toast.LENGTH_LONG).show();
+		//Toast.makeText(getApplicationContext(), R.string.person_list_legend,
+		//		Toast.LENGTH_LONG).show();
 	
 	}
 	
@@ -69,7 +69,7 @@ public class SharedWithMeListActivity extends ListActivity implements RefreshInt
 	protected void onPause(){
 		super.onPause();
 		/*TODO: Verificar se pode dar problema!!!*/
-		NetworkManager.getInstance().getNetworkSender().registerCallBack((SharedWithMeListActivity)null);
+		NetworkManager.getInstance().getNetworkSender().registerCallBack(null);
 	}
 	/*-------------- Callback functions stop -----------*/
 

@@ -42,8 +42,7 @@ public class NetworkListener extends Thread {
 				mListenSocket.receive(currPacket);
 
 				Log.i("NetworkListener",
-						"Received message from " + currPacket.getAddress());
-
+						"Received packet. IP:" + currPacket.getAddress()+" raw data:"+currPacket.toString());
 				parseJSON(new String(mBuffer), currPacket);
 
 			} catch (IOException e) {
