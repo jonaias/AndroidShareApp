@@ -81,42 +81,53 @@ public class NetworkSender extends Thread {
 				e.printStackTrace();
 			}
 		}
-		Log.i("NetworkSender","Sent packet. IP:" + packet.getAddress()+" raw data:"+packet.toString());
+		/*Log.i("NetworkSender", "Sent packet. IP:" + packet.getAddress()
+				+ " raw data:" + packet.getData());*/
 	}
-	
-	/* Sends share info for everybody which 
-	 * this devices has shares 
-	 * TODO: Send every shared once*/
-	public void sendShareInfoForEverbody(){
-		Iterator<SharedByMeItem> sharedByMeItemIterator = NetworkManager.getInstance().getSharedByMeItems().iterator();
+
+	/*
+	 * Sends share info for everybody which this devices has shares TODO: Send
+	 * every shared once
+	 */
+	public void sendShareInfoForEverbody() {
+		Iterator<SharedByMeItem> sharedByMeItemIterator = NetworkManager
+				.getInstance().getSharedByMeItems().iterator();
 		/* For each shared item */
 		while (sharedByMeItemIterator.hasNext()) {
 			SharedByMeItem sharedByMeItem = sharedByMeItemIterator.next();
-			Iterator<SharedPerson> sharedPersonIterator = sharedByMeItem.getSharedPersonList().iterator();
+			Iterator<SharedPerson> sharedPersonIterator = sharedByMeItem
+					.getSharedPersonList().iterator();
 			/* For each person which the item is shared */
-			while (sharedPersonIterator.hasNext()){
+			while (sharedPersonIterator.hasNext()) {
 				SharedPerson sharedPerson = sharedPersonIterator.next();
 				/* If shared person has access to the path */
-				if(sharedPerson.hasAnyAcess()){
+				if (sharedPerson.hasAnyAcess()) {
 					JSONObject tempJsonObject = new JSONObject();
 					JSONArray sharedListJSON = new JSONArray();
 					JSONObject sharedItemJSON = new JSONObject();
 					/* Create and send shared item */
 					try {
-						tempJsonObject.put("messageType", NetworkProtocol.MESSAGE_SHARING_DETAILS_SEND);
-						tempJsonObject.put("deviceID", NetworkManager.getInstance().getThisDeviceId());
-						
-						sharedItemJSON.put("path", sharedByMeItem.getSharedPath());
-						
-						sharedItemJSON.put("permissions", sharedPerson.getPermissionString());
-						
-						sharedItemJSON.put("size", sharedByMeItem.getFileSize());
-						
+						tempJsonObject.put("messageType",
+								NetworkProtocol.MESSAGE_SHARING_DETAILS_SEND);
+						tempJsonObject.put("deviceID", NetworkManager
+								.getInstance().getThisDeviceId());
+
+						sharedItemJSON.put("path",
+								sharedByMeItem.getSharedPath());
+
+						sharedItemJSON.put("permissions",
+								sharedPerson.getPermissionString());
+
+						sharedItemJSON
+								.put("size", sharedByMeItem.getFileSize());
+
 						sharedListJSON.put(sharedItemJSON);
-						
-						tempJsonObject.accumulate("sharedList",sharedListJSON);
-						
-						DatagramPacket tempPacket = new DatagramPacket(tempJsonObject.toString().getBytes(), tempJsonObject.toString().getBytes().length ,
+
+						tempJsonObject.accumulate("sharedList", sharedListJSON);
+
+						DatagramPacket tempPacket = new DatagramPacket(
+								tempJsonObject.toString().getBytes(),
+								tempJsonObject.toString().getBytes().length,
 								sharedPerson.getIP(), mPort);
 						sendDatagram(tempPacket);
 					} catch (JSONException e) {
@@ -124,12 +135,12 @@ public class NetworkSender extends Thread {
 						e.printStackTrace();
 					}
 				}
-				
+
 			}
 		}
-				
+
 	}
-	
+
 	@Override
 	public void run() {
 
@@ -163,12 +174,13 @@ public class NetworkSender extends Thread {
 			/*
 			 * Wait 5s TODO: improve broadcast interval
 			 */
-			
+
 			/* Broadcasts share info */
 			sendShareInfoForEverbody();
-			
-			/* Wait 5s 
-			 * TODO: improve broadcast interval*/
+
+			/*
+			 * Wait 5s TODO: improve broadcast interval
+			 */
 			try {
 				sleep(5000);
 			} catch (InterruptedException e1) {

@@ -34,7 +34,8 @@ public class FileServerThread implements Runnable {
 
 			/* First, we read the file. */
 			File currentFile = new File(mPath);
-			Log.i("FileServerThread", "Serving file  " + currentFile.getAbsolutePath()+ ".");
+			Log.i("FileServerThread",
+					"Serving file  " + currentFile.getAbsolutePath() + ".");
 			mSize = (int) currentFile.length();
 			byte[] bytesToSend = new byte[mSize];
 
@@ -63,8 +64,8 @@ public class FileServerThread implements Runnable {
 
 				currentProgress += ((double) BLOCK_SIZE) / ((double) mSize);
 
-				synchronized (mProgressBar) {
-					if (mProgressBar != null) {
+				if (mProgressBar != null) {
+					synchronized (mProgressBar) {
 						mProgressBar.setProgress((int) Math
 								.round(currentProgress));
 					}
@@ -77,16 +78,19 @@ public class FileServerThread implements Runnable {
 					+ "\".");
 
 		} catch (IOException e) {
-			Log.i("FileServerThread", "Error on transfer on socket \"" + mSocket
-					+ "\".");
+			Log.i("FileServerThread", "Error on transfer on socket \""
+					+ mSocket + "\".");
 			e.printStackTrace();
 			return;
 		}
 	}
 
 	public void registerCallback(ProgressBar progressBar) {
-		synchronized (mProgressBar) {
+		if (mProgressBar == null)
 			mProgressBar = progressBar;
-		}
+		else
+			synchronized (mProgressBar) {
+				mProgressBar = progressBar;
+			}
 	}
 }

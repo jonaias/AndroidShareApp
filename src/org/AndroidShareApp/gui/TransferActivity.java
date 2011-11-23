@@ -63,8 +63,7 @@ public class TransferActivity extends ListActivity implements RefreshInterface {
 	protected void onPause() {
 		super.onPause();
 		/* TODO: Verificar se pode dar problema!!! */
-		NetworkManager.getInstance().getNetworkSender()
-				.registerCallBack(null);
+		NetworkManager.getInstance().getNetworkSender().registerCallBack(null);
 	}
 
 	/*-------------- Callback functions stop -----------*/
@@ -124,7 +123,8 @@ public class TransferActivity extends ListActivity implements RefreshInterface {
 				// TODO: Colocar o nome da pessoa na classe FileTransfer e
 				// colocá-lo
 				// no holder.transferPersonText
-				//holder.transferPersonText.setText();
+				holder.transferPersonText.setText(mCurrentTransfers
+						.get(position).getPerson().getName());
 				holder.transferProgress.setProgress((int) Math
 						.round(mCurrentTransfers.get(position).getProgress()));
 			}

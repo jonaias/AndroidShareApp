@@ -8,10 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import android.app.Application;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 public class FileClient extends Thread {
 
@@ -23,10 +21,11 @@ public class FileClient extends Thread {
 	private int mSize;
 	private Double mCurrentProgress;
 	
-	//private Person mPerson;
+	private Person mPerson;
 	
 	public FileClient(Person person, SharedWithMeItem sharedWithMeItem) {
 		mSocket = null;
+		mPerson = person;
 				
 		mPath = sharedWithMeItem.getSharedPath();
 		mDestinationFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(); // TODO: Pegar o destino.
@@ -125,5 +124,9 @@ public class FileClient extends Thread {
 			ret = mCurrentProgress;
 		}
 		return ret;
+	}
+	
+	public Person getPerson() {
+		return mPerson;
 	}
 }

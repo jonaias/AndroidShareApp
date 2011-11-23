@@ -215,6 +215,8 @@ public class NetworkListener extends Thread {
 
 	private static boolean hasPermission(String deviceID, String path) {
 
+		//return true;
+		
 		Person person = NetworkManager.getInstance().getPersonByDeviceID(
 				deviceID);
 
@@ -227,13 +229,17 @@ public class NetworkListener extends Thread {
 		Iterator<SharedByMeItem> itr = sharedItems.iterator();
 		while (itr.hasNext()) {
 			SharedByMeItem currItem = itr.next();
+			
 			if (currItem.getSharedPath().compareTo(path) != 0)
 				continue;
+			
 			ArrayList<SharedPerson> persons = currItem.getSharedPersonList();
 
 			Iterator<SharedPerson> sitr = persons.iterator();
 			while (sitr.hasNext()) {
 				SharedPerson currPerson = sitr.next();
+				if(currPerson.getName().compareTo("Everybody") == 0)
+					return true;
 				if ((currPerson.getDeviceID().compareTo(person.getDeviceID()) == 0)
 						&& (currPerson.canRead()) && currItem.isActive())
 					return true;
