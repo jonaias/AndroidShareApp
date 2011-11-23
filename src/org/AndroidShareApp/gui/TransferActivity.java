@@ -27,7 +27,7 @@ import android.widget.TextView;
  * @author jonaias
  * 
  */
-public class TransferActivity extends ListActivity {
+public class TransferActivity extends ListActivity implements RefreshInterface {
 
 	private EfficientAdapter mAdapter;
 	private ArrayList<FileClient> mCurrentTransfers;
