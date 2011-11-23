@@ -1,6 +1,5 @@
 package org.AndroidShareApp.core;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -9,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.AndroidShareApp.gui.RefreshInterface;
-import org.AndroidShareApp.gui.SharedWithMeListActivity;
-import org.AndroidShareApp.gui.TransferActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -150,7 +147,6 @@ public class NetworkSender extends Thread {
 			/* TODO:NetworkManager.getInstance().getBroadcastAddress() */
 
 		} catch (JSONException e3) {
-			// TODO Auto-generated catch block
 			e3.printStackTrace();
 		}
 
@@ -175,7 +171,6 @@ public class NetworkSender extends Thread {
 			try {
 				sleep(5000);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 

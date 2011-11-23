@@ -89,15 +89,13 @@ public class TransferActivity extends ListActivity implements RefreshInterface {
 				ViewGroup parent) {
 
 			// A ViewHolder keeps references to children views to avoid
-			// unnecessary calls
-			// to findViewById() on each row.
+			// unnecessary calls to findViewById() on each row.
 			ViewHolder holder;
 
 			convertView = mInflater.inflate(R.layout.transfer_item, null);
 
 			// Creates a ViewHolder and store references to the two children
-			// views
-			// we want to bind data to.
+			// views we want to bind data to.
 			holder = new ViewHolder();
 			holder.transferInfoText = (TextView) convertView
 					.findViewById(R.id.transferInfoText);
@@ -113,20 +111,20 @@ public class TransferActivity extends ListActivity implements RefreshInterface {
 
 						@Override
 						public void onClick(View v) {
-							// TODO: Perguntar ao usuário e, caso ele queira,
-							// cancelar a transferência.
+							TransferActivity.this.mCurrentTransfers.get(
+									position).interrupt();
 						}
 					});
 
 			convertView.setTag(holder);
 
-			// Bind the data efficiently with the holder.
 			synchronized (mCurrentTransfers) {
 				holder.transferInfoText.setText(mCurrentTransfers.get(position)
 						.getPath());
 				// TODO: Colocar o nome da pessoa na classe FileTransfer e
 				// colocá-lo
 				// no holder.transferPersonText
+				//holder.transferPersonText.setText();
 				holder.transferProgress.setProgress((int) Math
 						.round(mCurrentTransfers.get(position).getProgress()));
 			}
