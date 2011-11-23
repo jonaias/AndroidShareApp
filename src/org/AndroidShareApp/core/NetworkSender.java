@@ -84,6 +84,7 @@ public class NetworkSender extends Thread {
 				e.printStackTrace();
 			}
 		}
+		Log.i("NetworkSender","Sent packet. IP:" + packet.getAddress()+" raw data:"+packet.toString());
 	}
 	
 	/* Sends share info for everybody which 

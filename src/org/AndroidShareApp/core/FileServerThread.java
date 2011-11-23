@@ -34,6 +34,7 @@ public class FileServerThread implements Runnable {
 
 			/* First, we read the file. */
 			File currentFile = new File(mPath);
+			Log.i("FileServerThread", "Serving file  " + currentFile.getAbsolutePath()+ ".");
 			mSize = (int) currentFile.length();
 			byte[] bytesToSend = new byte[mSize];
 
@@ -72,14 +73,15 @@ public class FileServerThread implements Runnable {
 
 			out.close();
 			mSocket.close();
+			Log.i("FileServerThread", "Ended transfer on socket \"" + mSocket
+					+ "\".");
 
 		} catch (IOException e) {
+			Log.i("FileServerThread", "Error on transfer on socket \"" + mSocket
+					+ "\".");
 			e.printStackTrace();
 			return;
 		}
-
-		Log.i("FileServerThread", "Ended transfer on socket \"" + mSocket
-				+ "\".");
 	}
 
 	public void registerCallback(ProgressBar progressBar) {

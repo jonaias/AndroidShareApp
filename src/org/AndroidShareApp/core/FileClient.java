@@ -67,6 +67,8 @@ public class FileClient extends Thread {
 				while (file.exists()){
 					file = new File(mDestination+"("+(++i)+")");
 				}
+				
+				Log.i("FileClient", "Created destination file " + file.getAbsolutePath());
 				//Toast.makeText(, text, duration)
 				FileOutputStream fos = new FileOutputStream(file);
 				BufferedOutputStream out = new BufferedOutputStream(fos);
@@ -81,7 +83,7 @@ public class FileClient extends Thread {
 				Log.i("FileClient", "Started transfer on socket \"" + mSocket
 						+ "\".");
 	
-				for (int i = 0; i < nPackets; i++) {
+				for (i = 0; i < nPackets; i++) {
 					int sizeToReceive = (mSize - i * BLOCK_SIZE >= BLOCK_SIZE) ? BLOCK_SIZE
 							: mSize - i * BLOCK_SIZE;
 	
@@ -100,12 +102,13 @@ public class FileClient extends Thread {
 				out.close();
 				in.close();
 				mSocket.close();
-	
+				
+				Log.i("FileClient", "Ended transfer on socket \"" + mSocket + "\".");
+			
 			} catch (IOException e) {
+				Log.i("FileClient", "IO exception on socket \"" + mSocket + "\".");
 				e.printStackTrace();
-			}
-	
-			Log.i("FileClient", "Ended transfer on socket \"" + mSocket + "\".");
+			}			
 		}
 		else{
 			Log.i("FileClient", "Cannot connect to \"" + mSocket + "\".");
