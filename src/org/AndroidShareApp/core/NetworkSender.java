@@ -1,5 +1,6 @@
 package org.AndroidShareApp.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -7,6 +8,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.AndroidShareApp.gui.RefreshInterface;
 import org.AndroidShareApp.gui.SharedWithMeListActivity;
 import org.AndroidShareApp.gui.TransferActivity;
 import org.json.JSONArray;
@@ -16,12 +18,11 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class NetworkSender extends Thread {
-	private SharedWithMeListActivity mSharedWithMeListActivity = null;
+	private RefreshInterface mInterfaceToRefresh = null;
 	private DatagramSocket mSocket = null;
 	private DatagramPacket mPacket = null;
 	private JSONObject mJsonObject = null;
 	private int mPort;
-	private TransferActivity mTransferActivity = null;
 
 	public NetworkSender(int port) {
 		mPort = port;
@@ -37,13 +38,8 @@ public class NetworkSender extends Thread {
 		setName("Network Sender");
 	}
 
-	public void registerCallBack(
-			SharedWithMeListActivity sharedWithMeListActivity) {
-		mSharedWithMeListActivity = sharedWithMeListActivity;
-	}
-
-	public void registerCallBack(TransferActivity transferActivity) {
-		mTransferActivity = transferActivity;
+	public void registerCallBack(RefreshInterface interfaceToRefresh) {
+		mInterfaceToRefresh = interfaceToRefresh;
 	}
 
 	public void requestDownload(Person person, ArrayList<String> itemsToDownload) {
@@ -116,6 +112,8 @@ public class NetworkSender extends Thread {
 						
 						sharedItemJSON.put("permissions", sharedPerson.getPermissionString());
 						
+						sharedItemJSON.put("size", sharedByMeItem.getFileSize());
+						
 						sharedListJSON.put(sharedItemJSON);
 						
 						tempJsonObject.accumulate("sharedList",sharedListJSON);
@@ -182,12 +180,8 @@ public class NetworkSender extends Thread {
 			}
 
 			/* Refresh displayed activity */
-			if (mSharedWithMeListActivity != null) {
-				mSharedWithMeListActivity.refreshUi();
-			}
-
-			if (mTransferActivity != null) {
-				mTransferActivity.refreshUi();
+			if (mInterfaceToRefresh != null) {
+				mInterfaceToRefresh.refreshUi();
 			}
 
 			/* Decreases every person a timeout counter */

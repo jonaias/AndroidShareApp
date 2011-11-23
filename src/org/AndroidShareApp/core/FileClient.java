@@ -8,80 +8,101 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import android.os.Environment;
 import android.util.Log;
 
 public class FileClient extends Thread {
 
 	private String mDeviceID;
 	private String mPath;
+	private String mDestinationFolder;
 	private String mDestination;
 	private Socket mSocket;
 	private int mSize;
 	private Double mCurrentProgress;
-
-	public FileClient(String deviceID, String path, String destination,
-			int size, Socket socket) {
-		mDeviceID = deviceID;
-		mPath = path;
-		mSize = size;
-		mSocket = socket;
-		mDestination = destination;
-
+	
+	//private Person mPerson;
+	
+	public FileClient(Person person, SharedWithMeItem sharedWithMeItem) {
+		mSocket = null;
+				
+		mPath = sharedWithMeItem.getSharedPath();
+		mDestinationFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(); // TODO: Pegar o destino.
+		mDestination = mDestinationFolder+mPath;
+		
+		mSize = (int)sharedWithMeItem.getFileSize();
+		mDeviceID = person.getDeviceID();
+		
+		try {
+			mSocket = new Socket(person.getIP(),
+					NetworkProtocol.FILE_PORT);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		
 		Log.i("FileClient", "Created transfer with path \"" + mPath
 				+ "\" on socket \"" + mSocket + "\" to destination \""
-				+ mDestination + "\".");
+				+ mDestinationFolder + "\".");
 	}
 
 	@Override
 	public void run() {
 		mCurrentProgress = 0.0;
-		try {
-
-			OutputStream sout = mSocket.getOutputStream();
-			String s = mDeviceID + " " + mPath + "\n";
-			sout.write(s.getBytes(), 0, s.getBytes().length);
-
-			int BLOCK_SIZE = NetworkProtocol.BLOCK_SIZE;
-
-			File file = new File(mDestination);
-			FileOutputStream fos = new FileOutputStream(file);
-			BufferedOutputStream out = new BufferedOutputStream(fos);
-
-			InputStream in = mSocket.getInputStream();
-			int nPackets = (int) Math.ceil(((double) mSize)
-					/ ((double) BLOCK_SIZE));
-
-			int bytesReceived;
-			byte[] received = new byte[mSize];
-
-			Log.i("FileClient", "Started transfer on socket \"" + mSocket
-					+ "\".");
-
-			for (int i = 0; i < nPackets; i++) {
-				int sizeToReceive = (mSize - i * BLOCK_SIZE >= BLOCK_SIZE) ? BLOCK_SIZE
-						: mSize - i * BLOCK_SIZE;
-
-				bytesReceived = in
-						.read(received, i * BLOCK_SIZE, sizeToReceive);
+		if(mSocket != null){
+			try {
 				
-				synchronized (mCurrentProgress) {
-					mCurrentProgress += ((double) bytesReceived) / ((double) mSize);
+				OutputStream sout = mSocket.getOutputStream();
+				String s = mDeviceID + " " + mPath + "\n";
+				sout.write(s.getBytes(), 0, s.getBytes().length);
+	
+				int BLOCK_SIZE = NetworkProtocol.BLOCK_SIZE;
+	
+				File file = new File(mDestination);
+				FileOutputStream fos = new FileOutputStream(file);
+				BufferedOutputStream out = new BufferedOutputStream(fos);
+	
+				InputStream in = mSocket.getInputStream();
+				int nPackets = (int) Math.ceil(((double) mSize)
+						/ ((double) BLOCK_SIZE));
+	
+				int bytesReceived;
+				byte[] received = new byte[mSize];
+	
+				Log.i("FileClient", "Started transfer on socket \"" + mSocket
+						+ "\".");
+	
+				for (int i = 0; i < nPackets; i++) {
+					int sizeToReceive = (mSize - i * BLOCK_SIZE >= BLOCK_SIZE) ? BLOCK_SIZE
+							: mSize - i * BLOCK_SIZE;
+	
+					bytesReceived = in
+							.read(received, i * BLOCK_SIZE, sizeToReceive);
+					
+					synchronized (mCurrentProgress) {
+						mCurrentProgress += ((double) bytesReceived) / ((double) mSize);
+					}
 				}
+	
+				out.write(received, 0, mSize);
+				out.flush();
+	
+				sout.close();
+				out.close();
+				in.close();
+				mSocket.close();
+	
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-
-			out.write(received, 0, mSize);
-			out.flush();
-
-			sout.close();
-			out.close();
-			in.close();
-			mSocket.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+	
+			Log.i("FileClient", "Ended transfer on socket \"" + mSocket + "\".");
 		}
-
-		Log.i("FileClient", "Ended transfer on socket \"" + mSocket + "\".");
+		else{
+			Log.i("FileClient", "Cannot connect to \"" + mSocket + "\".");
+		}
 	}
 	
 	public String getPath () {

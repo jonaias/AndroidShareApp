@@ -28,7 +28,7 @@ import android.widget.Toast;
  * @author jonaias
  * 
  */
-public class SharedWithMeListActivity extends ListActivity {
+public class SharedWithMeListActivity extends ListActivity implements RefreshInterface {
 
 	private EfficientAdapter adapter;
 	private static ArrayList<Person> personList;

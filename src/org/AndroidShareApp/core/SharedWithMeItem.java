@@ -5,11 +5,13 @@ public class SharedWithMeItem implements Comparable<SharedWithMeItem> {
 	private String mSharedPath;
 	private boolean mRead;
 	private boolean mWrite;
+	private long mSize;
 	
-	public SharedWithMeItem (String sharedPath, boolean read, boolean write) {
+	public SharedWithMeItem (String sharedPath, boolean read, boolean write, long size) {
 		mSharedPath = sharedPath;
 		mRead = read;
 		mWrite = write;
+		mSize = size;
 	}
 	
 	public String getSharedPath () {
@@ -35,6 +37,10 @@ public class SharedWithMeItem implements Comparable<SharedWithMeItem> {
 		else{
 			return "file";
 		}
+	}
+	
+	public long getFileSize(){
+		return mSize;
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Environment;
 import android.util.Log;
 
 public class NetworkListener extends Thread {
@@ -101,6 +102,7 @@ public class NetworkListener extends Thread {
 
 				JSONArray sharedList = obj.getJSONArray("sharedList");
 				String currPath, currPermissions;
+				long currSize;
 
 				Person person = NetworkManager.getInstance()
 						.getPersonByDeviceID(deviceID);
@@ -114,6 +116,8 @@ public class NetworkListener extends Thread {
 								.getString("path");
 						currPermissions = sharedList.getJSONObject(i)
 								.getString("permissions");
+						currSize = sharedList.getJSONObject(i)
+								.getLong("size");
 
 						boolean read = false, write = false;
 
@@ -123,7 +127,7 @@ public class NetworkListener extends Thread {
 							write = true;
 
 						person.addSharedWithMeItem(new SharedWithMeItem(
-								currPath, read, write));
+								currPath, read, write,currSize));
 					}
 				}
 			}
@@ -161,27 +165,29 @@ public class NetworkListener extends Thread {
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT): {
 				Log.i("NetworkListener", "MESSAGE_DOWNLOAD_ACCEPT: " + obj);
-
-				String path = obj.getString("path");
-				String destination = null; // TODO: Pegar o destino.
-				int size = 0; // TODO: Como pegar o tamanho??? Ele pode
-								// mandar....
-				size = Integer.valueOf(obj.getString("size"));
-
-				Socket socket = null;
-				try {
-					socket = new Socket(packet.getAddress(),
-							NetworkProtocol.FILE_PORT);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return;
+				SharedWithMeItem tempSharedWithMeItem = null;
+				String path;
+				Person tempPerson;
+				
+				path = obj.getString("path");
+				tempPerson = NetworkManager.getInstance().getPersonByDeviceID(deviceID);
+				
+				Iterator<SharedWithMeItem> sharedWithMeItemIterator = tempPerson.getSharedWithMeItems().iterator();
+				while(sharedWithMeItemIterator.hasNext()){
+					tempSharedWithMeItem = sharedWithMeItemIterator.next();
+					if (tempSharedWithMeItem.getSharedPath().equals(path)){
+						break;
+					}
+				}				
+				
+				if ((tempPerson!=null)&&(tempSharedWithMeItem!=null)){
+					FileClient client = new FileClient(tempPerson,tempSharedWithMeItem );
+					client.setName("FileClient:" + tempSharedWithMeItem.getSharedPath());
+					client.start();
 				}
-
-				FileClient client = new FileClient(deviceID, path, destination,
-						size, socket);
-				client.setName("FileClient:" + destination);
-				client.start();
+				else{
+					Log.i("NetworkListener", "Person or SharedWithMeItem is null, cannot create NetworkListener");
+				}
 			}
 				break;
 			case (NetworkProtocol.MESSAGE_DOWNLOAD_DENY):

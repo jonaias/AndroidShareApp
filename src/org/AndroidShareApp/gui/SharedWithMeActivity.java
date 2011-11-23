@@ -32,7 +32,7 @@ import android.widget.TextView;
  * @author jonaias
  * 
  */
-public class SharedWithMeActivity extends ListActivity implements OnClickListener {
+public class SharedWithMeActivity extends ListActivity implements OnClickListener, RefreshInterface {
 
 	private static EfficientAdapter adapter;
 	private static Person mPerson;
@@ -78,11 +78,11 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 		adapter.notifyDataSetChanged();
 	}
 	
-	public void refreshUi(){
-		refreshItemList();
+	public void refreshUi(){	
 		this.runOnUiThread(
                 new Runnable(){
                     public void run(){
+                    	refreshItemList();
                     	adapter.notifyDataSetChanged();
                     }
                 });
@@ -90,12 +90,12 @@ public class SharedWithMeActivity extends ListActivity implements OnClickListene
 	@Override
 	protected void onResume(){
 		super.onResume();
-		//NetworkManager.getInstance().getNetworkSender().registerCallBack(this);
+		NetworkManager.getInstance().getNetworkSender().registerCallBack(this);
 	}
 	@Override
 	protected void onPause(){
 		super.onPause();
-		//NetworkManager.getInstance().getNetworkSender().registerCallBack(null);
+		NetworkManager.getInstance().getNetworkSender().registerCallBack(null);
 	}
 	/*-------------- Callback functions stop -----------*/
 	
