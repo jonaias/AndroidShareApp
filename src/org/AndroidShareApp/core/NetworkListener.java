@@ -157,6 +157,12 @@ public class NetworkListener extends Thread {
 						reply.toString().getBytes().length,
 						packet.getAddress(), NetworkProtocol.UDP_PORT);
 
+				try {
+					Thread.sleep (500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				NetworkManager.getInstance().getNetworkSender()
 						.sendDatagram(replyPacket);
 			}
@@ -180,6 +186,12 @@ public class NetworkListener extends Thread {
 					}
 				}
 
+				try {
+					Thread.sleep (500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				if ((tempPerson != null) && (tempSharedWithMeItem != null)) {
 					FileClient client = new FileClient(tempPerson,
 							tempSharedWithMeItem);
