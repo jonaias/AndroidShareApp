@@ -20,30 +20,30 @@ public class FileClient extends Thread {
 	private Socket mSocket;
 	private int mSize;
 	private Double mCurrentProgress;
-	
+
 	private Person mPerson;
-	
+
 	public FileClient(Person person, SharedWithMeItem sharedWithMeItem) {
 		mSocket = null;
 		mPerson = person;
-				
+
 		mPath = sharedWithMeItem.getSharedPath();
-		mDestinationFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(); // TODO: Pegar o destino.
-		mDestination = mDestinationFolder+mPath;
-		
-		mSize = (int)sharedWithMeItem.getFileSize();
+		mDestinationFolder = Environment.getExternalStoragePublicDirectory(
+				Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+		mDestination = mDestinationFolder + mPath;
+
+		mSize = (int) sharedWithMeItem.getFileSize();
 		mDeviceID = person.getDeviceID();
-		
+
 		try {
-			mSocket = new Socket(person.getIP(),
-					NetworkProtocol.FILE_PORT);
-			
+			mSocket = new Socket(person.getIP(), NetworkProtocol.FILE_PORT);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
-		
+
 		Log.i("FileClient", "Created transfer with path \"" + mPath
 				+ "\" on socket \"" + mSocket + "\" to destination \""
 				+ mDestinationFolder + "\".");
@@ -52,69 +52,72 @@ public class FileClient extends Thread {
 	@Override
 	public void run() {
 		mCurrentProgress = 0.0;
-		if(mSocket != null){
+		if (mSocket != null) {
 			try {
-				
+
 				OutputStream sout = mSocket.getOutputStream();
 				String s = mDeviceID + " " + mPath + "\n";
 				sout.write(s.getBytes(), 0, s.getBytes().length);
-	
+
 				int BLOCK_SIZE = NetworkProtocol.BLOCK_SIZE;
-	
+
 				File file = new File(mDestination);
-				int i=0;
-				while (file.exists()){
-					file = new File(mDestination+"("+(++i)+")");
+				int i = 0;
+				while (file.exists()) {
+					file = new File(mDestination + "(" + (++i) + ")");
 				}
-				
-				Log.i("FileClient", "Created destination file " + file.getAbsolutePath());
-				//Toast.makeText(, text, duration)
+
+				Log.i("FileClient",
+						"Created destination file " + file.getAbsolutePath());
+				// Toast.makeText(, text, duration)
 				FileOutputStream fos = new FileOutputStream(file);
 				BufferedOutputStream out = new BufferedOutputStream(fos);
-	
+
 				InputStream in = mSocket.getInputStream();
 				int nPackets = (int) Math.ceil(((double) mSize)
 						/ ((double) BLOCK_SIZE));
-	
+
 				int bytesReceived;
 				byte[] received = new byte[mSize];
-	
+
 				Log.i("FileClient", "Started transfer on socket \"" + mSocket
 						+ "\".");
-	
+
 				for (i = 0; i < nPackets; i++) {
 					int sizeToReceive = (mSize - i * BLOCK_SIZE >= BLOCK_SIZE) ? BLOCK_SIZE
 							: mSize - i * BLOCK_SIZE;
-	
-					bytesReceived = in
-							.read(received, i * BLOCK_SIZE, sizeToReceive);
-					
+
+					bytesReceived = in.read(received, i * BLOCK_SIZE,
+							sizeToReceive);
+
 					synchronized (mCurrentProgress) {
-						mCurrentProgress += ((double) bytesReceived) / ((double) mSize);
+						mCurrentProgress += ((double) bytesReceived)
+								/ ((double) mSize);
 					}
 				}
-	
+
 				out.write(received, 0, mSize);
 				out.flush();
-	
+
 				sout.close();
 				out.close();
 				in.close();
 				mSocket.close();
-				
-				Log.i("FileClient", "Ended transfer on socket \"" + mSocket + "\".");
-			
+
+				Log.i("FileClient", "Ended transfer on socket \"" + mSocket
+						+ "\".");
+
 			} catch (IOException e) {
-				Log.i("FileClient", "IO exception on socket \"" + mSocket + "\".");
+				Log.i("FileClient", "IO exception on socket \"" + mSocket
+						+ "\".");
 				e.printStackTrace();
-			}			
-		}
-		else{
+			}
+		} else {
 			Log.i("FileClient", "Cannot connect to \"" + mSocket + "\".");
 		}
 	}
-	
-	public String getPath () {
+
+	public String getPath() {
 		return mPath;
 	}
 
@@ -125,7 +128,7 @@ public class FileClient extends Thread {
 		}
 		return ret;
 	}
-	
+
 	public Person getPerson() {
 		return mPerson;
 	}
