@@ -11,7 +11,7 @@ import java.net.Socket;
 import android.os.Environment;
 import android.util.Log;
 
-public class FileClient extends Thread {
+public class FileClient extends Thread implements FileTransferrer {
 
 	private String mDeviceID;
 	private String mPath;
@@ -51,6 +51,7 @@ public class FileClient extends Thread {
 
 	@Override
 	public void run() {
+		NetworkManager.getInstance().addTransfer(this);
 		mCurrentProgress = 0.0;
 		if (mSocket != null) {
 			try {
@@ -131,5 +132,9 @@ public class FileClient extends Thread {
 
 	public Person getPerson() {
 		return mPerson;
+	}
+	
+	public int getType() {
+		return FileTransferrer.TYPE_DOWNLOAD;
 	}
 }

@@ -8,27 +8,32 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import android.util.Log;
-import android.widget.ProgressBar;
 
-public class FileServerThread implements Runnable {
+public class FileServerThread extends Thread implements FileTransferrer {
 
 	private String mPath;
 	private Socket mSocket;
 	private int mSize;
-	private ProgressBar mProgressBar;
+	private Double mCurrentProgress;
+	private Person mPerson;
 
 	public FileServerThread(String transfer, Socket socket) {
 		mPath = transfer.substring(transfer.indexOf(' ') + 1);
 		mPath = NetworkManager.getInstance().getSharedByMeItemFullPath(mPath);
 		mSocket = socket;
 
+		mPerson = NetworkManager.getInstance().getPersonByDeviceID(
+				transfer.substring(0, transfer.indexOf(' ')));
+
+		mCurrentProgress = 0.0;
+		
 		Log.i("FileServerThread", "Created transfer with path \"" + mPath
 				+ "\" on socket \"" + mSocket + "\".");
 	}
 
 	@Override
 	public void run() {
-		double currentProgress = 0.0;
+		NetworkManager.getInstance().addTransfer(this);
 		try {
 			int BLOCK_SIZE = NetworkProtocol.BLOCK_SIZE;
 
@@ -47,7 +52,10 @@ public class FileServerThread implements Runnable {
 
 			/* Then, we send it, BLOCK_SIZE per BLOCK_SIZE. */
 			OutputStream out = mSocket.getOutputStream();
-			currentProgress = 0.0;
+
+			synchronized (mCurrentProgress) {
+				mCurrentProgress = 0.0;
+			}
 
 			int nPackets = (int) Math.ceil(((double) mSize)
 					/ ((double) BLOCK_SIZE));
@@ -62,13 +70,9 @@ public class FileServerThread implements Runnable {
 				out.write(bytesToSend, i * BLOCK_SIZE, sizeToSend);
 				out.flush();
 
-				currentProgress += ((double) BLOCK_SIZE) / ((double) mSize);
-
-				if (mProgressBar != null) {
-					synchronized (mProgressBar) {
-						mProgressBar.setProgress((int) Math
-								.round(currentProgress));
-					}
+				synchronized (mCurrentProgress) {
+					mCurrentProgress += ((double) BLOCK_SIZE)
+							/ ((double) mSize);
 				}
 			}
 
@@ -85,12 +89,22 @@ public class FileServerThread implements Runnable {
 		}
 	}
 
-	public void registerCallback(ProgressBar progressBar) {
-		if (mProgressBar == null)
-			mProgressBar = progressBar;
-		else
-			synchronized (mProgressBar) {
-				mProgressBar = progressBar;
-			}
+	@Override
+	public double getProgress() {
+		return mCurrentProgress;
+	}
+
+	@Override
+	public Person getPerson() {
+		return mPerson;
+	}
+
+	@Override
+	public String getPath() {
+		return mPath;
+	}
+	
+	public int getType() {
+		return FileTransferrer.TYPE_UPLOAD;
 	}
 }

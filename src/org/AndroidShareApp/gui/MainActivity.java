@@ -51,9 +51,9 @@ public class MainActivity extends TabActivity {
 				.setContent(intent);
 		tabHost.addTab(spec);
 
-		for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
+		/*for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
 			tabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 30;
-		}
+		}*/
 
 		tabHost.setCurrentTab(0);
 		

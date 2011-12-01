@@ -22,12 +22,12 @@ public class NetworkManager {
 	private NetworkSender mNetworkSender;
 	private NetworkListener mNetworkListener;
 	private FileServer mFileServer;
-	private ArrayList<FileClient> mCurrentTransfers;
+	private ArrayList<FileTransferrer> mCurrentTransfers;
 
 	private NetworkManager() {
 		mPersonList = new ArrayList<Person>();
 		mSharedByMeItems = new ArrayList<SharedByMeItem>();
-		mCurrentTransfers = new ArrayList<FileClient>();
+		mCurrentTransfers = new ArrayList<FileTransferrer>();
 
 		SharedPerson everybody = new SharedPerson("Everybody",
 				String.valueOf(new Random().nextInt()), null, false, false);
@@ -86,7 +86,7 @@ public class NetworkManager {
 		s1.getSharedPersonList().add(paul);
 		s1.getSharedPersonList().add(john);
 		mSharedByMeItems.add(s1);
-		createFile();
+		//createFile();
 		/* ########################### */
 	}
 	
@@ -161,15 +161,15 @@ public class NetworkManager {
 		return null;
 	}
 
-	public void addTransfer(FileClient transfer) {
+	public void addTransfer(FileTransferrer transfer) {
 		mCurrentTransfers.add(transfer);
 	}
 
 	public void deleteCompletedTransfers() {
 		synchronized (mCurrentTransfers) {
-			Iterator<FileClient> itr = mCurrentTransfers.iterator();
+			Iterator<FileTransferrer> itr = mCurrentTransfers.iterator();
 			while (itr.hasNext()) {
-				FileClient currClient = itr.next();
+				FileTransferrer currClient = itr.next();
 				if (!currClient.isAlive()) {
 					itr.remove();
 				}
@@ -177,7 +177,7 @@ public class NetworkManager {
 		}
 	}
 
-	public ArrayList<FileClient> getTransfers() {
+	public ArrayList<FileTransferrer> getTransfers() {
 		return mCurrentTransfers;
 	}
 

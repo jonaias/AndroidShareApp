@@ -6,7 +6,7 @@ package org.AndroidShareApp.gui;
 import java.util.ArrayList;
 
 import org.AndroidShareApp.R;
-import org.AndroidShareApp.core.FileClient;
+import org.AndroidShareApp.core.FileTransferrer;
 import org.AndroidShareApp.core.NetworkManager;
 import org.AndroidShareApp.core.RefreshInterface;
 
@@ -31,7 +31,7 @@ import android.widget.TextView;
 public class TransferActivity extends ListActivity implements RefreshInterface {
 
 	private EfficientAdapter mAdapter;
-	private ArrayList<FileClient> mCurrentTransfers;
+	private ArrayList<FileTransferrer> mCurrentTransfers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class TransferActivity extends ListActivity implements RefreshInterface {
 
 	public class EfficientAdapter extends BaseAdapter implements Filterable {
 		private LayoutInflater mInflater;
-		private ArrayList<FileClient> mCurrentTransfers;
+		private ArrayList<FileTransferrer> mCurrentTransfers;
 
 		public EfficientAdapter(Context context) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
@@ -124,10 +124,17 @@ public class TransferActivity extends ListActivity implements RefreshInterface {
 				// TODO: Colocar o nome da pessoa na classe FileTransfer e
 				// colocá-lo
 				// no holder.transferPersonText
-				holder.transferPersonText.setText(mCurrentTransfers
-						.get(position).getPerson().getName());
 				holder.transferProgress.setProgress((int) Math
 						.round(mCurrentTransfers.get(position).getProgress()));
+				if (holder.transferProgress.getProgress() == 100)
+					holder.transferInfoText.setText(holder.transferInfoText
+							.getText() + " (Concluded)");
+				if (mCurrentTransfers.get(position).getType() == FileTransferrer.TYPE_DOWNLOAD)
+					holder.transferPersonText.setText("from " + mCurrentTransfers
+							.get(position).getPerson().getName());
+				else
+					holder.transferPersonText.setText("to " + mCurrentTransfers
+							.get(position).getPerson().getName());
 			}
 
 			return convertView;
