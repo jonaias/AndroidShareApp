@@ -107,4 +107,10 @@ public class FileServerThread extends Thread implements FileTransferrer {
 	public int getType() {
 		return FileTransferrer.TYPE_UPLOAD;
 	}
+	
+	@Override
+	public void interrupt () {
+		super.interrupt();
+		NetworkManager.getInstance().deleteTransfer(this);
+	}
 }

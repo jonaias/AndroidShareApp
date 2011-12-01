@@ -16,15 +16,15 @@ public class SharedByMeItem {
 		mPerson = new ArrayList<SharedPerson>();
 		mPerson.add(person);
 		mSharedPath = getSharedPath(fullPath);
-		mIsActive = false;
-		mFileSize = (new File(mFullPath)).length();
+		mIsActive = true;
+		mFileSize = new File(mFullPath).length();
 	}
 
 	public SharedByMeItem(String fullPath) {
 		mFullPath = fullPath;
 		mSharedPath = getSharedPath(fullPath);
 		mPerson = new ArrayList<SharedPerson>();
-		mFileSize = (new File(mFullPath)).length();
+		mFileSize = new File(mFullPath).length();
 	}
 
 	private static String getSharedPath(String fullPath) {
@@ -53,6 +53,7 @@ public class SharedByMeItem {
 	public void setFullPath(String fullPath) {
 		mFullPath = fullPath;
 		mSharedPath = getSharedPath(fullPath);
+		mFileSize = new File(mFullPath).length();
 	}
 
 	public ArrayList<SharedPerson> getSharedPersonList() {

@@ -137,4 +137,10 @@ public class FileClient extends Thread implements FileTransferrer {
 	public int getType() {
 		return FileTransferrer.TYPE_DOWNLOAD;
 	}
+	
+	@Override
+	public void interrupt () {
+		super.interrupt();
+		NetworkManager.getInstance().deleteTransfer(this);
+	}
 }

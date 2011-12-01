@@ -34,7 +34,7 @@ public class NetworkManager {
 		addPerson(everybody);
 
 		/* TODO: REMOVE!!!!!!!!!!!!! */
-		addPerson(new Person("teste", "123121", null));
+		/*addPerson(new Person("teste", "123121", null));
 		addPerson(new Person("teste1", "1231211", null));
 		Person teste2 = new Person("teste2", "1231212", null); 
 		try {
@@ -57,7 +57,7 @@ public class NetworkManager {
 		teste2.addSharedWithMeItem(sharedWithMeItem5);
 		teste2.addSharedWithMeItem(sharedWithMeItem6);
 		teste2.addSharedWithMeItem(sharedWithMeItem7);
-		addPerson(teste2);
+		addPerson(teste2);*/
 		/* ########################### */
 
 		mNetworkSender = new NetworkSender(NetworkProtocol.UDP_PORT);
@@ -77,14 +77,14 @@ public class NetworkManager {
 			e.printStackTrace();
 		}
 		
-		SharedPerson paul = new SharedPerson("Paul", "PaulID", address, true,
+		/*SharedPerson paul = new SharedPerson("Paul", "PaulID", address, true,
 				false);
 		SharedPerson john = new SharedPerson("John", "JohnID", address, false,
-				false);
+				false);*/
 		
-		SharedByMeItem s1 = new SharedByMeItem("/mnt/sdcard/teste.txt");
-		s1.getSharedPersonList().add(paul);
-		s1.getSharedPersonList().add(john);
+		SharedByMeItem s1 = new SharedByMeItem("/mnt/sdcard/Example.txt");
+		/*s1.getSharedPersonList().add(paul);
+		s1.getSharedPersonList().add(john);*/
 		mSharedByMeItems.add(s1);
 		//createFile();
 		/* ########################### */
@@ -165,6 +165,10 @@ public class NetworkManager {
 		mCurrentTransfers.add(transfer);
 	}
 
+	public void deleteTransfer(FileTransferrer transfer) {
+		mCurrentTransfers.remove(transfer);
+	}
+	
 	public void deleteCompletedTransfers() {
 		synchronized (mCurrentTransfers) {
 			Iterator<FileTransferrer> itr = mCurrentTransfers.iterator();

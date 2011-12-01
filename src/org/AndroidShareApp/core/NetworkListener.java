@@ -42,7 +42,8 @@ public class NetworkListener extends Thread {
 				mListenSocket.receive(currPacket);
 
 				Log.i("NetworkListener",
-						"Received packet. IP:" + currPacket.getAddress()+" raw data:"+currPacket.toString());
+						"Received packet. IP:" + currPacket.getAddress()
+								+ " raw data:" + currPacket.toString());
 				parseJSON(new String(mBuffer), currPacket);
 
 			} catch (IOException e) {
@@ -139,7 +140,8 @@ public class NetworkListener extends Thread {
 				String path = obj.getString("path");
 
 				JSONObject reply = new JSONObject();
-				reply.put("deviceID", deviceID);
+				reply.put("deviceID", NetworkManager.getInstance()
+						.getThisDeviceId());
 				reply.put("path", path);
 
 				if (!hasPermission(deviceID, path) || hasPendingUploads(path)) {
@@ -158,11 +160,11 @@ public class NetworkListener extends Thread {
 						packet.getAddress(), NetworkProtocol.UDP_PORT);
 
 				try {
-					Thread.sleep (500);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				
+
 				NetworkManager.getInstance().getNetworkSender()
 						.sendDatagram(replyPacket);
 			}
@@ -221,8 +223,8 @@ public class NetworkListener extends Thread {
 
 	private static boolean hasPermission(String deviceID, String path) {
 
-		//return true;
-		
+		// return true;
+
 		Person person = NetworkManager.getInstance().getPersonByDeviceID(
 				deviceID);
 
@@ -235,16 +237,16 @@ public class NetworkListener extends Thread {
 		Iterator<SharedByMeItem> itr = sharedItems.iterator();
 		while (itr.hasNext()) {
 			SharedByMeItem currItem = itr.next();
-			
+
 			if (currItem.getSharedPath().compareTo(path) != 0)
 				continue;
-			
+
 			ArrayList<SharedPerson> persons = currItem.getSharedPersonList();
 
 			Iterator<SharedPerson> sitr = persons.iterator();
 			while (sitr.hasNext()) {
 				SharedPerson currPerson = sitr.next();
-				if(currPerson.getName().compareTo("Everybody") == 0)
+				if (currPerson.getName().compareTo("Everybody") == 0)
 					return true;
 				if ((currPerson.getDeviceID().compareTo(person.getDeviceID()) == 0)
 						&& (currPerson.canRead()) && currItem.isActive())
