@@ -9,6 +9,7 @@ import java.util.Iterator;
 import org.AndroidShareApp.R;
 import org.AndroidShareApp.core.NetworkManager;
 import org.AndroidShareApp.core.Person;
+import org.AndroidShareApp.core.RefreshInterface;
 import org.AndroidShareApp.core.SharedWithMeItem;
 
 import android.app.ListActivity;

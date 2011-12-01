@@ -1,4 +1,4 @@
-package org.AndroidShareApp.gui;
+package org.AndroidShareApp.core;
 
 public interface RefreshInterface {
 	

@@ -15,7 +15,6 @@ public class SharedByMeItem {
 		mFullPath = fullPath;
 		mPerson = new ArrayList<SharedPerson>();
 		mPerson.add(person);
-		/* TODO: Pegar o sharedPath a partir do fullPath. */
 		mSharedPath = getSharedPath(fullPath);
 		mIsActive = false;
 		mFileSize = (new File(mFullPath)).length();
@@ -23,7 +22,6 @@ public class SharedByMeItem {
 
 	public SharedByMeItem(String fullPath) {
 		mFullPath = fullPath;
-		/* TODO: Pegar o sharedPath a partir do fullPath. */
 		mSharedPath = getSharedPath(fullPath);
 		mPerson = new ArrayList<SharedPerson>();
 		mFileSize = (new File(mFullPath)).length();

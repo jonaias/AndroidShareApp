@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.AndroidShareApp.R;
 import org.AndroidShareApp.core.NetworkManager;
 import org.AndroidShareApp.core.Person;
+import org.AndroidShareApp.core.RefreshInterface;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -22,7 +23,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author jonaias
@@ -48,8 +48,6 @@ public class SharedWithMeListActivity extends ListActivity implements RefreshInt
 		//		Toast.LENGTH_LONG).show();
 	
 	}
-	
-	
 	
 	/*-------------- Callback functions start -----------*/
 	public void refreshUi(){

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.AndroidShareApp.R;
 import org.AndroidShareApp.core.FileClient;
 import org.AndroidShareApp.core.NetworkManager;
+import org.AndroidShareApp.core.RefreshInterface;
 
 import android.app.ListActivity;
 import android.content.Context;

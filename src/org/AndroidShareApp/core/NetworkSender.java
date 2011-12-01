@@ -7,7 +7,6 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.AndroidShareApp.gui.RefreshInterface;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
