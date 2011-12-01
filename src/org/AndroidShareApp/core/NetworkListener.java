@@ -61,7 +61,8 @@ public class NetworkListener extends Thread {
 
 			/* Ignore self packets */
 			if (deviceID.equals(NetworkManager.getInstance().getThisDeviceId())) {
-				return;
+				if (messageType != NetworkProtocol.MESSAGE_DOWNLOAD_ACCEPT)
+					return;
 			}
 
 			switch (messageType) {
@@ -158,12 +159,6 @@ public class NetworkListener extends Thread {
 						.toString().getBytes(),
 						reply.toString().getBytes().length,
 						packet.getAddress(), NetworkProtocol.UDP_PORT);
-
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
 
 				NetworkManager.getInstance().getNetworkSender()
 						.sendDatagram(replyPacket);

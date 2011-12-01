@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class FileClient extends Thread implements FileTransferrer {
 
-	private String mDeviceID;
+	//private String mDeviceID;
 	private String mPath;
 	private String mDestinationFolder;
 	private String mDestination;
@@ -33,7 +33,7 @@ public class FileClient extends Thread implements FileTransferrer {
 		mDestination = mDestinationFolder + mPath;
 
 		mSize = (int) sharedWithMeItem.getFileSize();
-		mDeviceID = person.getDeviceID();
+		//mDeviceID = person.getDeviceID();
 
 		try {
 			mSocket = new Socket(person.getIP(), NetworkProtocol.FILE_PORT);
@@ -57,7 +57,8 @@ public class FileClient extends Thread implements FileTransferrer {
 			try {
 
 				OutputStream sout = mSocket.getOutputStream();
-				String s = mDeviceID + " " + mPath + "\n";
+				String s = NetworkManager.getInstance().getThisDeviceId() + " "
+						+ mPath + "\n";
 				sout.write(s.getBytes(), 0, s.getBytes().length);
 
 				int BLOCK_SIZE = NetworkProtocol.BLOCK_SIZE;
@@ -95,6 +96,8 @@ public class FileClient extends Thread implements FileTransferrer {
 						mCurrentProgress += ((double) bytesReceived)
 								/ ((double) mSize);
 					}
+					Log.i("FileClient", "Received packet " + i);
+					Log.i("FileClient", "Received size " + sizeToReceive);
 				}
 
 				out.write(received, 0, mSize);
@@ -133,13 +136,13 @@ public class FileClient extends Thread implements FileTransferrer {
 	public Person getPerson() {
 		return mPerson;
 	}
-	
+
 	public int getType() {
 		return FileTransferrer.TYPE_DOWNLOAD;
 	}
-	
+
 	@Override
-	public void interrupt () {
+	public void interrupt() {
 		super.interrupt();
 		NetworkManager.getInstance().deleteTransfer(this);
 	}
