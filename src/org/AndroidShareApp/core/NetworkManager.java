@@ -82,10 +82,10 @@ public class NetworkManager {
 		SharedPerson john = new SharedPerson("John", "JohnID", address, false,
 				false);*/
 		
-		SharedByMeItem s1 = new SharedByMeItem("/mnt/sdcard/Example.txt");
+		//SharedByMeItem s1 = new SharedByMeItem("/mnt/sdcard/Example.txt");
 		/*s1.getSharedPersonList().add(paul);
 		s1.getSharedPersonList().add(john);*/
-		mSharedByMeItems.add(s1);
+		//mSharedByMeItems.add(s1);
 		//createFile();
 		/* ########################### */
 	}

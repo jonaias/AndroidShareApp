@@ -166,6 +166,9 @@ public class SharedByMeConfigActivity extends ListActivity implements
 
 		Log.i("SharedByMeConfigActivity", "Received result with code "
 				+ requestCode);
+		
+		if(data == null)
+			return;
 
 		switch (requestCode) {
 		case REQUEST_CODE_ADD_PERSON_TO_SHARE: {
